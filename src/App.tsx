@@ -4,6 +4,7 @@ import { Navbar } from './components/Navbar';
 import { translations } from './i18n/translations';
 import { ChevronDown } from 'lucide-react';
 import { TypedText } from './components/TypedText';
+import { AboutSection } from './components/AboutSection';
 
 function App() {
   const [currentLang, setCurrentLang] = useState('es');
@@ -61,6 +62,8 @@ function App() {
           </div>
         </div>
       </main>
+
+      <AboutSection currentLang={currentLang} />
     </div>
   );
 }

@@ -5,7 +5,7 @@ interface TypedTextProps {
   delay?: number;
 }
 
-export const TypedText: React.FC<TypedTextProps> = ({ text, delay = 100 }) => {
+export const TypedText: React.FC<TypedTextProps> = ({ text, delay = 50 }) => {
   const [displayText, setDisplayText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
 
