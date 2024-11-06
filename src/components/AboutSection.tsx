@@ -104,7 +104,7 @@ export const AboutSection = ({ currentLang }: { currentLang: string }) => {
                 </p>
                 <p className="text-xl text-gray-300 leading-relaxed">
                   {currentLang === 'es'
-                    ? "Mi enfoque se centra en escribir código limpio y mantenible, siempre buscando las mejores prácticas y nuevas tecnologías para mejorar mis habilidades."
+? "Mi enfoque se centra en escribir código limpio y mantenible, siempre buscando las mejores prácticas y nuevas tecnologías para fortalecer mis habilidades."
                     : "My approach focuses on writing clean and maintainable code, always seeking best practices and new technologies to enhance my skills."}
                 </p>
               </div>
