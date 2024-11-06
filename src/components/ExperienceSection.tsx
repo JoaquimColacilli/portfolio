@@ -34,7 +34,8 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) =>
       period: currentLang === 'es' ? 'Ene. 2021 - Actualidad' : 'Jan. 2021 - Present',
       icon: <Globe className="w-6 h-6 text-emerald-400" />,
       responsibilities: [
-        currentLang === 'es' ? 'Desarrollo de landing pages modernas y responsivas utilizando React y Next.js.' : 'Development of modern and responsive landing pages using React and Next.js.',
+        currentLang === 'es' ? "Desarrollo de landing pages modernas y responsivas utilizando frameworks y tecnologías de frontend como React, Next.js, entre otras."
+: "Development of modern and responsive landing pages using frontend frameworks and technologies such as React, Next.js, among others.",
         currentLang === 'es' ? 'Implementación de APIs RESTful con Node.js y Express para gestión de datos.' : 'Implementation of RESTful APIs with Node.js and Express for data management.',
         currentLang === 'es' ? 'Diseño y desarrollo de bases de datos SQL y NoSQL según requerimientos del proyecto.' : 'Design and development of SQL and NoSQL databases according to project requirements.',
         currentLang === 'es' ? 'Integración de pasarelas de pago y sistemas de autenticación seguros.' : 'Integration of payment gateways and secure authentication systems.',
