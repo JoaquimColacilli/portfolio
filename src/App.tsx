@@ -5,6 +5,7 @@ import { translations } from './i18n/translations';
 import { ChevronDown } from 'lucide-react';
 import { TypedText } from './components/TypedText';
 import { AboutSection } from './components/AboutSection';
+import { ExperienceSection } from './components/ExperienceSection';
 
 function App() {
   const [currentLang, setCurrentLang] = useState('es');
@@ -64,6 +65,7 @@ function App() {
       </main>
 
       <AboutSection currentLang={currentLang} />
+      <ExperienceSection currentLang={currentLang} />
     </div>
   );
 }

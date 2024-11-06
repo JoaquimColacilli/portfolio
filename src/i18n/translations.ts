@@ -22,7 +22,6 @@ export const translations = {
         technologies: "Technologies mastered",
         satisfaction: "Client satisfaction",
       },
-      showMore: "Show More",
     },
   },
   es: {
@@ -48,7 +47,6 @@ export const translations = {
         technologies: "Tecnologías dominadas",
         satisfaction: "Satisfacción del cliente",
       },
-      showMore: "Mostrar más",
     },
   },
 };
