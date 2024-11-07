@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useInView } from '../hooks/useInView';
-import { BriefcaseIcon, CheckCircle2, Globe, Code2 } from 'lucide-react';
+import { BriefcaseIcon, CheckCircle2, Globe } from 'lucide-react';
 
 interface ExperienceProps {
   currentLang: string;
@@ -31,11 +31,10 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) =>
     },
     {
       title: currentLang === 'es' ? 'Desarrollador Full Stack Freelance' : 'Full Stack Developer Freelance',
-      period: currentLang === 'es' ? 'Ene. 2021 - Actualidad' : 'Jan. 2021 - Present',
+      period: currentLang === 'es' ? 'Ene. 2021 - Sept. 2022' : 'Jan. 2021 - Sept. 2022',
       icon: <Globe className="w-6 h-6 text-emerald-400" />,
       responsibilities: [
-        currentLang === 'es' ? "Desarrollo de landing pages modernas y responsivas utilizando frameworks y tecnologías de frontend como React, Next.js, entre otras."
-: "Development of modern and responsive landing pages using frontend frameworks and technologies such as React, Next.js, among others.",
+        currentLang === 'es' ? 'Desarrollo de landing pages modernas y responsivas utilizando React y Next.js.' : 'Development of modern and responsive landing pages using React and Next.js.',
         currentLang === 'es' ? 'Implementación de APIs RESTful con Node.js y Express para gestión de datos.' : 'Implementation of RESTful APIs with Node.js and Express for data management.',
         currentLang === 'es' ? 'Diseño y desarrollo de bases de datos SQL y NoSQL según requerimientos del proyecto.' : 'Design and development of SQL and NoSQL databases according to project requirements.',
         currentLang === 'es' ? 'Integración de pasarelas de pago y sistemas de autenticación seguros.' : 'Integration of payment gateways and secure authentication systems.',
@@ -58,10 +57,8 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) =>
           const { top, height } = ref.getBoundingClientRect();
           const elementCenter = top + height / 2;
           
-          // Calculamos la distancia al centro de la pantalla
           const distanceToCenter = Math.abs(elementCenter - window.innerHeight / 2);
           
-          // Si está más cerca del centro que el actual activo, lo activamos
           if (distanceToCenter < window.innerHeight / 3) {
             setActiveIndex(index);
           }
@@ -89,13 +86,18 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) =>
             ref={sectionRef as React.RefObject<HTMLDivElement>}
             className="relative"
           >
-            {/* Timeline line */}
+            {/* Timeline line with animation */}
             <div 
               ref={timelineRef}
-              className="absolute left-24 top-0 bottom-0 w-1 bg-gray-700"
+              className={`absolute top-0 bottom-0 w-0.5 bg-gray-700 transform transition-transform duration-1000 ${
+                inView ? 'scale-y-100' : 'scale-y-0'
+              } origin-top`}
+              style={{
+                left: '6.1rem' 
+                }}
             >
               <div 
-                className="absolute w-1 bg-gradient-to-b from-emerald-500 to-blue-500 transition-all duration-500 ease-in-out"
+                className="absolute w-0.5 bg-gradient-to-b from-emerald-500 to-blue-500 transition-all duration-500 ease-in-out"
                 style={{
                   top: `${(activeIndex * (100 / experiences.length))}%`,
                   height: `${100 / experiences.length}%`
@@ -114,13 +116,13 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) =>
               >
                 {/* Timeline dot */}
                 <div 
-  style={{
-    left: '6.125rem' // Ajusta este valor según el desplazamiento exacto que necesitas
-  }}
-  className={`absolute top-8 transform -translate-x-1/2 transition-all duration-300 ${
-    activeIndex === index ? 'scale-125' : 'scale-100'
-  }`}
->
+                  style={{
+                    left: '6.125rem'
+                  }}
+                  className={`absolute top-8 transform -translate-x-1/2 transition-all duration-300 ${
+                    activeIndex === index ? 'scale-125' : 'scale-100'
+                  }`}
+                >
                   <div className={`w-4 h-4 rounded-full ${
                     activeIndex === index ? 'bg-emerald-500' : 'bg-gray-600'
                   } ring-4 ring-gray-800 ring-opacity-30 transition-colors duration-300`} />
