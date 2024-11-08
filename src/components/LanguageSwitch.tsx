@@ -11,7 +11,7 @@ export const LanguageSwitch: React.FC<LanguageSwitchProps> = ({
   onLanguageChange,
 }) => {
   return (
-    <div className="fixed top-6 right-6 flex items-center gap-2 z-50">
+    <div className="fixed top-6 right-6 flex items-center gap-2" style={{ zIndex: 60 }}>
       <Globe className="w-5 h-5 text-gray-200" />
       <div className="relative">
         <select
@@ -19,8 +19,12 @@ export const LanguageSwitch: React.FC<LanguageSwitchProps> = ({
           onChange={(e) => onLanguageChange(e.target.value)}
           className="bg-gray-800 text-gray-200 border border-gray-700 rounded-md pl-3 pr-8 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 appearance-none cursor-pointer"
         >
-          <option value="en" className="bg-gray-800">EN</option>
-          <option value="es" className="bg-gray-800">ES</option>
+          <option value="en" className="bg-gray-800">
+            EN
+          </option>
+          <option value="es" className="bg-gray-800">
+            ES
+          </option>
         </select>
         <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
       </div>

@@ -31,7 +31,7 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) =>
     },
     {
       title: currentLang === 'es' ? 'Desarrollador Full Stack Freelance' : 'Full Stack Developer Freelance',
-      period: currentLang === 'es' ? 'Ene. 2021 - Sept. 2022' : 'Jan. 2021 - Sept. 2022',
+      period: currentLang === 'es' ? 'Ene. 2021 - Acualidad' : 'Jan. 2021 - Present',
       icon: <Globe className="w-6 h-6 text-emerald-400" />,
       responsibilities: [
         currentLang === 'es' ? 'Desarrollo de landing pages modernas y responsivas utilizando React y Next.js.' : 'Development of modern and responsive landing pages using React and Next.js.',

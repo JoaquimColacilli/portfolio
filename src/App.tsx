@@ -7,6 +7,7 @@ import { TypedText } from './components/TypedText';
 import { AboutSection } from './components/AboutSection';
 import { ExperienceSection } from './components/ExperienceSection';
 import { ProjectsSection } from './components/ProjectsSection';
+import { Footer } from './components/Footer';
 
 function App() {
   const [currentLang, setCurrentLang] = useState('es');
@@ -68,6 +69,7 @@ function App() {
       <AboutSection currentLang={currentLang} />
       <ExperienceSection currentLang={currentLang} />
       <ProjectsSection currentLang={currentLang} />
+      <Footer currentLang={currentLang} />
     </div>
   );
 }

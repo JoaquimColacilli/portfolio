@@ -23,6 +23,13 @@ export const translations = {
         satisfaction: "Client satisfaction",
       },
     },
+    footer: {
+      title: "Let's work Together",
+      subtitle: "Have a project in mind? Let's bring it to life!",
+      contactButton: "Contact Me",
+      available: "Available for freelance opportunities",
+      rights: "All rights reserved.",
+    },
   },
   es: {
     nav: {
@@ -47,6 +54,13 @@ export const translations = {
         technologies: "Tecnologías dominadas",
         satisfaction: "Satisfacción del cliente",
       },
+    },
+    footer: {
+      title: "Trabajemos Juntos",
+      subtitle: "¿Tienes un proyecto en mente? ¡Hagámoslo realidad!",
+      contactButton: "Contáctame",
+      available: "Disponible para oportunidades freelance",
+      rights: "Todos los derechos reservados.",
     },
   },
 };
