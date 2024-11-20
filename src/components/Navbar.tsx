@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
-import { translations } from '../i18n/translations';
+import React, { useState, useEffect } from "react";
+import { Menu, X } from "lucide-react";
+import { translations } from "../i18n/translations";
 
 interface NavbarProps {
   currentLang: string;
@@ -16,8 +16,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentLang }) => {
       setHasScrolled(window.scrollY > 20);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleItemClick = () => {
@@ -28,8 +28,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentLang }) => {
     <nav
       className={`fixed w-full top-0 z-50 transition-all duration-300 ${
         hasScrolled || isOpen
-          ? 'bg-gray-900/95 backdrop-blur-md shadow-lg'
-          : 'bg-gray-900/50 backdrop-blur-sm'
+          ? "bg-gray-900/95 backdrop-blur-md shadow-lg"
+          : "bg-gray-900/50 backdrop-blur-sm"
       }`}
     >
       <div className="container mx-auto px-6">
@@ -68,7 +68,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentLang }) => {
         {/* Menú móvil */}
         <div
           className={`lg:hidden transition-all duration-300 ease-in-out ${
-            isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
+            isOpen
+              ? "max-h-96 opacity-100"
+              : "max-h-0 opacity-0 pointer-events-none"
           }`}
         >
           <div className="px-2 pt-2 pb-3 space-y-1 border-t border-gray-800">
@@ -89,7 +91,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentLang }) => {
       {/* Overlay para el menú móvil */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 bg-black/10 lg:hidden"
           onClick={() => setIsOpen(false)}
           style={{ zIndex: 40 }}
         />

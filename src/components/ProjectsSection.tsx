@@ -1,6 +1,6 @@
-import React from 'react';
-import { useInView } from '../hooks/useInView';
-import { Github, ExternalLink, Code2, ArrowRight } from 'lucide-react';
+import React from "react";
+import { useInView } from "../hooks/useInView";
+import { Github, ExternalLink, Code2, ArrowRight } from "lucide-react";
 
 interface ProjectProps {
   currentLang: string;
@@ -11,24 +11,80 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
 
   const projects = [
     {
-      title: currentLang === 'es' ? 'Estimador de Desarrollos' : 'Development Estimator',
-      description: currentLang === 'es'
-        ? 'Aplicación web para estimar tiempos y costos de desarrollo de software. Utiliza IA para proporcionar estimaciones precisas basadas en proyectos anteriores.'
-        : 'Web application for estimating software development time and costs. Uses AI to provide accurate estimates based on previous projects.',
-      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2426&h=1366',
-      technologies: ['React', 'Node.js', 'MongoDB', 'TailwindCSS', 'OpenAI API'],
-      demoLink: 'https://estimador.demo.com',
-      githubLink: 'https://github.com/username/estimador',
+      title: "El Calculetas",
+      description:
+        currentLang === "es"
+          ? "Administrador financiero que ayuda a organizar tus gastos e ingresos de forma sencilla."
+          : "Finance manager that helps you organize your expenses and income easily.",
+      image: "/images/projects/el-calculetas.png",
+      technologies: ["React", "Firebase", "TailwindCSS"],
+      demoLink: "https://el-calculetas.netlify.app/",
+      githubLink: "https://github.com/JoaquimColacilli/el-calculetas",
     },
     {
-      title: 'Hotfood',
-      description: currentLang === 'es'
-        ? 'Plataforma de delivery de comida que conecta restaurantes locales con clientes. Sistema completo con seguimiento en tiempo real y pagos integrados.'
-        : 'Food delivery platform connecting local restaurants with customers. Complete system with real-time tracking and integrated payments.',
-      image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=2370&h=1366',
-      technologies: ['Next.js', 'Express', 'PostgreSQL', 'Stripe', 'Socket.io'],
-      demoLink: 'https://hotfood.demo.com',
-      githubLink: 'https://github.com/username/hotfood',
+      title: "Hotfood",
+      description:
+        currentLang === "es"
+          ? "Plataforma de delivery de comida que conecta restaurantes locales con clientes. Sistema completo con seguimiento en tiempo real y pagos integrados."
+          : "Food delivery platform connecting local restaurants with customers. Complete system with real-time tracking and integrated payments.",
+      image: "/images/projects/hotfood.png",
+      technologies: ["Next.js", "Express", "PostgreSQL", "Stripe", "Socket.io"],
+      demoLink: "https://joaquimcolacilli.github.io/hotfood/",
+      githubLink: "https://github.com/JoaquimColacilli/hotfood",
+    },
+    {
+      title: "Outreal Website",
+      description:
+        currentLang === "es"
+          ? "Sitio web oficial para Outreal ARQ, mostrando proyectos arquitectónicos innovadores."
+          : "Official website for Outreal ARQ, showcasing innovative architectural projects.",
+      image: "/images/projects/outreal.png",
+      technologies: ["HTML", "CSS", "JavaScript"],
+      demoLink: "https://outrealstudio.com/",
+      githubLink: "https://github.com/JoaquimColacilli/outreal",
+    },
+    {
+      title: "JSON Parser EXEC",
+      description:
+        currentLang === "es"
+          ? "Aplicación ejecutable para formatear y validar archivos JSON de manera eficiente."
+          : "Executable application for formatting and validating JSON files efficiently.",
+      image: "/images/projects/json-parser.png",
+      technologies: ["Java", "JSON"],
+      demoLink: "https://github.com/JoaquimColacilli/json-parser-exec",
+      githubLink: "https://github.com/JoaquimColacilli/json-parser-exec",
+    },
+    {
+      title:
+        currentLang === "es"
+          ? "Estimador de Desarrollos"
+          : "Development Estimator",
+      description:
+        currentLang === "es"
+          ? "Aplicación web para estimar tiempos y costos de desarrollo de software. Utiliza IA para proporcionar estimaciones precisas basadas en proyectos anteriores."
+          : "Web application for estimating software development time and costs. Uses AI to provide accurate estimates based on previous projects.",
+      image: "/images/projects/estimador.png",
+      technologies: [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "TailwindCSS",
+        "OpenAI API",
+      ],
+      demoLink: "https://joaquimcolacilli.github.io/estimador-desarrollo/",
+      githubLink: "https://github.com/JoaquimColacilli/estimador-desarrollo",
+    },
+
+    {
+      title: "Checklist APP",
+      description:
+        currentLang === "es"
+          ? "Aplicación de checklist dinámica para controlar despliegues y tareas pendientes."
+          : "Dynamic checklist application for controlling deployments and pending tasks.",
+      image: "/images/projects/checklist.png",
+      technologies: ["Vue.js", "Firebase", "Vuetify"],
+      demoLink: "https://joaquimcolacilli.github.io/checklistwf3/",
+      githubLink: "https://github.com/JoaquimColacilli/checklistwf3",
     },
   ];
 
@@ -39,29 +95,46 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
           <div className="flex items-center justify-between mb-16">
             <h2
               className={`text-4xl font-bold text-white transition-all duration-1000 transform ${
-                inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                inView
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-10"
               }`}
             >
-              {currentLang === 'es' ? 'Proyectos' : 'Projects'}
+              {currentLang === "es" ? "Proyectos" : "Projects"}
             </h2>
             <div
               className={`hidden md:flex items-center gap-2 text-gray-400 hover:text-white transition-all duration-500 cursor-pointer group transform ${
-                inView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
+                inView
+                  ? "opacity-100 translate-x-0"
+                  : "opacity-0 translate-x-10"
               }`}
             >
-              <span className="text-sm font-medium">
-                {currentLang === 'es' ? 'Ver todos los proyectos' : 'View all projects'}
-              </span>
+              <a
+                href="https://github.com/JoaquimColacilli/"
+                className="text-sm font-medium"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {currentLang === "es"
+                  ? "Ver todos los proyectos"
+                  : "View all projects"}
+              </a>
+
               <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
             </div>
           </div>
 
-          <div ref={sectionRef as React.RefObject<HTMLDivElement>} className="grid gap-24">
+          <div
+            ref={sectionRef as React.RefObject<HTMLDivElement>}
+            className="grid gap-24"
+          >
             {projects.map((project, index) => (
               <div
                 key={project.title}
                 className={`group relative transition-all duration-1000 transform ${
-                  inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'
+                  inView
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-20"
                 }`}
                 style={{ transitionDelay: `${index * 200}ms` }}
               >
@@ -84,7 +157,7 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-all duration-300 transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 hover:scale-110"
-                            style={{ transitionDelay: '100ms' }}
+                            style={{ transitionDelay: "100ms" }}
                           >
                             <ExternalLink className="w-5 h-5" />
                           </a>
@@ -93,7 +166,7 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center text-white hover:bg-gray-700 transition-all duration-300 transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 hover:scale-110"
-                            style={{ transitionDelay: '200ms' }}
+                            style={{ transitionDelay: "200ms" }}
                           >
                             <Github className="w-5 h-5" />
                           </a>
@@ -111,10 +184,14 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
                           <div className="p-2 bg-gray-700/50 rounded-lg">
                             <Code2 className="w-6 h-6 text-emerald-400" />
                           </div>
-                          <h3 className="text-2xl font-bold text-white">{project.title}</h3>
+                          <h3 className="text-2xl font-bold text-white">
+                            {project.title}
+                          </h3>
                         </div>
 
-                        <p className="text-gray-300 mb-8 leading-relaxed">{project.description}</p>
+                        <p className="text-gray-300 mb-8 leading-relaxed">
+                          {project.description}
+                        </p>
 
                         <div className="flex flex-wrap gap-2 mb-8">
                           {project.technologies.map((tech) => (
