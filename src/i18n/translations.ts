@@ -57,7 +57,7 @@ export const translations = {
     },
     footer: {
       title: "Trabajemos Juntos",
-      subtitle: "¿Tienes un proyecto en mente? ¡Hagámoslo realidad!",
+      subtitle: "¿Tenés un proyecto en mente? ¡Hagámoslo realidad!",
       contactButton: "Contáctame",
       available: "Disponible para oportunidades freelance",
       rights: "Todos los derechos reservados.",

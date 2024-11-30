@@ -11,6 +11,17 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
 
   const projects = [
     {
+      title: "Script Validator",
+      description:
+        currentLang === "es"
+          ? "Herramienta para validar scripts SQL con soporte para PostgreSQL, MySQL y MongoDB, garantizando consultas sin errores y optimizadas."
+          : "Tool to validate SQL scripts with support for PostgreSQL, MySQL, and MongoDB, ensuring error-free and optimized queries.",
+      image: "/images/projects/script-validator.png",
+      technologies: ["React", "TailwindCSS", "Electron"],
+      demoLink: "https://github.com/JoaquimColacilli/script-validator/",
+      githubLink: "https://github.com/JoaquimColacilli/script-validator",
+    },
+    {
       title: "El Calculetas",
       description:
         currentLang === "es"
@@ -50,7 +61,7 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
           ? "Aplicación ejecutable para formatear y validar archivos JSON de manera eficiente."
           : "Executable application for formatting and validating JSON files efficiently.",
       image: "/images/projects/json-parser.png",
-      technologies: ["Java", "JSON"],
+      technologies: ["React", "JSON", "Electron"],
       demoLink: "https://github.com/JoaquimColacilli/json-parser-exec",
       githubLink: "https://github.com/JoaquimColacilli/json-parser-exec",
     },

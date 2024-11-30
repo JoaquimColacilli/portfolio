@@ -39,12 +39,18 @@ function App() {
                   {t.hero.description}
                 </p>
                 <div className="flex gap-4 justify-center md:justify-start animate-fade-in">
-                  <button className="px-8 py-4 bg-gradient-to-r from-blue-500 to-emerald-500 text-white rounded-lg font-medium hover:opacity-90 transition-opacity text-lg">
+                  <a
+                    href={`#contact`}
+                    className="px-8 py-4 bg-gradient-to-r from-blue-500 to-emerald-500 text-white rounded-lg font-medium hover:opacity-90 transition-opacity text-lg"
+                  >
                     {t.nav.contact}
-                  </button>
-                  <button className="px-8 py-4 border border-gray-700 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors text-lg">
+                  </a>
+                  <a
+                    className="px-8 py-4 border border-gray-700 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors text-lg"
+                    href={`#projects`}
+                  >
                     {t.nav.projects}
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>

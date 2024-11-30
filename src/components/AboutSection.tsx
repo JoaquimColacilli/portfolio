@@ -94,26 +94,7 @@ export const AboutSection = ({ currentLang }: { currentLang: string }) => {
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-10"
           }`}
-        >
-          {/* Mostrar imagen solo en pantallas mayores a 768px */}
-          <div className="hidden md:block w-full md:w-1/3 justify-center mb-8 md:mb-0">
-            <img
-              src="/path/to/joaquim-colacilli-photo.jpg"
-              alt="Joaquim Colacilli"
-              className="rounded-full w-48 h-48 md:w-64 md:h-64 object-cover"
-            />
-          </div>
-          <div className="w-full md:w-2/3 text-center md:text-left">
-            <h1 className="text-4xl font-bold text-white mb-4">
-              Joaquim Colacilli
-            </h1>
-            <p className="text-xl text-gray-300 leading-relaxed">
-              {currentLang === "es"
-                ? "Desarrollador Full Stack apasionado por la tecnología y la innovación."
-                : "Full Stack Developer passionate about technology and innovation."}
-            </p>
-          </div>
-        </div>
+        ></div>
 
         {/* About Me */}
         <div className="max-w-7xl mx-auto mb-20">
