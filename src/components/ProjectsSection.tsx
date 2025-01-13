@@ -11,6 +11,17 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
 
   const projects = [
     {
+      title: "Player Timer",
+      description:
+        currentLang === "es"
+          ? "Temporizador interactivo para múltiples jugadores, con personalización de nombres, colores y seguimiento preciso de tiempos. Incluye una interfaz moderna, animaciones dinámicas y soporte responsivo para mejorar la experiencia de usuario."
+          : "Interactive timer for multiple players, featuring customizable names, colors, and precise time tracking. Includes a modern interface, dynamic animations, and responsive support to enhance the user experience.",
+      image: "/images/projects/player-timer.png",
+      technologies: ["React", "TailwindCSS", "Next"],
+      demoLink: "https://github.com/JoaquimColacilli/player-timer/",
+      githubLink: "https://github.com/JoaquimColacilli/player-timer",
+    },
+    {
       title: "Script Validator",
       description:
         currentLang === "es"
@@ -75,13 +86,7 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
           ? "Aplicación web para estimar tiempos y costos de desarrollo de software. Utiliza IA para proporcionar estimaciones precisas basadas en proyectos anteriores."
           : "Web application for estimating software development time and costs. Uses AI to provide accurate estimates based on previous projects.",
       image: "/images/projects/estimador.png",
-      technologies: [
-        "React",
-        "Node.js",
-        "MongoDB",
-        "TailwindCSS",
-        "OpenAI API",
-      ],
+      technologies: ["React", "Node.js", "TailwindCSS"],
       demoLink: "https://joaquimcolacilli.github.io/estimador-desarrollo/",
       githubLink: "https://github.com/JoaquimColacilli/estimador-desarrollo",
     },

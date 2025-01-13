@@ -1,6 +1,14 @@
-import React, { useState } from 'react';
-import { Mail, Github, Linkedin, Copy, Check, ArrowUpRight, Sparkles } from 'lucide-react';
-import { translations } from '../i18n/translations';
+import React, { useState } from "react";
+import {
+  Mail,
+  Github,
+  Linkedin,
+  Copy,
+  Check,
+  ArrowUpRight,
+  Sparkles,
+} from "lucide-react";
+import { translations } from "../i18n/translations";
 
 interface FooterProps {
   currentLang: string;
@@ -10,11 +18,11 @@ export const Footer: React.FC<FooterProps> = ({ currentLang }) => {
   const [isCardOpen, setIsCardOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const t = translations[currentLang as keyof typeof translations];
-  
-  const email = 'joaquim.colacilli@gmail.com';
+
+  const email = "joaquimcolacilli9@gmail.com";
   const socialLinks = {
-    github: 'https://github.com/joaquimcolacilli',
-    linkedin: 'https://linkedin.com/in/joaquimcolacilli'
+    github: "https://github.com/joaquimcolacilli",
+    linkedin: "https://linkedin.com/in/joaquim-colacilli",
   };
 
   const handleCopyEmail = async () => {
@@ -51,14 +59,16 @@ export const Footer: React.FC<FooterProps> = ({ currentLang }) => {
             <div className="relative max-w-lg mx-auto">
               <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-gradient" />
               <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-8">
-                <div className={`flex flex-col items-center text-center transition-all duration-500 ${
-                  isCardOpen ? '-translate-y-4' : 'translate-y-0'
-                }`}>
+                <div
+                  className={`flex flex-col items-center text-center transition-all duration-500 ${
+                    isCardOpen ? "-translate-y-4" : "translate-y-0"
+                  }`}
+                >
                   {/* Contact Button */}
                   <button
                     onClick={() => setIsCardOpen(!isCardOpen)}
                     className={`relative group transition-all duration-500 ${
-                      isCardOpen ? 'mb-8 scale-90' : 'scale-100'
+                      isCardOpen ? "mb-8 scale-90" : "scale-100"
                     }`}
                   >
                     <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full blur opacity-30 group-hover:opacity-100 transition duration-500" />
@@ -68,23 +78,27 @@ export const Footer: React.FC<FooterProps> = ({ currentLang }) => {
                         <span className="text-white font-medium">
                           {t.footer.contactButton}
                         </span>
-                        <ArrowUpRight className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${
-                          isCardOpen ? 'rotate-180' : ''
-                        }`} />
+                        <ArrowUpRight
+                          className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${
+                            isCardOpen ? "rotate-180" : ""
+                          }`}
+                        />
                       </div>
                     </div>
                   </button>
 
                   {/* Expanded Contact Options */}
-                  <div className={`w-full space-y-4 transition-all duration-500 ${
-                    isCardOpen 
-                      ? 'opacity-100 translate-y-0 h-auto' 
-                      : 'opacity-0 -translate-y-4 h-0 overflow-hidden pointer-events-none'
-                  }`}>
+                  <div
+                    className={`w-full space-y-4 transition-all duration-500 ${
+                      isCardOpen
+                        ? "opacity-100 translate-y-0 h-auto"
+                        : "opacity-0 -translate-y-4 h-0 overflow-hidden pointer-events-none"
+                    }`}
+                  >
                     <div className="relative group">
                       <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500/50 to-blue-500/50 rounded-lg blur opacity-0 group-hover:opacity-30 transition duration-500" />
                       <div className="relative w-full p-4 bg-gray-900/50 rounded-lg border border-gray-700 group-hover:border-gray-600 transition duration-500 flex items-center justify-between">
-                        <div 
+                        <div
                           onClick={handleEmailClick}
                           className="flex items-center gap-3 cursor-pointer"
                         >
@@ -137,12 +151,11 @@ export const Footer: React.FC<FooterProps> = ({ currentLang }) => {
             <div className="mt-20 text-center">
               <div className="flex items-center justify-center gap-2 mb-6">
                 <Sparkles className="w-5 h-5 text-emerald-400" />
-                <p className="text-gray-400">
-                  {t.footer.available}
-                </p>
+                <p className="text-gray-400">{t.footer.available}</p>
               </div>
               <p className="text-sm text-gray-500">
-                © {new Date().getFullYear()} Joaquim Colacilli. {t.footer.rights}
+                © {new Date().getFullYear()} Joaquim Colacilli.{" "}
+                {t.footer.rights}
               </p>
             </div>
           </div>
