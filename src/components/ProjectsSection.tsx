@@ -11,6 +11,17 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
 
   const projects = [
     {
+      title: "Willpower Fit",
+      description:
+        currentLang === "es"
+          ? "Landing page para un gimnasio, diseñada para motivar y atraer nuevos clientes. Incluye un diseño moderno, imágenes dinámicas y una interfaz optimizada para rendimiento y accesibilidad."
+          : "Gym landing page designed to motivate and attract new clients. Features a modern design, dynamic visuals, and an optimized interface for performance and accessibility.",
+      image: "/images/projects/wpf.png",
+      technologies: ["Next.js", "Vite", "TailwindCSS"],
+      demoLink: "https://joaquimcolacilli.github.io/wpf/",
+      githubLink: "https://github.com/JoaquimColacilli/wpf",
+    },
+    {
       title: "Player Timer",
       description:
         currentLang === "es"
