@@ -11,6 +11,7 @@ export const translations = {
       title: "Full Stack Developer",
       description:
         "I'm a passionate developer dedicated to creating user-friendly experiences. Let's build something special together!",
+      downloadCV: "DOWNLOAD CV", // <-- AÑADIR ESTA LÍNEA
     },
     about: {
       title: "About Me",
@@ -43,6 +44,7 @@ export const translations = {
       title: "Desarrollador Full Stack",
       description:
         "Soy un desarrollador apasionado dedicado a crear experiencias amigables para el usuario. ¡Hagamos algo especial juntos!",
+      downloadCV: "DESCARGAR CV", // <-- AÑADIR ESTA LÍNEA
     },
     about: {
       title: "Sobre mí",
