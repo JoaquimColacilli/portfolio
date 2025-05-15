@@ -6,24 +6,31 @@ interface ProjectProps {
   currentLang: string;
 }
 
-// Define categories for easier filtering
-type ProjectCategory = "All" | "Website" | "Desktop App" | "Tool"; // Add more as needed
+type ProjectCategory = "All" | "Website" | "Desktop App" | "Tool"; 
 
-// Define filter labels for different languages
 const filterLabels: Record<ProjectCategory, { es: string; en: string }> = {
   All: { es: "Todos", en: "All" },
   Website: { es: "Sitios Web", en: "Websites" },
   "Desktop App": { es: "Apps de Escritorio", en: "Desktop Apps" },
   Tool: { es: "Herramientas", en: "Tools" },
-  // Add more categories and translations here
 };
 
 export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
-  const [sectionRef, inView] = useInView({ threshold: 0.05 }); // Adjust threshold slightly if needed
-  const [activeFilter, setActiveFilter] = useState<ProjectCategory>("All"); // State for the active filter
+  const [sectionRef, inView] = useInView({ threshold: 0.05 });
+  const [activeFilter, setActiveFilter] = useState<ProjectCategory>("All"); 
 
   const projects = [
-    // --- Add a 'category' property to each project ---
+    {
+      title: "PRIMATECH",
+      description:
+        currentLang === "es"
+          ? "Landing page de PRIMATECH, empresa de soluciones tecnológicas. Desarrollada para comunicar con claridad nuestros servicios de software a medida, con un enfoque visual moderno, profesional y dinámico. Incluye animaciones, secciones interactivas y una estructura escalable."
+          : "Landing page for PRIMATECH, technology solutions company. Built to clearly communicate our custom software services, featuring a modern, professional, and dynamic visual approach. Includes animations, interactive sections, and a scalable structure.",
+      image: "/images/projects/primatech.png",
+      technologies: ["Next.js", "TailwindCSS", "Framer Motion", "i18n"],
+      demoLink: "https://primatech.com.ar/",
+      category: "Website" as ProjectCategory,
+    },
     {
       title: "BRAMELEC",
       description:
@@ -34,7 +41,7 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
       technologies: ["Next.js", "Vite", "TailwindCSS"],
       demoLink: "https://bramelec.com/",
       githubLink: "https://github.com/JoaquimColacilli/bramelec",
-      category: "Website" as ProjectCategory, // Add category
+      category: "Website" as ProjectCategory,
     },
     {
       title: "Willpower Fit",
@@ -46,7 +53,7 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
       technologies: ["Next.js", "Vite", "TailwindCSS"],
       demoLink: "https://joaquimcolacilli.github.io/wpf/",
       githubLink: "https://github.com/JoaquimColacilli/wpf",
-      category: "Website" as ProjectCategory, // Add category
+      category: "Website" as ProjectCategory,
     },
     {
       title: "Player Timer",
@@ -55,10 +62,10 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
           ? "Temporizador interactivo para múltiples jugadores, con personalización de nombres, colores y seguimiento preciso de tiempos. Incluye una interfaz moderna, animaciones dinámicas y soporte responsivo para mejorar la experiencia de usuario."
           : "Interactive timer for multiple players, featuring customizable names, colors, and precise time tracking. Includes a modern interface, dynamic animations, and responsive support to enhance the user experience.",
       image: "/images/projects/player-timer.png",
-      technologies: ["React", "TailwindCSS", "Next"], // Assuming web deployment
+      technologies: ["React", "TailwindCSS", "Next"],
       demoLink: "https://joaquimcolacilli.github.io/playertimer/",
       githubLink: "https://github.com/JoaquimColacilli/playertimer",
-      category: "Website" as ProjectCategory, // Add category (or 'Tool' if preferred)
+      category: "Website" as ProjectCategory,
     },
     {
       title: "Script Validator",
@@ -68,9 +75,9 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
           : "Tool to validate SQL scripts with support for PostgreSQL, MySQL, and MongoDB, ensuring error-free and optimized queries.",
       image: "/images/projects/script-validator.png",
       technologies: ["React", "TailwindCSS", "Electron"],
-      demoLink: "https://github.com/JoaquimColacilli/script-validator/", // Demo might be GitHub if it's primarily a desktop app
+      demoLink: "https://github.com/JoaquimColacilli/script-validator/",
       githubLink: "https://github.com/JoaquimColacilli/script-validator",
-      category: "Desktop App" as ProjectCategory, // Add category
+      category: "Desktop App" as ProjectCategory,
     },
     {
       title: "El Calculetas",
@@ -82,7 +89,7 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
       technologies: ["React", "Firebase", "TailwindCSS"],
       demoLink: "https://el-calculetas.netlify.app/",
       githubLink: "https://github.com/JoaquimColacilli/el-calculetas",
-      category: "Website" as ProjectCategory, // Add category (or 'Tool')
+      category: "Website" as ProjectCategory,
     },
     {
       title: "Hotfood",
@@ -94,7 +101,7 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
       technologies: ["Next.js", "Express", "PostgreSQL", "Stripe", "Socket.io"],
       demoLink: "https://joaquimcolacilli.github.io/hotfood/",
       githubLink: "https://github.com/JoaquimColacilli/hotfood",
-      category: "Website" as ProjectCategory, // Add category
+      category: "Website" as ProjectCategory,
     },
     {
       title: "Outreal Website",
@@ -106,7 +113,7 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
       technologies: ["HTML", "CSS", "JavaScript"],
       demoLink: "https://outrealstudio.com/",
       githubLink: "https://github.com/JoaquimColacilli/outreal",
-      category: "Website" as ProjectCategory, // Add category
+      category: "Website" as ProjectCategory,
     },
     {
       title: "JSON Parser EXEC",
@@ -116,9 +123,9 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
           : "Executable application for formatting and validating JSON files efficiently.",
       image: "/images/projects/json-parser.png",
       technologies: ["React", "JSON", "Electron"],
-      demoLink: "https://github.com/JoaquimColacilli/json-parser-exec", // Demo might be GitHub
+      demoLink: "https://github.com/JoaquimColacilli/json-parser-exec",
       githubLink: "https://github.com/JoaquimColacilli/json-parser-exec",
-      category: "Desktop App" as ProjectCategory, // Add category
+      category: "Desktop App" as ProjectCategory,
     },
     {
       title:
@@ -133,7 +140,7 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
       technologies: ["React", "Node.js", "TailwindCSS"],
       demoLink: "https://joaquimcolacilli.github.io/estimador-desarrollo/",
       githubLink: "https://github.com/JoaquimColacilli/estimador-desarrollo",
-      category: "Website" as ProjectCategory, // Add category (or 'Tool')
+      category: "Website" as ProjectCategory,
     },
     {
       title: "Checklist APP",
@@ -145,29 +152,26 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
       technologies: ["Vue.js", "Firebase", "Vuetify"],
       demoLink: "https://joaquimcolacilli.github.io/checklistwf3/",
       githubLink: "https://github.com/JoaquimColacilli/checklistwf3",
-      category: "Website" as ProjectCategory, // Add category (or 'Tool')
+      category: "Website" as ProjectCategory,
     },
   ];
 
-  // Define the categories to display in the filter UI
   const filterCategories: ProjectCategory[] = [
     "All",
     "Website",
     "Desktop App",
-    // "Tool", // Uncomment if you create a 'Tool' category
   ];
 
-  // Memoize the filtered projects list
   const filteredProjects = useMemo(() => {
     if (activeFilter === "All") {
       return projects;
     }
     return projects.filter((project) => project.category === activeFilter);
-  }, [activeFilter, projects, currentLang]); // Add currentLang dependency if project descriptions/titles change
+  }, [activeFilter, projects, currentLang]);
 
   return (
     <section
-      className="relative py-20 overflow-hidden bg-gray-900" // Added bg color for context
+      className="relative py-20 overflow-hidden bg-gray-900"
       id="projects"
     >
       <div className="container mx-auto px-6">
@@ -175,20 +179,18 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
           {/* Section Header */}
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 md:mb-12">
             <h2
-              className={`text-4xl font-bold text-white mb-4 md:mb-0 transition-all duration-1000 transform ${
-                inView
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-10"
-              }`}
+              className={`text-4xl font-bold text-white mb-4 md:mb-0 transition-all duration-1000 transform ${inView
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-10"
+                }`}
             >
               {currentLang === "es" ? "Proyectos" : "Projects"}
             </h2>
             <div
-              className={`hidden md:flex items-center gap-2 text-gray-400 hover:text-white transition-all duration-500 cursor-pointer group transform ${
-                inView
-                  ? "opacity-100 translate-x-0"
-                  : "opacity-0 translate-x-10"
-              }`}
+              className={`hidden md:flex items-center gap-2 text-gray-400 hover:text-white transition-all duration-500 cursor-pointer group transform ${inView
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-10"
+                }`}
             >
               <a
                 href="https://github.com/JoaquimColacilli/"
@@ -206,24 +208,22 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
 
           {/* Filter Buttons */}
           <div
-            className={`flex flex-wrap justify-center gap-3 mb-12 md:mb-16 transition-all duration-1000 transform ${
-              inView ? "opacity-100 scale-100" : "opacity-0 scale-90"
-            }`}
+            className={`flex flex-wrap justify-center gap-3 mb-12 md:mb-16 transition-all duration-1000 transform ${inView ? "opacity-100 scale-100" : "opacity-0 scale-90"
+              }`}
             style={{ transitionDelay: "150ms" }} // Add slight delay
           >
             {filterCategories.map((category) => (
               <button
                 key={category}
                 onClick={() => setActiveFilter(category)}
-                className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 ${
-                  activeFilter === category
-                    ? "bg-gradient-to-r from-blue-500 to-emerald-500 text-white shadow-md ring-2 ring-emerald-400"
-                    : "bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white"
-                }`}
+                className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 ${activeFilter === category
+                  ? "bg-gradient-to-r from-blue-500 to-emerald-500 text-white shadow-md ring-2 ring-emerald-400"
+                  : "bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white"
+                  }`}
               >
                 {
                   filterLabels[category][
-                    currentLang as keyof (typeof filterLabels)[typeof category]
+                  currentLang as keyof (typeof filterLabels)[typeof category]
                   ]
                 }
               </button>
@@ -238,11 +238,10 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
             {filteredProjects.map((project, index) => (
               <div
                 key={`${activeFilter}-${project.title}`} // Use filter in key to help React differentiate when list changes
-                className={`group relative transition-all duration-700 ease-out transform ${
-                  inView
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-20"
-                }`}
+                className={`group relative transition-all duration-700 ease-out transform ${inView
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-20"
+                  }`}
                 // Adjust delay based on index within the *filtered* list
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
@@ -347,9 +346,8 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
             {/* Message if no projects match filter */}
             {filteredProjects.length === 0 && activeFilter !== "All" && (
               <div
-                className={`text-center text-gray-400 py-10 transition-opacity duration-500 ${
-                  inView ? "opacity-100" : "opacity-0"
-                }`}
+                className={`text-center text-gray-400 py-10 transition-opacity duration-500 ${inView ? "opacity-100" : "opacity-0"
+                  }`}
               >
                 <p className="text-lg">
                   {currentLang === "es"
