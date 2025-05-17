@@ -6,63 +6,71 @@ interface ExperienceProps {
   currentLang: string;
 }
 
-export const ExperienceSection: React.FC<ExperienceProps> = ({
-  currentLang,
-}) => {
+export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) => {
   const [sectionRef, inView] = useInView({ threshold: 0.1 });
-  const [activeIndex, setActiveIndex] = useState(0); // Mantenemos el estado para resaltar la experiencia activa
+  const [activeIndex, setActiveIndex] = useState(0);
   const experienceRefs = useRef<(HTMLDivElement | null)[]>([]);
   const timelineRef = useRef<HTMLDivElement>(null);
 
-  // --- Datos de Experiencia (sin cambios en la estructura, solo como referencia) ---
   const experiences = [
     {
-      title:
-        currentLang === "es"
-          ? "Full Stack Software Developer - NTT Data"
-          : "Full Stack Software Developer - NTT Data",
+      title: "Full Stack Software Developer - NTT Data",
       period:
         currentLang === "es"
-          ? "Sept. 2022 - Actualidad"
-          : "Sept. 2022 - Present",
+          ? "Abr. 2024 - Actualidad"
+          : "Apr. 2024 - Present",
       icon: <BriefcaseIcon className="w-6 h-6 text-emerald-400" />,
       responsibilities: [
         currentLang === "es"
-          ? "Creación de microservicios desde cero con Java Spring Boot."
-          : "Creation of microservices from scratch with Java Spring Boot.",
+          ? "Desarrollo backend robusto con Spring Boot y Spring Cloud, implementando servicios resilientes y escalables en arquitectura distribuida."
+          : "Backend development using Spring Boot and Spring Cloud, building scalable and resilient services within a distributed architecture.",
         currentLang === "es"
-          ? "Implementación de sistemas de mensajería en cola para comunicación asincrónica"
-          : "Implementation of queue messaging systems for asynchronous communication",
+          ? "Pruebas unitarias y de integración automatizadas con JUnit y Mockito, garantizando calidad y cobertura en los desarrollos."
+          : "Automated unit and integration testing with JUnit and Mockito, ensuring high code quality and coverage.",
         currentLang === "es"
-          ? "Desarrollo de operaciones CRUD para gestión eficiente de datos."
-          : "Development of CRUD operations for efficient data management.",
+          ? "Optimización de performance mediante uso de índices, cachés locales y consultas SQL ajustadas."
+          : "Performance optimization through indexes, local caching, and fine-tuned SQL queries.",
         currentLang === "es"
-          ? "Mantenimiento y mejora continua de microservicios existentes."
-          : "Maintenance and continuous improvement of existing microservices.",
+          ? "Despliegue continuo en contenedores Docker sobre entornos OpenShift con pipelines CI/CD."
+          : "Continuous integration and deployment with Docker on OpenShift environments using CI/CD pipelines.",
         currentLang === "es"
-          ? "Uso de Postman para pruebas y documentación exhaustiva de APIs."
-          : "Use of Postman for testing and comprehensive API documentation.",
+          ? "Automatización y control de versiones de scripts de base de datos con Liquibase."
+          : "Automation and version control of database scripts using Liquibase.",
         currentLang === "es"
-          ? "Optimización de código antiguo mediante refactorización y adopción de buenas prácticas de programación."
-          : "Optimization of legacy code through refactoring and adoption of good programming practices.",
+          ? "Comunicación asincrónica entre servicios usando ActiveMQ y patrones de resiliencia (Retry, DLQ)."
+          : "Asynchronous communication using ActiveMQ with resilience patterns like Retry and DLQ.",
         currentLang === "es"
-          ? "Integración al Front-End con Angular y TypeScript para interfaces dinámicas."
-          : "Front-End integration with Angular and TypeScript for dynamic interfaces.",
+          ? "Integración con Angular y TypeScript para interfaces reactivas en proyectos full stack."
+          : "Frontend integration with Angular and TypeScript for reactive interfaces in full-stack projects.",
         currentLang === "es"
-          ? "Ejecución y control de versiones de scripts de base de datos con Liquibase."
-          : "Execution and version control of database scripts with Liquibase.",
+          ? "Participación activa en code reviews, refinamientos técnicos y decisiones de diseño orientadas a buenas prácticas."
+          : "Active involvement in code reviews, technical refinements, and design decisions following best practices.",
+        currentLang === "es"
+          ? "Monitoreo de servicios con Spring Boot Actuator y documentación de APIs con Swagger."
+          : "Service monitoring with Spring Boot Actuator and API documentation using Swagger.",
+        currentLang === "es"
+          ? "Gestión de versiones y trabajo colaborativo con Git y GitHub, siguiendo flujos de trabajo como GitFlow."
+          : "Version control and collaborative work using Git and GitHub, following GitFlow workflows.",
+        currentLang === "es"
+          ? "Participación en equipos ágiles aplicando Scrum y Kanban, con entregas iterativas y planificación técnica."
+          : "Participation in agile teams applying Scrum and Kanban, with iterative delivery and technical planning.",
       ],
       skills: [
-        "Microservicios",
-        "Java",
-        "Spring Cloud",
         "Spring Boot",
-        "TypeScript",
-        "Angular",
-        "Postman",
+        "Spring Cloud",
+        "Java",
+        "JUnit",
+        "Mockito",
         "Liquibase",
-        "Scrum",
+        "ActiveMQ",
+        "Angular",
+        "TypeScript",
         "Git",
+        "OpenShift",
+        "Docker",
+        "Swagger",
+        "Scrum",
+        "Kanban",
       ],
     },
     {
@@ -71,7 +79,7 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({
           ? "Desarrollador Full Stack Freelance"
           : "Full Stack Developer Freelance",
       period:
-        currentLang === "es" ? "Ene. 2021 - Acualidad" : "Jan. 2021 - Present",
+        currentLang === "es" ? "Ene. 2021 - Actualidad" : "Jan. 2021 - Present",
       icon: <Globe className="w-6 h-6 text-emerald-400" />,
       responsibilities: [
         currentLang === "es"
@@ -79,19 +87,19 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({
           : "Development of modern and responsive landing pages using React and Next.js.",
         currentLang === "es"
           ? "Implementación de APIs RESTful con Node.js y Express para gestión de datos."
-          : "Implementation of RESTful APIs with Node.js and Express for data management.",
+          : "Implementation of RESTful APIs with Node.js and Express for data handling.",
         currentLang === "es"
           ? "Diseño y desarrollo de bases de datos SQL y NoSQL según requerimientos del proyecto."
-          : "Design and development of SQL and NoSQL databases according to project requirements.",
+          : "Design and development of SQL and NoSQL databases based on project needs.",
         currentLang === "es"
           ? "Integración de pasarelas de pago y sistemas de autenticación seguros."
           : "Integration of payment gateways and secure authentication systems.",
         currentLang === "es"
           ? "Optimización SEO y mejora de rendimiento en aplicaciones web."
-          : "SEO optimization and performance improvement in web applications.",
+          : "SEO optimization and performance enhancement in web applications.",
         currentLang === "es"
           ? "Desarrollo de dashboards administrativos personalizados."
-          : "Development of custom administrative dashboards.",
+          : "Development of customized admin dashboards.",
       ],
       skills: [
         "React",
@@ -109,28 +117,22 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({
       ],
     },
   ];
-  // --- Fin Datos de Experiencia ---
 
-  // --- Hook para detectar la experiencia activa al hacer scroll (sin cambios) ---
   useEffect(() => {
     const handleScroll = () => {
-      if (!timelineRef.current) return; // Salir si la referencia no está lista
+      if (!timelineRef.current) return;
 
-      // Encuentra la experiencia más cercana al centro de la ventana
       let closestIndex = 0;
       let minDistance = Infinity;
 
       experienceRefs.current.forEach((ref, index) => {
         if (ref) {
           const { top, height } = ref.getBoundingClientRect();
-          // Calculamos el centro del elemento de experiencia
           const elementCenter = top + height / 2;
-          // Distancia del centro del elemento al centro de la ventana
           const distanceToCenter = Math.abs(
             elementCenter - window.innerHeight / 2
           );
 
-          // Si este elemento está más cerca que el mínimo encontrado hasta ahora
           if (distanceToCenter < minDistance) {
             minDistance = distanceToCenter;
             closestIndex = index;
@@ -138,7 +140,6 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({
         }
       });
 
-      // Actualiza el índice activo solo si ha cambiado
       setActiveIndex((prevIndex) => {
         if (prevIndex !== closestIndex) {
           return closestIndex;
@@ -147,12 +148,11 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({
       });
     };
 
-    // Ejecutar una vez al montar para establecer el estado inicial
     handleScroll();
 
-    window.addEventListener("scroll", handleScroll, { passive: true }); // Usar passive: true para mejor rendimiento
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [experiences.length]); // Dependencia: longitud de experiencias por si cambia dinámicamente
+  }, [experiences.length]);
 
   return (
     <section
@@ -160,27 +160,21 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({
       id="experience"
     >
       {" "}
-      {/* Ajuste padding y bg */}
       <div className="container mx-auto px-4 sm:px-6">
         {" "}
-        {/* Ajuste padding horizontal */}
         <div className="max-w-7xl mx-auto">
-          {/* Título de la Sección */}
           <h2
-            className={`text-3xl sm:text-4xl font-bold text-white mb-12 md:mb-16 text-center transition-all duration-1000 transform ${
-              inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-            }`}
+            className={`text-3xl sm:text-4xl font-bold text-white mb-12 md:mb-16 text-center transition-all duration-1000 transform ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+              }`}
           >
             {currentLang === "es"
               ? "Experiencia Profesional"
               : "Professional Experience"}
           </h2>
-          {/* Contenedor del Timeline */}
           <div
             ref={sectionRef as React.RefObject<HTMLDivElement>}
             className="relative"
           >
-            {/* Línea del Timeline (Ajustada para Responsividad) */}
             <div
               ref={timelineRef}
               className={`
@@ -190,7 +184,6 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({
                 ${inView ? "scale-y-100" : "scale-y-0"}
               `}
             >
-              {/* Segmento activo de la línea */}
               <div
                 className="absolute w-full bg-gradient-to-b from-emerald-500 to-blue-500 transition-all duration-300 ease-in-out rounded-full"
                 style={{
@@ -199,21 +192,17 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({
                 }}
               />
             </div>
-            {/* Mapeo de Experiencias */}
             {experiences.map((exp, index) => (
               <div
                 key={index}
                 ref={(el) => (experienceRefs.current[index] = el)}
-                // **Ajuste Responsivo de Padding Izquierdo:**
-                // pl-12 en móvil (espacio para línea y punto), md:pl-40 en desktop
-                className={`relative pl-12 md:pl-40 mb-12 md:mb-16 transition-all duration-700 ease-out transform ${
-                  inView
+
+                className={`relative pl-12 md:pl-40 mb-12 md:mb-16 transition-all duration-700 ease-out transform ${inView
                     ? "opacity-100 translate-x-0"
                     : "opacity-0 -translate-x-10"
-                }`}
-                style={{ transitionDelay: `${index * 150}ms` }} // Reducido delay
+                  }`}
+                style={{ transitionDelay: `${index * 150}ms` }}
               >
-                {/* Punto del Timeline (Ajustado para Responsividad) */}
                 <div
                   className={`
                     absolute top-1 w-8 h-8 rounded-full flex items-center justify-center
@@ -226,31 +215,25 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({
                     className={`
                     w-4 h-4 rounded-full transition-colors duration-300
                     ring-4 ring-opacity-50
-                    ${
-                      activeIndex === index
+                    ${activeIndex === index
                         ? "bg-emerald-400 ring-emerald-500/30"
                         : "bg-gray-600 ring-gray-700/30"
-                    }
+                      }
                     `}
                   />
                 </div>
-                {/* Contenedor del Contenido de la Experiencia */}
                 <div className="relative group">
-                  {/* Sombra/Borde sutil en hover */}
                   <div className="absolute -inset-x-4 -inset-y-2 md:-inset-x-6 md:-inset-y-4to-transparent rounded-lg opacity-0 group-hover:opacity-50 transition-opacity duration-300 pointer-events-none" />
-                  {/* Tarjeta de Contenido */}
                   <div
                     className={`
                       relative bg-gray-800/60 backdrop-blur-sm rounded-lg border transition-all duration-300 ease-out shadow-md
-                      ${
-                        activeIndex === index
-                          ? "border-emerald-500/40 shadow-emerald-500/10"
-                          : "border-gray-700/50"
+                      ${activeIndex === index
+                        ? "border-emerald-500/40 shadow-emerald-500/10"
+                        : "border-gray-700/50"
                       }
                        p-6 md:p-8 group-hover:border-gray-600/80
                     `}
                   >
-                    {/* Encabezado (Icono, Título, Período) */}
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
                       <div className="p-2 bg-gray-700/50 rounded-lg ring-1 ring-gray-600/50 flex-shrink-0">
                         {exp.icon}
@@ -265,21 +248,17 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({
                       </div>
                     </div>
 
-                    {/* Lista de Responsabilidades */}
                     <div className="space-y-3 mt-5">
                       {exp.responsibilities.map((resp, idx) => (
                         <div key={idx} className="flex items-start gap-3">
                           <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />{" "}
-                          {/* Ajuste vertical */}
                           <p className="text-sm text-gray-300 leading-relaxed">
                             {resp}
                           </p>{" "}
-                          {/* Ajuste tamaño/leading */}
                         </div>
                       ))}
                     </div>
 
-                    {/* Lista de Habilidades/Tecnologías */}
                     <div className="mt-6 border-t border-gray-700/50 pt-5 flex flex-wrap gap-2">
                       {exp.skills.map((skill, idx) => (
                         <span
@@ -296,18 +275,14 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({
                       ))}
                     </div>
                   </div>{" "}
-                  {/* Fin Tarjeta de Contenido */}
                 </div>{" "}
-                {/* Fin Contenedor group */}
-              </div> // Fin Contenedor de Experiencia Individual
+
+              </div>
             ))}{" "}
-            {/* Fin map */}
           </div>{" "}
-          {/* Fin Contenedor del Timeline */}
+
         </div>{" "}
-        {/* Fin max-w-7xl */}
       </div>{" "}
-      {/* Fin container */}
-    </section> // Fin section
+    </section>
   );
 };
