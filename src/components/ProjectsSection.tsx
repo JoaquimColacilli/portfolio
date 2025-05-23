@@ -27,7 +27,7 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
           ? "Landing page de PRIMATECH, empresa de soluciones tecnológicas. Desarrollada para comunicar con claridad nuestros servicios de software a medida, con un enfoque visual moderno, profesional y dinámico. Incluye animaciones, secciones interactivas y una estructura escalable."
           : "Landing page for PRIMATECH, technology solutions company. Built to clearly communicate our custom software services, featuring a modern, professional, and dynamic visual approach. Includes animations, interactive sections, and a scalable structure.",
       image: "/images/projects/primatech.png",
-      technologies: ["Next.js", "TailwindCSS", "Framer Motion", "i18n"],
+      technologies: ["Next.js", "TailwindCSS", "Framer Motion", "i18n", "mongoDB", "Node.js"],
       demoLink: "https://primatech.com.ar/",
       category: "Website" as ProjectCategory,
     },
@@ -38,21 +38,9 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
           ? "Landing page para una empresa especializada en planos de instalaciones eléctricas para edificios. Diseñada para resaltar su experiencia y precisión en proyectos eléctricos, con una interfaz moderna y optimizada para una navegación intuitiva."
           : "Landing page for a company specializing in electrical installation plans for buildings. Designed to highlight their expertise and precision in electrical projects, with a modern interface optimized for intuitive navigation.",
       image: "/images/projects/bramelec.png",
-      technologies: ["Next.js", "Vite", "TailwindCSS"],
+      technologies: ["Next.js", "Vite", "TailwindCSS", "Firebase"],
       demoLink: "https://bramelec.com/",
       githubLink: "https://github.com/JoaquimColacilli/bramelec",
-      category: "Website" as ProjectCategory,
-    },
-    {
-      title: "Willpower Fit",
-      description:
-        currentLang === "es"
-          ? "Landing page para un gimnasio, diseñada para motivar y atraer nuevos clientes. Incluye un diseño moderno, imágenes dinámicas y una interfaz optimizada para rendimiento y accesibilidad."
-          : "Gym landing page designed to motivate and attract new clients. Features a modern design, dynamic visuals, and an optimized interface for performance and accessibility.",
-      image: "/images/projects/wpf.png",
-      technologies: ["Next.js", "Vite", "TailwindCSS"],
-      demoLink: "https://joaquimcolacilli.github.io/wpf/",
-      githubLink: "https://github.com/JoaquimColacilli/wpf",
       category: "Website" as ProjectCategory,
     },
     {
@@ -65,6 +53,18 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
       technologies: ["Angular", "Java SpringBoot", "MySQL", "Oracle", "WebSocket", "ActiveMQ", "Microservicios"],
       demoLink: "",
       githubLink: "",
+      category: "Website" as ProjectCategory,
+    },
+    {
+      title: "Willpower Fit",
+      description:
+        currentLang === "es"
+          ? "Landing page para un gimnasio, diseñada para motivar y atraer nuevos clientes. Incluye un diseño moderno, imágenes dinámicas y una interfaz optimizada para rendimiento y accesibilidad."
+          : "Gym landing page designed to motivate and attract new clients. Features a modern design, dynamic visuals, and an optimized interface for performance and accessibility.",
+      image: "/images/projects/wpf.png",
+      technologies: ["Next.js", "Vite", "TailwindCSS"],
+      demoLink: "https://joaquimcolacilli.github.io/wpf/",
+      githubLink: "https://github.com/JoaquimColacilli/wpf",
       category: "Website" as ProjectCategory,
     },
     {
