@@ -58,6 +58,9 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) =>
       skills: [
         "Spring Boot",
         "Spring Cloud",
+        "WebSockets",
+        "Spring Security", 
+        "Spring Data JPA",
         "Java",
         "JUnit",
         "Mockito",

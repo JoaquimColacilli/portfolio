@@ -36,11 +36,11 @@ export const AboutSection = ({ currentLang }: { currentLang: string }) => {
       name: "Backend",
       icon: <Server className="w-6 h-6" />,
       skills: [
+        "Java",
+        "Spring Boot",
         "Node.js",
         "Express",
         "NestJS",
-        "Java",
-        "Spring Boot",
         "Laravel",
       ],
     },
@@ -89,11 +89,10 @@ export const AboutSection = ({ currentLang }: { currentLang: string }) => {
         {/* Profile Section */}
         <div
           ref={profileRef as React.RefObject<HTMLDivElement>}
-          className={`flex flex-col md:flex-row items-center mb-20 transition-all duration-1000 transform ${
-            profileInView
+          className={`flex flex-col md:flex-row items-center mb-20 transition-all duration-1000 transform ${profileInView
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-10"
-          }`}
+            }`}
         ></div>
 
         {/* About Me */}
@@ -101,22 +100,20 @@ export const AboutSection = ({ currentLang }: { currentLang: string }) => {
           <div className="mb-20">
             <h2
               ref={titleRef as React.RefObject<HTMLHeadingElement>}
-              className={`text-4xl font-bold text-white mb-8 transition-all duration-1000 transform ${
-                titleInView
+              className={`text-4xl font-bold text-white mb-8 transition-all duration-1000 transform ${titleInView
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-10"
-              }`}
+                }`}
             >
               {currentLang === "es" ? "Sobre mí" : "About Me"}
             </h2>
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div
                 ref={aboutRef as React.RefObject<HTMLDivElement>}
-                className={`space-y-6 transition-all duration-1000 transform ${
-                  aboutInView
+                className={`space-y-6 transition-all duration-1000 transform ${aboutInView
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-10"
-                }`}
+                  }`}
                 style={{ transitionDelay: "200ms" }}
               >
                 <p className="text-xl text-gray-300 leading-relaxed">
@@ -132,11 +129,10 @@ export const AboutSection = ({ currentLang }: { currentLang: string }) => {
               </div>
               <div
                 ref={statsRef as React.RefObject<HTMLDivElement>}
-                className={`relative group transition-all duration-1000 transform ${
-                  statsInView
+                className={`relative group transition-all duration-1000 transform ${statsInView
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-10"
-                }`}
+                  }`}
                 style={{ transitionDelay: "400ms" }}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-lg blur-xl opacity-25 group-hover:opacity-40 transition-opacity duration-500" />
@@ -159,11 +155,10 @@ export const AboutSection = ({ currentLang }: { currentLang: string }) => {
           {/* Skills */}
           <div>
             <h2
-              className={`text-4xl font-bold text-white mb-12 transition-all duration-1000 transform ${
-                skillsInView
+              className={`text-4xl font-bold text-white mb-12 transition-all duration-1000 transform ${skillsInView
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-10"
-              }`}
+                }`}
             >
               {currentLang === "es" ? "Habilidades" : "Skills"}
             </h2>

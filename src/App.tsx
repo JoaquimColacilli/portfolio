@@ -42,7 +42,7 @@ function App() {
                   JOAQUIM COLACILLI
                 </h1>
                 <div className="text-2xl lg:text-3xl font-semibold text-emerald-400 h-10">
-                  <TypedText text="Full Stack Software Developer" />
+                  <TypedText text="Software Developer" />
                 </div>
                 <p
                   className="text-lg md:text-xl text-gray-400 leading-relaxed animate-slide-up max-w-2xl mx-auto md:mx-0"

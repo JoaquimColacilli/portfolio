@@ -6,7 +6,7 @@ interface ProjectProps {
   currentLang: string;
 }
 
-type ProjectCategory = "All" | "Website" | "Desktop App" | "Tool"; 
+type ProjectCategory = "All" | "Website" | "Desktop App" | "Tool";
 
 const filterLabels: Record<ProjectCategory, { es: string; en: string }> = {
   All: { es: "Todos", en: "All" },
@@ -17,7 +17,7 @@ const filterLabels: Record<ProjectCategory, { es: string; en: string }> = {
 
 export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
   const [sectionRef, inView] = useInView({ threshold: 0.05 });
-  const [activeFilter, setActiveFilter] = useState<ProjectCategory>("All"); 
+  const [activeFilter, setActiveFilter] = useState<ProjectCategory>("All");
 
   const projects = [
     {
@@ -56,6 +56,30 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
       category: "Website" as ProjectCategory,
     },
     {
+      title: "Qiufy",
+      description:
+        currentLang === "es"
+          ? "Plataforma de matchmaking para gamers que conecta jugadores de forma rápida y sin complicaciones."
+          : "Matchmaking platform for gamers that connects players quickly and effortlessly.",
+      image: "/images/projects/qiufy.jpg",
+      technologies: ["Angular", "Java SpringBoot", "MySQL", "Oracle", "WebSocket", "ActiveMQ", "Microservicios"],
+      demoLink: "",
+      githubLink: "",
+      category: "Website" as ProjectCategory,
+    },
+    {
+      title: "Outreal Website",
+      description:
+        currentLang === "es"
+          ? "Sitio web oficial para Outreal ARQ, mostrando proyectos arquitectónicos innovadores."
+          : "Official website for Outreal ARQ, showcasing innovative architectural projects.",
+      image: "/images/projects/outreal.png",
+      technologies: ["HTML", "CSS", "JavaScript"],
+      demoLink: "https://outrealstudio.com/",
+      githubLink: "https://github.com/JoaquimColacilli/outreal",
+      category: "Website" as ProjectCategory,
+    },
+    {
       title: "Player Timer",
       description:
         currentLang === "es"
@@ -80,18 +104,6 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
       category: "Desktop App" as ProjectCategory,
     },
     {
-      title: "El Calculetas",
-      description:
-        currentLang === "es"
-          ? "Administrador financiero que ayuda a organizar tus gastos e ingresos de forma sencilla."
-          : "Finance manager that helps you organize your expenses and income easily.",
-      image: "/images/projects/el-calculetas.png",
-      technologies: ["React", "Firebase", "TailwindCSS"],
-      demoLink: "https://el-calculetas.netlify.app/",
-      githubLink: "https://github.com/JoaquimColacilli/el-calculetas",
-      category: "Website" as ProjectCategory,
-    },
-    {
       title: "Hotfood",
       description:
         currentLang === "es"
@@ -101,18 +113,6 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
       technologies: ["Next.js", "Express", "PostgreSQL", "Stripe", "Socket.io"],
       demoLink: "https://joaquimcolacilli.github.io/hotfood/",
       githubLink: "https://github.com/JoaquimColacilli/hotfood",
-      category: "Website" as ProjectCategory,
-    },
-    {
-      title: "Outreal Website",
-      description:
-        currentLang === "es"
-          ? "Sitio web oficial para Outreal ARQ, mostrando proyectos arquitectónicos innovadores."
-          : "Official website for Outreal ARQ, showcasing innovative architectural projects.",
-      image: "/images/projects/outreal.png",
-      technologies: ["HTML", "CSS", "JavaScript"],
-      demoLink: "https://outrealstudio.com/",
-      githubLink: "https://github.com/JoaquimColacilli/outreal",
       category: "Website" as ProjectCategory,
     },
     {
