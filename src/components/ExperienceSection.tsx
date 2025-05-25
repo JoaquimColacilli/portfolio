@@ -14,16 +14,19 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) =>
 
   const experiences = [
     {
-      title: "Full Stack Software Developer - NTT Data",
+      title: "Software Engineer - NTT Data",
       period:
         currentLang === "es"
-          ? "Abr. 2024 - Actualidad"
-          : "Apr. 2024 - Present",
+          ? "Sep. 2022 - Actualidad"
+          : "Sep. 2022 - Present",
       icon: <BriefcaseIcon className="w-6 h-6 text-emerald-400" />,
       responsibilities: [
         currentLang === "es"
           ? "Desarrollo backend robusto con Spring Boot y Spring Cloud, implementando servicios resilientes y escalables en arquitectura distribuida."
           : "Backend development using Spring Boot and Spring Cloud, building scalable and resilient services within a distributed architecture.",
+        currentLang === "es"
+          ? "Diseño e implementación de microservicios desacoplados, comunicados entre sí mediante HTTP y mensajería asíncrona (ActiveMQ), aplicando principios de arquitectura hexagonal y resiliencia."
+          : "Design and implementation of decoupled microservices communicating via HTTP and asynchronous messaging (ActiveMQ), applying hexagonal architecture principles and resilience patterns.",
         currentLang === "es"
           ? "Pruebas unitarias y de integración automatizadas con JUnit y Mockito, garantizando calidad y cobertura en los desarrollos."
           : "Automated unit and integration testing with JUnit and Mockito, ensuring high code quality and coverage.",
@@ -58,8 +61,9 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) =>
       skills: [
         "Spring Boot",
         "Spring Cloud",
+        "Microservices",
         "WebSockets",
-        "Spring Security", 
+        "Spring Security",
         "Spring Data JPA",
         "Java",
         "JUnit",
@@ -201,8 +205,8 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) =>
                 ref={(el) => (experienceRefs.current[index] = el)}
 
                 className={`relative pl-12 md:pl-40 mb-12 md:mb-16 transition-all duration-700 ease-out transform ${inView
-                    ? "opacity-100 translate-x-0"
-                    : "opacity-0 -translate-x-10"
+                  ? "opacity-100 translate-x-0"
+                  : "opacity-0 -translate-x-10"
                   }`}
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
