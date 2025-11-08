@@ -87,7 +87,7 @@ function App() {
               <div className="absolute inset-[-10px] bg-gradient-to-br from-blue-600/40 via-emerald-500/30 to-transparent rounded-full blur-xl animate-pulse opacity-70" />
               <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-gray-700/50 shadow-2xl z-10">
                 <img
-                  src="/images/foto_portfolio.png"
+                  src="/images/foto_portfolio.jpg"
                   alt="Profile"
                   className="w-full h-full object-cover"
                   loading="lazy"

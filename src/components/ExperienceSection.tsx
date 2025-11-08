@@ -6,20 +6,83 @@ interface ExperienceProps {
   currentLang: string;
 }
 
+interface ExperienceItem {
+  title: string;
+  period: string;
+  icon: JSX.Element;
+  logo?: string;
+  responsibilities: string[];
+  skills: string[];
+}
+
 export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) => {
   const [sectionRef, inView] = useInView({ threshold: 0.1 });
   const [activeIndex, setActiveIndex] = useState(0);
   const experienceRefs = useRef<(HTMLDivElement | null)[]>([]);
   const timelineRef = useRef<HTMLDivElement>(null);
 
-  const experiences = [
+  const experiences: ExperienceItem[] = [
+    {
+      title: currentLang === "es" ? "Software Developer - Almundo" : "Software Developer - Almundo",
+      period: currentLang === "es" ? "Jun. 2025 - Actualidad" : "Jun. 2025 - Present",
+      icon: <BriefcaseIcon className="w-6 h-6 text-emerald-400" />,
+      logo: "/images/almundo-logo.png", 
+      responsibilities: [
+        currentLang === "es"
+          ? "Mejora y mantenimiento en verticales de Autos y Circuitos: Angular (17/18) + Java/Spring Boot 3, actualización de APIs y modelos compartidos entre front y back."
+          : "Improvement and maintenance in Cars and Circuits verticals: Angular (17/18) + Java/Spring Boot 3, API updates and shared models between front and back.",
+        currentLang === "es"
+          ? "Micrositios (white-label) para partners y marcas: parametrización por dominio/estilo/contenido, mejoras de performance y SEO técnico, lanzamientos sin fricción para equipos comerciales."
+          : "White-label microsites for partners and brands: parameterization by domain/style/content, performance improvements and technical SEO, frictionless launches for commercial teams.",
+        currentLang === "es"
+          ? "BackOffice (BO): mantenimiento evolutivo y correctivo; feature flags, permisos/roles, mejoras de UX, reportes y herramientas de soporte para operaciones."
+          : "BackOffice (BO): evolutionary and corrective maintenance; feature flags, permissions/roles, UX improvements, reports and support tools for operations.",
+        currentLang === "es"
+          ? "Plataforma para vendedores de sucursales (local): flujos de búsqueda, cotización y reserva unificados; reducción de pasos y tiempos de atención; entrenamiento y feedback con mejoras continuas."
+          : "Platform for branch sellers (local): unified search, quote and booking flows; reduction of steps and service times; training and feedback with continuous improvements.",
+        currentLang === "es"
+          ? "Integración de proveedor de Autos (CNET): availability/details/booking/cancel con retries, validaciones y mapeos (agencia, moneda, oficinas, vehículos); resiliencia y observabilidad punta a punta."
+          : "Car provider integration (CNET): availability/details/booking/cancel with retries, validations and mappings (agency, currency, offices, vehicles); end-to-end resilience and observability.",
+        currentLang === "es"
+          ? "Vouchers y post-venta: fixes productivos en emisión/sincronización de estados; consistencia entre confirmación, envío de emails y recuperación de reservas."
+          : "Vouchers and post-sale: production fixes in issuance/status synchronization; consistency between confirmation, email sending and booking recovery.",
+        currentLang === "es"
+          ? "Arquitectura: microservicios con enfoque hexagonal, conectores desacoplados (Feign/REST), pipelines idempotentes; sistemas distribuidos con concurrencia controlada y reintentos."
+          : "Architecture: microservices with hexagonal approach, decoupled connectors (Feign/REST), idempotent pipelines; distributed systems with controlled concurrency and retries.",
+        currentLang === "es"
+          ? "Datos y búsqueda: MongoDB y SQL para transaccional; Cassandra (TTL/caché de tarifas) para alta rotación; OpenSearch para trazabilidad y diagnóstico."
+          : "Data and search: MongoDB and SQL for transactional; Cassandra (TTL/rate cache) for high rotation; OpenSearch for traceability and diagnostics.",
+        currentLang === "es"
+          ? "Observabilidad: métricas de latencia por proveedor, trazas correlacionadas, alertas de timeouts y dashboards para detectar cuellos de botella."
+          : "Observability: latency metrics per provider, correlated traces, timeout alerts and dashboards to detect bottlenecks.",
+        currentLang === "es"
+          ? "Buenas prácticas: testing automatizado, validaciones de dominio, code reviews, documentación técnica y handoffs claros con negocio/ops."
+          : "Best practices: automated testing, domain validations, code reviews, technical documentation and clear handoffs with business/ops.",
+      ],
+      skills: [
+        "Spring Boot",
+        "Spring Cloud",
+        "Angular",
+        "Java",
+        "TypeScript",
+        "MongoDB",
+        "MySQL",
+        "Cassandra",
+        "OpenSearch",
+        "Docker",
+        "OpenShift",
+        "Feign",
+        "ActiveMQ",
+        "Git",
+        "Hexagonal Architecture",
+        "Microservices",
+      ],
+    },
     {
       title: "Software Engineer - NTT Data",
-      period:
-        currentLang === "es"
-          ? "Sep. 2022 - Actualidad"
-          : "Sep. 2022 - Present",
+      period: currentLang === "es" ? "Sep. 2022 - Actualidad" : "Sep. 2022 - Present",
       icon: <BriefcaseIcon className="w-6 h-6 text-emerald-400" />,
+      logo: "/images/nttdata-logo.png",
       responsibilities: [
         currentLang === "es"
           ? "Desarrollo backend robusto con Spring Boot y Spring Cloud, implementando servicios resilientes y escalables en arquitectura distribuida."
@@ -81,13 +144,10 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) =>
       ],
     },
     {
-      title:
-        currentLang === "es"
-          ? "Desarrollador Full Stack Freelance"
-          : "Full Stack Developer Freelance",
-      period:
-        currentLang === "es" ? "Ene. 2021 - Actualidad" : "Jan. 2021 - Present",
+      title: currentLang === "es" ? "Desarrollador Full Stack Freelance" : "Full Stack Developer Freelance",
+      period: currentLang === "es" ? "Ene. 2021 - Actualidad" : "Jan. 2021 - Present",
       icon: <Globe className="w-6 h-6 text-emerald-400" />,
+      logo: undefined,
       responsibilities: [
         currentLang === "es"
           ? "Desarrollo de landing pages modernas y responsivas utilizando React y Next.js."
@@ -136,9 +196,7 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) =>
         if (ref) {
           const { top, height } = ref.getBoundingClientRect();
           const elementCenter = top + height / 2;
-          const distanceToCenter = Math.abs(
-            elementCenter - window.innerHeight / 2
-          );
+          const distanceToCenter = Math.abs(elementCenter - window.innerHeight / 2);
 
           if (distanceToCenter < minDistance) {
             minDistance = distanceToCenter;
@@ -162,32 +220,23 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) =>
   }, [experiences.length]);
 
   return (
-    <section
-      className="relative py-20 md:py-28 overflow-hidden bg-gray-800/30"
-      id="experience"
-    >
-      {" "}
+    <section className="relative py-20 md:py-28 overflow-hidden bg-gray-800/30" id="experience">
       <div className="container mx-auto px-4 sm:px-6">
-        {" "}
         <div className="max-w-7xl mx-auto">
           <h2
-            className={`text-3xl sm:text-4xl font-bold text-white mb-12 md:mb-16 text-center transition-all duration-1000 transform ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              }`}
+            className={`text-3xl sm:text-4xl font-bold text-white mb-12 md:mb-16 text-center transition-all duration-1000 transform ${
+              inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+            }`}
           >
-            {currentLang === "es"
-              ? "Experiencia Profesional"
-              : "Professional Experience"}
+            {currentLang === "es" ? "Experiencia Profesional" : "Professional Experience"}
           </h2>
-          <div
-            ref={sectionRef as React.RefObject<HTMLDivElement>}
-            className="relative"
-          >
+          <div ref={sectionRef as React.RefObject<HTMLDivElement>} className="relative">
             <div
               ref={timelineRef}
               className={`
                 absolute top-0 bottom-0 w-1 bg-gray-700/50 rounded-full
                 transform transition-transform duration-700 ease-out origin-top
-                ml-4 md:ml-0 md:left-[6.1rem]  /* Margen izquierdo en móvil, posición 'left' en desktop */
+                ml-4 md:ml-0 md:left-[6.1rem]
                 ${inView ? "scale-y-100" : "scale-y-0"}
               `}
             >
@@ -203,11 +252,9 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) =>
               <div
                 key={index}
                 ref={(el) => (experienceRefs.current[index] = el)}
-
-                className={`relative pl-12 md:pl-40 mb-12 md:mb-16 transition-all duration-700 ease-out transform ${inView
-                  ? "opacity-100 translate-x-0"
-                  : "opacity-0 -translate-x-10"
-                  }`}
+                className={`relative pl-12 md:pl-40 mb-12 md:mb-16 transition-all duration-700 ease-out transform ${
+                  inView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
+                }`}
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
                 <div
@@ -222,46 +269,53 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) =>
                     className={`
                     w-4 h-4 rounded-full transition-colors duration-300
                     ring-4 ring-opacity-50
-                    ${activeIndex === index
+                    ${
+                      activeIndex === index
                         ? "bg-emerald-400 ring-emerald-500/30"
                         : "bg-gray-600 ring-gray-700/30"
-                      }
+                    }
                     `}
                   />
                 </div>
                 <div className="relative group">
-                  <div className="absolute -inset-x-4 -inset-y-2 md:-inset-x-6 md:-inset-y-4to-transparent rounded-lg opacity-0 group-hover:opacity-50 transition-opacity duration-300 pointer-events-none" />
+                  <div className="absolute -inset-x-4 -inset-y-2 md:-inset-x-6 md:-inset-y-4 to-transparent rounded-lg opacity-0 group-hover:opacity-50 transition-opacity duration-300 pointer-events-none" />
                   <div
                     className={`
                       relative bg-gray-800/60 backdrop-blur-sm rounded-lg border transition-all duration-300 ease-out shadow-md
-                      ${activeIndex === index
-                        ? "border-emerald-500/40 shadow-emerald-500/10"
-                        : "border-gray-700/50"
+                      ${
+                        activeIndex === index
+                          ? "border-emerald-500/40 shadow-emerald-500/10"
+                          : "border-gray-700/50"
                       }
                        p-6 md:p-8 group-hover:border-gray-600/80
                     `}
                   >
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
-                      <div className="p-2 bg-gray-700/50 rounded-lg ring-1 ring-gray-600/50 flex-shrink-0">
-                        {exp.icon}
-                      </div>
+                      {/* Mostrar logo si existe, sino mostrar icono */}
+                      {exp.logo ? (
+                        <div className="flex-shrink-0">
+                          <img
+                            src={exp.logo}
+                            alt={`${exp.title} logo`}
+                            className="w-12 h-12 sm:w-14 sm:h-14 object-contain rounded-lg bg-white p-2"
+                          />
+                        </div>
+                      ) : (
+                        <div className="p-2 bg-gray-700/50 rounded-lg ring-1 ring-gray-600/50 flex-shrink-0">
+                          {exp.icon}
+                        </div>
+                      )}
                       <div className="flex-grow">
-                        <h3 className="text-lg sm:text-xl font-semibold text-white">
-                          {exp.title}
-                        </h3>
-                        <p className="text-sm text-gray-400 mt-1">
-                          {exp.period}
-                        </p>
+                        <h3 className="text-lg sm:text-xl font-semibold text-white">{exp.title}</h3>
+                        <p className="text-sm text-gray-400 mt-1">{exp.period}</p>
                       </div>
                     </div>
 
                     <div className="space-y-3 mt-5">
                       {exp.responsibilities.map((resp, idx) => (
                         <div key={idx} className="flex items-start gap-3">
-                          <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />{" "}
-                          <p className="text-sm text-gray-300 leading-relaxed">
-                            {resp}
-                          </p>{" "}
+                          <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                          <p className="text-sm text-gray-300 leading-relaxed">{resp}</p>
                         </div>
                       ))}
                     </div>
@@ -281,15 +335,13 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) =>
                         </span>
                       ))}
                     </div>
-                  </div>{" "}
-                </div>{" "}
-
+                  </div>
+                </div>
               </div>
-            ))}{" "}
-          </div>{" "}
-
-        </div>{" "}
-      </div>{" "}
+            ))}
+          </div>
+        </div>
+      </div>
     </section>
   );
 };
