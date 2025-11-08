@@ -90,7 +90,7 @@ function App() {
                   src="/images/foto_portfolio.jpg"
                   alt="Profile"
                   className="w-full h-full object-cover"
-                  loading="lazy"
+                  loading="lazy" 
                 />
               </div>
             </div>
