@@ -21,6 +21,30 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
 
   const projects = [
     {
+      title: "Cubiqa Landing",
+      description:
+        currentLang === "es"
+          ? "Landing page template diseñada para Cubiqa, empresa de experiencias arquitectónicas inmersivas. Desarrollada como solución white-label para ofrecer a sus clientes, con diseño moderno, elegante y totalmente personalizable. Incluye secciones interactivas, galería de proyectos y formulario de contacto integrado."
+          : "Landing page template designed for Cubiqa, an immersive architectural experiences company. Built as a white-label solution to offer their clients, featuring a modern, elegant, and fully customizable design. Includes interactive sections, project gallery, and integrated contact form.",
+      image: "/images/projects/cubiqa.png",
+      technologies: ["React", "Next.js", "TailwindCSS", "Framer Motion"],
+      demoLink: "https://cubiqa-landing-template.vercel.app/",
+      githubLink: "https://github.com/JoaquimColacilli/cubiqa-landing-template",
+      category: "Website" as ProjectCategory,
+    },
+    {
+      title: "Cubiqa Backoffice",
+      description:
+        currentLang === "es"
+          ? "Sistema de gestión interno (backoffice) para Cubiqa, permitiendo administrar proyectos arquitectónicos, clientes, etapas de desarrollo y finanzas. Incluye dashboard con estadísticas en tiempo real, gestión de calendario, línea de tiempo de proyectos y módulo de notificaciones. Interfaz intuitiva y optimizada para flujos de trabajo eficientes."
+          : "Internal management system (backoffice) for Cubiqa, enabling management of architectural projects, clients, development stages, and finances. Features a dashboard with real-time statistics, calendar management, project timeline, and notifications module. Intuitive interface optimized for efficient workflows.",
+      image: "/images/projects/cubiqa-bo.png",
+      technologies: ["React", "Next.js", "TailwindCSS", "Node.js", "PostgreSQL", "Prisma"],
+      demoLink: "https://cubiqa-bo.vercel.app/",
+      githubLink: "",
+      category: "Website" as ProjectCategory,
+    },
+    {
       title: "PRIMATECH",
       description:
         currentLang === "es"
