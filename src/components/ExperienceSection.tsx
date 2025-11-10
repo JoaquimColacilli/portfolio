@@ -79,8 +79,8 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) =>
       ],
     },
     {
-      title: "Software Engineer - NTT Data",
-      period: currentLang === "es" ? "Sep. 2022 - Actualidad" : "Sep. 2022 - Present",
+      title: "Software Developer - NTT Data",
+      period: currentLang === "es" ? "Sep. 2022 - Jun. 2025" : "Sep. 2022 - Jun. 2025",
       icon: <BriefcaseIcon className="w-6 h-6 text-emerald-400" />,
       logo: "/images/nttdata-logo.png",
       responsibilities: [
