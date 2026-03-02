@@ -23,6 +23,43 @@ export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) =>
 
   const experiences: ExperienceItem[] = [
     {
+      title: currentLang === "es" ? "Software Developer - Despegar" : "Software Developer - Despegar",
+      period: currentLang === "es" ? "Feb. 2026" : "Feb. 2026",
+      icon: <BriefcaseIcon className="w-6 h-6 text-emerald-400" />,
+      logo: "/images/despegar-logo.jpeg",
+      responsibilities: [
+        currentLang === "es"
+          ? "Desarrollo y mantenimiento de funcionalidades Frontend para el área de Cross Selling, con foco en UX y conversión, incorporando aprendizajes de proyectos anteriores."
+          : "Development and maintenance of Frontend features for the Cross Selling area, focusing on UX and conversion while incorporating lessons learned from previous projects.",
+        currentLang === "es"
+          ? "Construcción de componentes reutilizables e integración con APIs, cuidando performance y calidad y asegurando que puedan escalar en distintos contextos."
+          : "Building reusable components and integrating with APIs, ensuring performance and quality and making sure they can scale in different contexts.",
+        currentLang === "es"
+          ? "Trabajo colaborativo con Producto, Diseño y Backend, aplicando buenas prácticas (reviews, estándares y documentación) y fomentando comunicación fluida."
+          : "Collaborative work with Product, Design and Backend, applying best practices (reviews, standards and documentation) and fostering smooth communication.",
+        currentLang === "es"
+          ? "Adaptación de soluciones e ideas inspiradas en la experiencia en Almundo para optimizar flujos y acelerar la entrega."
+          : "Adapting solutions and ideas inspired by the experience at Almundo to optimize workflows and speed up delivery.",
+        currentLang === "es"
+          ? "Participación en optimizaciones de rendimiento y mejoras incrementales, siempre alineado con los objetivos de negocio y conversión."
+          : "Participation in performance optimizations and incremental improvements, always aligned with business and conversion goals.",
+      ],
+      skills: [
+        "Frontend Development",
+        "TypeScript",
+        "React",
+        "API Integration",
+        "UX",
+        "TailwindCSS",
+        "Responsive Design",
+        "Performance Optimization",
+        "Unit Testing",
+        "Storybook",
+        "Git",
+        "Cross-browser Compatibility",
+      ],
+    },
+    {
       title: currentLang === "es" ? "Software Developer - Almundo" : "Software Developer - Almundo",
       period: currentLang === "es" ? "Jun. 2025 - Actualidad" : "Jun. 2025 - Present",
       icon: <BriefcaseIcon className="w-6 h-6 text-emerald-400" />,
