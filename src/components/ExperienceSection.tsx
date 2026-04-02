@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useInView } from "../hooks/useInView";
-import { BriefcaseIcon, CheckCircle2, Globe } from "lucide-react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import { motion } from "motion/react";
+import { Globe } from "lucide-react";
+import { translations } from "../i18n/translations";
 
 interface ExperienceProps {
   currentLang: string;
@@ -8,373 +9,271 @@ interface ExperienceProps {
 
 interface ExperienceItem {
   title: string;
+  company: string;
   period: string;
-  icon: JSX.Element;
   logo?: string;
   responsibilities: string[];
   skills: string[];
 }
 
 export const ExperienceSection: React.FC<ExperienceProps> = ({ currentLang }) => {
-  const [sectionRef, inView] = useInView({ threshold: 0.1 });
   const [activeIndex, setActiveIndex] = useState(0);
-  const experienceRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const timelineRef = useRef<HTMLDivElement>(null);
 
   const experiences: ExperienceItem[] = [
     {
-      title: currentLang === "es" ? "Software Developer - Despegar" : "Software Developer - Despegar",
-      period: currentLang === "es" ? "Feb. 2026" : "Feb. 2026",
-      icon: <BriefcaseIcon className="w-6 h-6 text-emerald-400" />,
+      title: "Software Developer",
+      company: "Despegar",
+      period: currentLang === "es" ? "Feb. 2026 — Actualidad" : "Feb. 2026 — Present",
       logo: "/images/despegar-logo.jpeg",
       responsibilities: [
         currentLang === "es"
-          ? "Desarrollo y mantenimiento de funcionalidades Frontend para el área de Cross Selling, con foco en UX y conversión, incorporando aprendizajes de proyectos anteriores."
-          : "Development and maintenance of Frontend features for the Cross Selling area, focusing on UX and conversion while incorporating lessons learned from previous projects.",
+          ? "Desarrollo y mantenimiento frontend para Cross Selling, con foco en UX y conversión."
+          : "Frontend development and maintenance for Cross Selling, focused on UX and conversion.",
         currentLang === "es"
-          ? "Construcción de componentes reutilizables e integración con APIs, cuidando performance y calidad y asegurando que puedan escalar en distintos contextos."
-          : "Building reusable components and integrating with APIs, ensuring performance and quality and making sure they can scale in different contexts.",
+          ? "Componentes reutilizables e integración con APIs, cuidando performance y calidad."
+          : "Reusable components and API integrations, ensuring performance and quality.",
         currentLang === "es"
-          ? "Trabajo colaborativo con Producto, Diseño y Backend, aplicando buenas prácticas (reviews, estándares y documentación) y fomentando comunicación fluida."
-          : "Collaborative work with Product, Design and Backend, applying best practices (reviews, standards and documentation) and fostering smooth communication.",
-        currentLang === "es"
-          ? "Adaptación de soluciones e ideas inspiradas en la experiencia en Almundo para optimizar flujos y acelerar la entrega."
-          : "Adapting solutions and ideas inspired by the experience at Almundo to optimize workflows and speed up delivery.",
-        currentLang === "es"
-          ? "Participación en optimizaciones de rendimiento y mejoras incrementales, siempre alineado con los objetivos de negocio y conversión."
-          : "Participation in performance optimizations and incremental improvements, always aligned with business and conversion goals.",
+          ? "Trabajo colaborativo con Producto, Diseño y Backend, aplicando reviews y estándares."
+          : "Cross-team collaboration with Product, Design, and Backend, applying reviews and standards.",
       ],
-      skills: [
-        "Frontend Development",
-        "TypeScript",
-        "React",
-        "API Integration",
-        "UX",
-        "TailwindCSS",
-        "Responsive Design",
-        "Performance Optimization",
-        "Unit Testing",
-        "Storybook",
-        "Git",
-        "Cross-browser Compatibility",
-      ],
+      skills: ["React", "TypeScript", "TailwindCSS", "API Integration", "Performance Optimization"],
     },
     {
-      title: currentLang === "es" ? "Software Developer - Almundo" : "Software Developer - Almundo",
-      period: currentLang === "es" ? "Jun. 2025 - Actualidad" : "Jun. 2025 - Present",
-      icon: <BriefcaseIcon className="w-6 h-6 text-emerald-400" />,
-      logo: "/images/almundo-logo.png", 
+      title: "Software Developer",
+      company: "Almundo",
+      period: currentLang === "es" ? "Jun. 2025 — Feb. 2026" : "Jun. 2025 — Feb. 2026",
+      logo: "/images/almundo-logo.png",
       responsibilities: [
         currentLang === "es"
-          ? "Mejora y mantenimiento en verticales de Autos y Circuitos: Angular (17/18) + Java/Spring Boot 3, actualización de APIs y modelos compartidos entre front y back."
-          : "Improvement and maintenance in Cars and Circuits verticals: Angular (17/18) + Java/Spring Boot 3, API updates and shared models between front and back.",
+          ? "Verticales de Autos y Circuitos: Angular (17/18) + Java/Spring Boot 3."
+          : "Cars and Tours verticals: Angular (17/18) + Java/Spring Boot 3.",
         currentLang === "es"
-          ? "Micrositios (white-label) para partners y marcas: parametrización por dominio/estilo/contenido, mejoras de performance y SEO técnico, lanzamientos sin fricción para equipos comerciales."
-          : "White-label microsites for partners and brands: parameterization by domain/style/content, performance improvements and technical SEO, frictionless launches for commercial teams.",
+          ? "Micrositios white-label para partners: parametrización, SEO y performance."
+          : "White-label microsites for partners: parameterization, SEO and performance.",
         currentLang === "es"
-          ? "BackOffice (BO): mantenimiento evolutivo y correctivo; feature flags, permisos/roles, mejoras de UX, reportes y herramientas de soporte para operaciones."
-          : "BackOffice (BO): evolutionary and corrective maintenance; feature flags, permissions/roles, UX improvements, reports and support tools for operations.",
+          ? "BackOffice: feature flags, permisos, reportes y herramientas de soporte."
+          : "BackOffice: feature flags, permissions, reports and support tools.",
         currentLang === "es"
-          ? "Plataforma para vendedores de sucursales (local): flujos de búsqueda, cotización y reserva unificados; reducción de pasos y tiempos de atención; entrenamiento y feedback con mejoras continuas."
-          : "Platform for branch sellers (local): unified search, quote and booking flows; reduction of steps and service times; training and feedback with continuous improvements.",
+          ? "Integración de proveedor de Autos (CNET) con retries, validaciones y resiliencia."
+          : "Car provider integration (CNET) with retries, validations and resilience.",
         currentLang === "es"
-          ? "Integración de proveedor de Autos (CNET): availability/details/booking/cancel con retries, validaciones y mapeos (agencia, moneda, oficinas, vehículos); resiliencia y observabilidad punta a punta."
-          : "Car provider integration (CNET): availability/details/booking/cancel with retries, validations and mappings (agency, currency, offices, vehicles); end-to-end resilience and observability.",
-        currentLang === "es"
-          ? "Vouchers y post-venta: fixes productivos en emisión/sincronización de estados; consistencia entre confirmación, envío de emails y recuperación de reservas."
-          : "Vouchers and post-sale: production fixes in issuance/status synchronization; consistency between confirmation, email sending and booking recovery.",
-        currentLang === "es"
-          ? "Arquitectura: microservicios con enfoque hexagonal, conectores desacoplados (Feign/REST), pipelines idempotentes; sistemas distribuidos con concurrencia controlada y reintentos."
-          : "Architecture: microservices with hexagonal approach, decoupled connectors (Feign/REST), idempotent pipelines; distributed systems with controlled concurrency and retries.",
-        currentLang === "es"
-          ? "Datos y búsqueda: MongoDB y SQL para transaccional; Cassandra (TTL/caché de tarifas) para alta rotación; OpenSearch para trazabilidad y diagnóstico."
-          : "Data and search: MongoDB and SQL for transactional; Cassandra (TTL/rate cache) for high rotation; OpenSearch for traceability and diagnostics.",
-        currentLang === "es"
-          ? "Observabilidad: métricas de latencia por proveedor, trazas correlacionadas, alertas de timeouts y dashboards para detectar cuellos de botella."
-          : "Observability: latency metrics per provider, correlated traces, timeout alerts and dashboards to detect bottlenecks.",
-        currentLang === "es"
-          ? "Buenas prácticas: testing automatizado, validaciones de dominio, code reviews, documentación técnica y handoffs claros con negocio/ops."
-          : "Best practices: automated testing, domain validations, code reviews, technical documentation and clear handoffs with business/ops.",
+          ? "Arquitectura hexagonal, pipelines idempotentes, MongoDB, Cassandra, OpenSearch."
+          : "Hexagonal architecture, idempotent pipelines, MongoDB, Cassandra, OpenSearch.",
       ],
-      skills: [
-        "Spring Boot",
-        "Spring Cloud",
-        "Angular",
-        "Java",
-        "TypeScript",
-        "MongoDB",
-        "MySQL",
-        "Cassandra",
-        "OpenSearch",
-        "Docker",
-        "OpenShift",
-        "Feign",
-        "ActiveMQ",
-        "Git",
-        "Hexagonal Architecture",
-        "Microservices",
-      ],
+      skills: ["Angular", "Spring Boot", "Java", "MongoDB", "Cassandra", "OpenSearch", "Docker", "Microservices"],
     },
     {
-      title: "Software Developer - NTT Data",
-      period: currentLang === "es" ? "Sep. 2022 - Jun. 2025" : "Sep. 2022 - Jun. 2025",
-      icon: <BriefcaseIcon className="w-6 h-6 text-emerald-400" />,
+      title: "Software Developer",
+      company: "NTT Data",
+      period: currentLang === "es" ? "Sep. 2022 — Jun. 2025" : "Sep. 2022 — Jun. 2025",
       logo: "/images/nttdata-logo.png",
       responsibilities: [
         currentLang === "es"
-          ? "Desarrollo backend robusto con Spring Boot y Spring Cloud, implementando servicios resilientes y escalables en arquitectura distribuida."
-          : "Backend development using Spring Boot and Spring Cloud, building scalable and resilient services within a distributed architecture.",
+          ? "Diseño de sistemas distribuidos escalables con Spring Boot y Spring Cloud."
+          : "Design of scalable distributed systems with Spring Boot and Spring Cloud.",
         currentLang === "es"
-          ? "Diseño e implementación de microservicios desacoplados, comunicados entre sí mediante HTTP y mensajería asíncrona (ActiveMQ), aplicando principios de arquitectura hexagonal y resiliencia."
-          : "Design and implementation of decoupled microservices communicating via HTTP and asynchronous messaging (ActiveMQ), applying hexagonal architecture principles and resilience patterns.",
+          ? "APIs RESTful con WebFlux, Circuit Breaker y Retry (Resilience4j)."
+          : "RESTful APIs with WebFlux, Circuit Breaker and Retry (Resilience4j).",
         currentLang === "es"
-          ? "Pruebas unitarias y de integración automatizadas con JUnit y Mockito, garantizando calidad y cobertura en los desarrollos."
-          : "Automated unit and integration testing with JUnit and Mockito, ensuring high code quality and coverage.",
+          ? "Optimización de PostgreSQL y Oracle: índices, query tuning, Hibernate tuning."
+          : "PostgreSQL and Oracle optimization: indexes, query tuning, Hibernate tuning.",
         currentLang === "es"
-          ? "Optimización de performance mediante uso de índices, cachés locales y consultas SQL ajustadas."
-          : "Performance optimization through indexes, local caching, and fine-tuned SQL queries.",
+          ? "Procesamiento asíncrono con RabbitMQ y ActiveMQ."
+          : "Async processing with RabbitMQ and ActiveMQ.",
         currentLang === "es"
-          ? "Despliegue continuo en contenedores Docker sobre entornos OpenShift con pipelines CI/CD."
-          : "Continuous integration and deployment with Docker on OpenShift environments using CI/CD pipelines.",
-        currentLang === "es"
-          ? "Automatización y control de versiones de scripts de base de datos con Liquibase."
-          : "Automation and version control of database scripts using Liquibase.",
-        currentLang === "es"
-          ? "Comunicación asincrónica entre servicios usando ActiveMQ y patrones de resiliencia (Retry, DLQ)."
-          : "Asynchronous communication using ActiveMQ with resilience patterns like Retry and DLQ.",
-        currentLang === "es"
-          ? "Integración con Angular y TypeScript para interfaces reactivas en proyectos full stack."
-          : "Frontend integration with Angular and TypeScript for reactive interfaces in full-stack projects.",
-        currentLang === "es"
-          ? "Participación activa en code reviews, refinamientos técnicos y decisiones de diseño orientadas a buenas prácticas."
-          : "Active involvement in code reviews, technical refinements, and design decisions following best practices.",
-        currentLang === "es"
-          ? "Monitoreo de servicios con Spring Boot Actuator y documentación de APIs con Swagger."
-          : "Service monitoring with Spring Boot Actuator and API documentation using Swagger.",
-        currentLang === "es"
-          ? "Gestión de versiones y trabajo colaborativo con Git y GitHub, siguiendo flujos de trabajo como GitFlow."
-          : "Version control and collaborative work using Git and GitHub, following GitFlow workflows.",
-        currentLang === "es"
-          ? "Participación en equipos ágiles aplicando Scrum y Kanban, con entregas iterativas y planificación técnica."
-          : "Participation in agile teams applying Scrum and Kanban, with iterative delivery and technical planning.",
+          ? "CI/CD con GitLab y Jenkins, deploy en OpenShift."
+          : "CI/CD with GitLab and Jenkins, deploy on OpenShift.",
       ],
-      skills: [
-        "Spring Boot",
-        "Spring Cloud",
-        "Microservices",
-        "WebSockets",
-        "Spring Security",
-        "Spring Data JPA",
-        "Java",
-        "JUnit",
-        "Mockito",
-        "Liquibase",
-        "ActiveMQ",
-        "Angular",
-        "TypeScript",
-        "Git",
-        "OpenShift",
-        "Docker",
-        "Swagger",
-        "Scrum",
-        "Kanban",
-      ],
+      skills: ["Spring Boot", "Spring Cloud", "WebFlux", "PostgreSQL", "RabbitMQ", "Docker", "OpenShift", "Jenkins"],
     },
     {
-      title: currentLang === "es" ? "Desarrollador Full Stack Freelance" : "Full Stack Developer Freelance",
-      period: currentLang === "es" ? "Ene. 2021 - Actualidad" : "Jan. 2021 - Present",
-      icon: <Globe className="w-6 h-6 text-emerald-400" />,
+      title: currentLang === "es" ? "Desarrollador Full Stack" : "Full Stack Developer",
+      company: "Freelance",
+      period: currentLang === "es" ? "Ene. 2021 — Actualidad" : "Jan. 2021 — Present",
       logo: undefined,
       responsibilities: [
         currentLang === "es"
-          ? "Desarrollo de landing pages modernas y responsivas utilizando React y Next.js."
-          : "Development of modern and responsive landing pages using React and Next.js.",
+          ? "Landing pages modernas y responsivas con React y Next.js."
+          : "Modern, responsive landing pages with React and Next.js.",
         currentLang === "es"
-          ? "Implementación de APIs RESTful con Node.js y Express para gestión de datos."
-          : "Implementation of RESTful APIs with Node.js and Express for data handling.",
+          ? "APIs RESTful con Node.js y Express."
+          : "RESTful APIs with Node.js and Express.",
         currentLang === "es"
-          ? "Diseño y desarrollo de bases de datos SQL y NoSQL según requerimientos del proyecto."
-          : "Design and development of SQL and NoSQL databases based on project needs.",
-        currentLang === "es"
-          ? "Integración de pasarelas de pago y sistemas de autenticación seguros."
-          : "Integration of payment gateways and secure authentication systems.",
-        currentLang === "es"
-          ? "Optimización SEO y mejora de rendimiento en aplicaciones web."
-          : "SEO optimization and performance enhancement in web applications.",
-        currentLang === "es"
-          ? "Desarrollo de dashboards administrativos personalizados."
-          : "Development of customized admin dashboards.",
+          ? "Dashboards administrativos personalizados y optimización SEO."
+          : "Custom admin dashboards and SEO optimization.",
       ],
-      skills: [
-        "React",
-        "Next.js",
-        "Node.js",
-        "MongoDB",
-        "PostgreSQL",
-        "AWS",
-        "TailwindCSS",
-        "Material UI",
-        "Figma",
-        "Astro",
-        "Angular",
-        "Go",
-      ],
+      skills: ["React", "Next.js", "Node.js", "MongoDB", "PostgreSQL", "TailwindCSS", "AWS"],
     },
   ];
 
+  const handleScroll = useCallback(() => {
+    let closestIndex = 0;
+    let minDistance = Infinity;
+
+    cardRefs.current.forEach((ref, index) => {
+      if (ref) {
+        const { top, height } = ref.getBoundingClientRect();
+        const elementCenter = top + height / 2;
+        const distanceToCenter = Math.abs(elementCenter - window.innerHeight / 2);
+
+        if (distanceToCenter < minDistance) {
+          minDistance = distanceToCenter;
+          closestIndex = index;
+        }
+      }
+    });
+
+    setActiveIndex(closestIndex);
+  }, []);
+
   useEffect(() => {
-    const handleScroll = () => {
-      if (!timelineRef.current) return;
-
-      let closestIndex = 0;
-      let minDistance = Infinity;
-
-      experienceRefs.current.forEach((ref, index) => {
-        if (ref) {
-          const { top, height } = ref.getBoundingClientRect();
-          const elementCenter = top + height / 2;
-          const distanceToCenter = Math.abs(elementCenter - window.innerHeight / 2);
-
-          if (distanceToCenter < minDistance) {
-            minDistance = distanceToCenter;
-            closestIndex = index;
-          }
-        }
-      });
-
-      setActiveIndex((prevIndex) => {
-        if (prevIndex !== closestIndex) {
-          return closestIndex;
-        }
-        return prevIndex;
-      });
-    };
-
     handleScroll();
-
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [experiences.length]);
+  }, [handleScroll]);
+
+  const timelineProgress = ((activeIndex + 0.5) / experiences.length) * 100;
 
   return (
-    <section className="relative py-20 md:py-28 overflow-hidden bg-gray-800/30" id="experience">
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto">
-          <h2
-            className={`text-3xl sm:text-4xl font-bold text-white mb-12 md:mb-16 text-center transition-all duration-1000 transform ${
-              inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-            }`}
-          >
-            {currentLang === "es" ? "Experiencia Profesional" : "Professional Experience"}
-          </h2>
-          <div ref={sectionRef as React.RefObject<HTMLDivElement>} className="relative">
-            <div
-              ref={timelineRef}
-              className={`
-                absolute top-0 bottom-0 w-1 bg-gray-700/50 rounded-full
-                transform transition-transform duration-700 ease-out origin-top
-                ml-4 md:ml-0 md:left-[6.1rem]
-                ${inView ? "scale-y-100" : "scale-y-0"}
-              `}
-            >
-              <div
-                className="absolute w-full bg-gradient-to-b from-emerald-500 to-blue-500 transition-all duration-300 ease-in-out rounded-full"
-                style={{
-                  top: `${activeIndex * (100 / experiences.length)}%`,
-                  height: `${100 / experiences.length}%`,
-                }}
-              />
-            </div>
-            {experiences.map((exp, index) => (
-              <div
-                key={index}
-                ref={(el) => (experienceRefs.current[index] = el)}
-                className={`relative pl-12 md:pl-40 mb-12 md:mb-16 transition-all duration-700 ease-out transform ${
-                  inView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
-                }`}
-                style={{ transitionDelay: `${index * 150}ms` }}
+    <section className="section-padding relative z-10 overflow-hidden" id="experience">
+      <div className="section-container">
+        {/* Section title */}
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-16 md:mb-20">
+          {((translations as Record<string, any>)[currentLang].experience.title as string)
+            .split(" ")
+            .map((word: string, i: number) => (
+              <motion.span
+                key={i}
+                className="inline-block mr-[0.25em] last:mr-0 gradient-text"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ delay: i * 0.1, duration: 0.5, ease: "easeOut" }}
               >
+                {word}
+              </motion.span>
+            ))}
+        </h2>
+
+        {/* Timeline container */}
+        <div className="relative max-w-4xl mx-auto">
+          {/* Timeline line */}
+          <div
+            ref={timelineRef}
+            className="absolute top-0 bottom-0 left-[5px] md:left-[9px] w-[2px] bg-[#2A2A3C]/60"
+          >
+            {/* Animated gradient fill */}
+            <motion.div
+              className="absolute top-0 left-0 w-full rounded-full"
+              style={{
+                background: "linear-gradient(to bottom, #6366f1, #22d3ee)",
+              }}
+              initial={{ height: "0%" }}
+              animate={{ height: `${timelineProgress}%` }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+            />
+          </div>
+
+          {/* Experience cards */}
+          <div className="space-y-10 md:space-y-14">
+            {experiences.map((exp, index) => (
+              <motion.div
+                key={index}
+                ref={(el) => {
+                  cardRefs.current[index] = el;
+                }}
+                className="relative pl-10 md:pl-16"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.1,
+                  ease: "easeOut",
+                }}
+              >
+                {/* Timeline dot */}
                 <div
                   className={`
-                    absolute top-1 w-8 h-8 rounded-full flex items-center justify-center
-                    transform transition-all duration-300 ease-out
-                    left-0 md:left-[6.19rem] md:-translate-x-1/2
-                    ${activeIndex === index ? "scale-110" : "scale-100"}
-                  `}
-                >
-                  <div
-                    className={`
-                    w-4 h-4 rounded-full transition-colors duration-300
-                    ring-4 ring-opacity-50
+                    absolute top-8 left-0 md:left-[4px]
+                    w-3 h-3 rounded-full border-2 transition-all duration-300
                     ${
                       activeIndex === index
-                        ? "bg-emerald-400 ring-emerald-500/30"
-                        : "bg-gray-600 ring-gray-700/30"
+                        ? "bg-indigo-500 border-indigo-400 shadow-[0_0_12px_rgba(99,102,241,0.6)]"
+                        : "bg-[#1C1C2A] border-[#2A2A3C]"
                     }
-                    `}
-                  />
-                </div>
-                <div className="relative group">
-                  <div className="absolute -inset-x-4 -inset-y-2 md:-inset-x-6 md:-inset-y-4 to-transparent rounded-lg opacity-0 group-hover:opacity-50 transition-opacity duration-300 pointer-events-none" />
-                  <div
-                    className={`
-                      relative bg-gray-800/60 backdrop-blur-sm rounded-lg border transition-all duration-300 ease-out shadow-md
-                      ${
-                        activeIndex === index
-                          ? "border-emerald-500/40 shadow-emerald-500/10"
-                          : "border-gray-700/50"
-                      }
-                       p-6 md:p-8 group-hover:border-gray-600/80
-                    `}
-                  >
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
-                      {/* Mostrar logo si existe, sino mostrar icono */}
-                      {exp.logo ? (
-                        <div className="flex-shrink-0">
-                          <img
-                            src={exp.logo}
-                            alt={`${exp.title} logo`}
-                            className="w-12 h-12 sm:w-14 sm:h-14 object-contain rounded-lg bg-white p-2"
-                          />
-                        </div>
-                      ) : (
-                        <div className="p-2 bg-gray-700/50 rounded-lg ring-1 ring-gray-600/50 flex-shrink-0">
-                          {exp.icon}
-                        </div>
-                      )}
-                      <div className="flex-grow">
-                        <h3 className="text-lg sm:text-xl font-semibold text-white">{exp.title}</h3>
-                        <p className="text-sm text-gray-400 mt-1">{exp.period}</p>
+                  `}
+                />
+
+                {/* Card */}
+                <div
+                  className={`
+                    bg-[#12121A]/60 backdrop-blur-sm border rounded-xl p-6 md:p-8
+                    transition-all duration-300
+                    ${
+                      activeIndex === index
+                        ? "border-indigo-500/40 shadow-lg shadow-indigo-500/5"
+                        : "border-[#2A2A3C]/50 hover:border-[#2A2A3C]"
+                    }
+                  `}
+                >
+                  {/* Header: logo/icon + title + period */}
+                  <div className="flex items-start gap-4 mb-5">
+                    {/* Logo or fallback icon */}
+                    {exp.logo ? (
+                      <div className="flex-shrink-0">
+                        <img
+                          src={exp.logo}
+                          alt={`${exp.company} logo`}
+                          className="w-12 h-12 object-contain rounded-lg bg-white/90 p-1.5"
+                        />
                       </div>
-                    </div>
+                    ) : (
+                      <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-[#1C1C2A] border border-[#2A2A3C] flex items-center justify-center">
+                        <Globe className="w-5 h-5 text-indigo-400" />
+                      </div>
+                    )}
 
-                    <div className="space-y-3 mt-5">
-                      {exp.responsibilities.map((resp, idx) => (
-                        <div key={idx} className="flex items-start gap-3">
-                          <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                          <p className="text-sm text-gray-300 leading-relaxed">{resp}</p>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="mt-6 border-t border-gray-700/50 pt-5 flex flex-wrap gap-2">
-                      {exp.skills.map((skill, idx) => (
-                        <span
-                          key={idx}
-                          className={`
-                            px-3 py-1 bg-gray-700/60 text-emerald-300 rounded-full text-xs sm:text-sm font-mono
-                            cursor-default
-                            transition-all duration-200 ease-out
-                            hover:bg-emerald-600/70 hover:text-white hover:-translate-y-px hover:shadow-md hover:shadow-emerald-500/20
-                          `}
-                        >
-                          {skill}
-                        </span>
-                      ))}
+                    <div className="flex-grow min-w-0">
+                      <h3 className="text-lg md:text-xl font-bold text-white leading-tight">
+                        {exp.title}
+                      </h3>
+                      <p className="text-base font-semibold text-white/80 mt-0.5">
+                        {exp.company}
+                      </p>
+                      <p className="text-sm text-[#8888A0] font-mono mt-1">
+                        {exp.period}
+                      </p>
                     </div>
                   </div>
+
+                  {/* Responsibilities */}
+                  <ul className="space-y-2 mb-6">
+                    {exp.responsibilities.map((resp, idx) => (
+                      <li key={idx} className="flex items-start gap-3">
+                        <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-indigo-500 mt-2" />
+                        <span className="text-sm text-gray-300 leading-relaxed">
+                          {resp}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Skills pills */}
+                  <div className="border-t border-[#2A2A3C]/50 pt-5 flex flex-wrap gap-2">
+                    {exp.skills.map((skill, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1 rounded-full text-xs font-mono bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 transition-colors duration-200 hover:bg-indigo-500/20 hover:text-indigo-200"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

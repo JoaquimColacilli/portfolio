@@ -1,67 +1,103 @@
 export const translations = {
   en: {
     nav: {
-      home: "HOME",
-      about: "ABOUT ME",
-      experience: "EXPERIENCE",
-      projects: "PROJECTS",
-      contact: "CONTACT",
+      home: "Home",
+      about: "About",
+      experience: "Experience",
+      projects: "Projects",
+      contact: "Contact",
     },
     hero: {
-      title: "Full Stack Developer",
+      greeting: "Hi, I'm",
+      name: "Joaquim Colacilli",
+      role: "Software Developer",
       description:
-        "I'm a passionate developer dedicated to creating user-friendly experiences. Let's build something special together!",
-      downloadCV: "DOWNLOAD CV", // <-- AÑADIR ESTA LÍNEA
+        "I build scalable, high-performance systems with Java, Spring Boot, and modern frontend frameworks. Currently at Despegar, previously at Almundo and NTT Data.",
+      downloadCV: "Download CV",
+      contact: "Get in touch",
     },
     about: {
-      title: "About Me",
+      title: "About",
       description:
-        "I'm a Full Stack Developer passionate about creating innovative and scalable web solutions. With experience in modern web application development, I specialize in building exceptional digital experiences.",
+        "Software Developer with 3+ years of experience designing and building distributed systems, microservices, and modern web applications. I focus on clean architecture, observability, and delivering real business value.",
+      descriptionTwo:
+        "Currently working on Cross Selling frontend at Despegar. Previously built white-label platforms, provider integrations, and backoffice tools at Almundo using Angular + Java/Spring Boot.",
       stats: {
-        experience: "Years of experience",
-        projects: "Completed projects",
-        technologies: "Technologies mastered",
-        satisfaction: "Client satisfaction",
+        experience: "Years of Experience",
+        projects: "Projects Delivered",
+        technologies: "Technologies",
+        satisfaction: "Client Satisfaction",
+      },
+    },
+    experience: {
+      title: "Experience",
+    },
+    projects: {
+      title: "Projects",
+      viewAll: "View all on GitHub",
+      noResults: "No projects found in this category.",
+      filters: {
+        all: "All",
+        website: "Websites",
+        desktopApp: "Desktop Apps",
       },
     },
     footer: {
-      title: "Let's work Together",
-      subtitle: "Have a project in mind? Let's bring it to life!",
-      contactButton: "Contact Me",
-      available: "Available for freelance opportunities",
+      title: "Let's work together",
+      subtitle: "Have a project in mind? Let's make it happen.",
+      contactButton: "Get in touch",
+      available: "Available for new opportunities",
       rights: "All rights reserved.",
     },
   },
   es: {
     nav: {
-      home: "INICIO",
-      about: "SOBRE MÍ",
-      experience: "EXPERIENCIA",
-      projects: "PROYECTOS",
-      contact: "CONTACTO",
+      home: "Inicio",
+      about: "Sobre mí",
+      experience: "Experiencia",
+      projects: "Proyectos",
+      contact: "Contacto",
     },
     hero: {
-      title: "Desarrollador Full Stack",
+      greeting: "Hola, soy",
+      name: "Joaquim Colacilli",
+      role: "Software Developer",
       description:
-        "Soy un desarrollador apasionado dedicado a crear experiencias amigables para el usuario. ¡Hagamos algo especial juntos!",
-      downloadCV: "DESCARGAR CV", // <-- AÑADIR ESTA LÍNEA
+        "Construyo sistemas escalables y de alto rendimiento con Java, Spring Boot y frameworks frontend modernos. Actualmente en Despegar, previamente en Almundo y NTT Data.",
+      downloadCV: "Descargar CV",
+      contact: "Contactar",
     },
     about: {
       title: "Sobre mí",
       description:
-        "Soy un desarrollador Full Stack apasionado por crear soluciones web innovadoras y escalables. Con experiencia en el desarrollo de aplicaciones web modernas, me especializo en construir experiencias digitales excepcionales.",
+        "Software Developer con más de 3 años de experiencia diseñando y construyendo sistemas distribuidos, microservicios y aplicaciones web modernas. Me enfoco en arquitectura limpia, observabilidad y entregar valor de negocio real.",
+      descriptionTwo:
+        "Actualmente trabajo en el frontend de Cross Selling en Despegar. Previamente construí plataformas white-label, integraciones con proveedores y herramientas de backoffice en Almundo con Angular + Java/Spring Boot.",
       stats: {
-        experience: "Años de experiencia",
-        projects: "Proyectos completados",
-        technologies: "Tecnologías dominadas",
-        satisfaction: "Satisfacción del cliente",
+        experience: "Años de Experiencia",
+        projects: "Proyectos Entregados",
+        technologies: "Tecnologías",
+        satisfaction: "Satisfacción del Cliente",
+      },
+    },
+    experience: {
+      title: "Experiencia",
+    },
+    projects: {
+      title: "Proyectos",
+      viewAll: "Ver todos en GitHub",
+      noResults: "No se encontraron proyectos en esta categoría.",
+      filters: {
+        all: "Todos",
+        website: "Sitios Web",
+        desktopApp: "Apps de Escritorio",
       },
     },
     footer: {
-      title: "Trabajemos Juntos",
-      subtitle: "¿Tenés un proyecto en mente? ¡Hagámoslo realidad!",
-      contactButton: "Contáctame",
-      available: "Disponible para oportunidades freelance",
+      title: "Trabajemos juntos",
+      subtitle: "¿Tenés un proyecto en mente? Hagámoslo realidad.",
+      contactButton: "Contactar",
+      available: "Disponible para nuevas oportunidades",
       rights: "Todos los derechos reservados.",
     },
   },

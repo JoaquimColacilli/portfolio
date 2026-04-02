@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create:*)",
+      "Bash(mkdir -p src/components/layout src/components/sections src/components/ui src/data src/styles src/assets)",
+      "Bash(rm -f src/App.css src/index.css)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Read(//c/Users/joaqu/OneDrive/Escritorio/altitude/**)",
+      "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")",
+      "Bash(node /c/Users/joaqu/OneDrive/Escritorio/altitude/node_modules/typescript/bin/tsc -p /c/Users/joaqu/OneDrive/Escritorio/altitude/apps/api/tsconfig.json --noEmit)",
+      "Bash(node /c/Users/joaqu/OneDrive/Escritorio/altitude/node_modules/typescript/bin/tsc -p /c/Users/joaqu/OneDrive/Escritorio/altitude/apps/web/tsconfig.json --noEmit)",
+      "WebSearch"
+    ]
+  }
+}

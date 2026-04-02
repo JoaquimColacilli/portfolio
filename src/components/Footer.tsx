@@ -1,13 +1,6 @@
 import React, { useState } from "react";
-import {
-  Mail,
-  Github,
-  Linkedin,
-  Copy,
-  Check,
-  ArrowUpRight,
-  Sparkles,
-} from "lucide-react";
+import { Mail, Github, Linkedin, Copy, Check, ExternalLink } from "lucide-react";
+import { motion } from "motion/react";
 import { translations } from "../i18n/translations";
 
 interface FooterProps {
@@ -15,7 +8,6 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ currentLang }) => {
-  const [isCardOpen, setIsCardOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const t = translations[currentLang as keyof typeof translations];
 
@@ -25,7 +17,8 @@ export const Footer: React.FC<FooterProps> = ({ currentLang }) => {
     linkedin: "https://linkedin.com/in/joaquim-colacilli",
   };
 
-  const handleCopyEmail = async () => {
+  const handleCopyEmail = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     await navigator.clipboard.writeText(email);
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
@@ -36,129 +29,128 @@ export const Footer: React.FC<FooterProps> = ({ currentLang }) => {
   };
 
   return (
-    <footer className="relative py-20 overflow-hidden " id="contact">
-      {/* Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[400px] bg-gradient-to-b from-emerald-500/10 to-blue-500/10 blur-3xl rounded-full opacity-30" />
+    <footer className="relative z-10 py-24 overflow-hidden" id="contact">
+      {/* Background gradient glow */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-gradient-to-br from-indigo-500/15 to-cyan-400/10 blur-[120px] rounded-full" />
       </div>
 
-      <div className="container mx-auto px-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Contact Section */}
-          <div className="relative">
-            <div className="text-center mb-12">
-              <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
-                {t.footer.title}
-              </h2>
-              <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-                {t.footer.subtitle}
-              </p>
-            </div>
+      <div className="section-padding">
+        <div className="section-container">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="max-w-3xl mx-auto text-center"
+          >
+            {/* Title */}
+            <h2 className="text-4xl md:text-5xl font-bold gradient-text mb-4">
+              {t.footer.title.split(" ").map((word: string, i: number) => (
+                <motion.span
+                  key={i}
+                  className="inline-block mr-[0.25em] last:mr-0"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1, duration: 0.5, ease: "easeOut" }}
+                >
+                  {word}
+                </motion.span>
+              ))}
+            </h2>
+            <motion.p
+              className="text-lg text-muted mb-12"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            >
+              {t.footer.subtitle}
+            </motion.p>
 
             {/* Contact Card */}
-            <div className="relative max-w-lg mx-auto">
-              <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-gradient" />
-              <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-8">
-                <div
-                  className={`flex flex-col items-center text-center transition-all duration-500 ${
-                    isCardOpen ? "-translate-y-4" : "translate-y-0"
-                  }`}
-                >
-                  {/* Contact Button */}
-                  <button
-                    onClick={() => setIsCardOpen(!isCardOpen)}
-                    className={`relative group transition-all duration-500 ${
-                      isCardOpen ? "mb-8 scale-90" : "scale-100"
-                    }`}
-                  >
-                    <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full blur opacity-30 group-hover:opacity-100 transition duration-500" />
-                    <div className="relative px-8 py-4 bg-gray-900 rounded-full border border-gray-700 group-hover:border-gray-600 transition duration-500">
-                      <div className="flex items-center gap-3">
-                        <Mail className="w-5 h-5 text-emerald-400" />
-                        <span className="text-white font-medium">
-                          {t.footer.contactButton}
-                        </span>
-                        <ArrowUpRight
-                          className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${
-                            isCardOpen ? "rotate-180" : ""
-                          }`}
-                        />
-                      </div>
-                    </div>
-                  </button>
-
-                  {/* Expanded Contact Options */}
-                  <div
-                    className={`w-full space-y-4 transition-all duration-500 ${
-                      isCardOpen
-                        ? "opacity-100 translate-y-0 h-auto"
-                        : "opacity-0 -translate-y-4 h-0 overflow-hidden pointer-events-none"
-                    }`}
-                  >
-                    <div className="relative group">
-                      <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500/50 to-blue-500/50 rounded-lg blur opacity-0 group-hover:opacity-30 transition duration-500" />
-                      <div className="relative w-full p-4 bg-gray-900/50 rounded-lg border border-gray-700 group-hover:border-gray-600 transition duration-500 flex items-center justify-between">
-                        <div
-                          onClick={handleEmailClick}
-                          className="flex items-center gap-3 cursor-pointer"
-                        >
-                          <Mail className="w-5 h-5 text-emerald-400" />
-                          <span className="text-gray-300">{email}</span>
-                        </div>
-                        <div
-                          onClick={handleCopyEmail}
-                          className="p-2 hover:bg-gray-800 rounded-md transition-colors cursor-pointer"
-                        >
-                          {isCopied ? (
-                            <Check className="w-4 h-4 text-emerald-400" />
-                          ) : (
-                            <Copy className="w-4 h-4 text-gray-400" />
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-center gap-4">
-                      <a
-                        href={socialLinks.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group relative"
-                      >
-                        <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-lg blur opacity-30 group-hover:opacity-100 transition duration-500" />
-                        <div className="relative p-3 bg-gray-900 rounded-lg border border-gray-700 group-hover:border-gray-600 transition duration-500">
-                          <Github className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors" />
-                        </div>
-                      </a>
-                      <a
-                        href={socialLinks.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group relative"
-                      >
-                        <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-lg blur opacity-30 group-hover:opacity-100 transition duration-500" />
-                        <div className="relative p-3 bg-gray-900 rounded-lg border border-gray-700 group-hover:border-gray-600 transition duration-500">
-                          <Linkedin className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors" />
-                        </div>
-                      </a>
-                    </div>
-                  </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="bg-surface/80 backdrop-blur-xl border border-subtle/60 rounded-2xl p-8 max-w-lg mx-auto"
+            >
+              {/* Email row */}
+              <div
+                onClick={handleEmailClick}
+                className="group flex items-center justify-between gap-4 p-4 rounded-xl border border-subtle hover:border-indigo-500/40 transition-colors cursor-pointer mb-6"
+                style={{ backgroundColor: "#1e1e2e" }}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <Mail className="w-5 h-5 text-indigo-400 shrink-0" />
+                  <span className="font-mono text-sm md:text-base truncate" style={{ color: "#f0f0f5" }}>
+                    {email}
+                  </span>
                 </div>
+                <button
+                  onClick={handleCopyEmail}
+                  className="p-2 rounded-lg hover:bg-elevated transition-colors shrink-0"
+                  aria-label="Copy email"
+                >
+                  {isCopied ? (
+                    <Check className="w-4 h-4 text-emerald-400" />
+                  ) : (
+                    <Copy className="w-4 h-4 text-muted hover:text-white transition-colors" />
+                  )}
+                </button>
               </div>
-            </div>
 
-            {/* Footer Content */}
-            <div className="mt-20 text-center">
-              <div className="flex items-center justify-center gap-2 mb-6">
-                <Sparkles className="w-5 h-5 text-emerald-400" />
-                <p className="text-gray-400">{t.footer.available}</p>
+              {/* Social links */}
+              <div className="flex justify-center gap-3">
+                <a
+                  href={socialLinks.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-2 px-5 py-3 rounded-xl bg-surface/60 border border-subtle/40 hover:border-indigo-500/40 transition-colors"
+                >
+                  <Github className="w-5 h-5 text-muted group-hover:text-white transition-colors" />
+                  <span className="text-sm text-muted group-hover:text-white transition-colors">
+                    GitHub
+                  </span>
+                  <ExternalLink className="w-3.5 h-3.5 text-muted/50 group-hover:text-white/50 transition-colors" />
+                </a>
+                <a
+                  href={socialLinks.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-2 px-5 py-3 rounded-xl bg-surface/60 border border-subtle/40 hover:border-indigo-500/40 transition-colors"
+                >
+                  <Linkedin className="w-5 h-5 text-muted group-hover:text-white transition-colors" />
+                  <span className="text-sm text-muted group-hover:text-white transition-colors">
+                    LinkedIn
+                  </span>
+                  <ExternalLink className="w-3.5 h-3.5 text-muted/50 group-hover:text-white/50 transition-colors" />
+                </a>
               </div>
-              <p className="text-sm text-gray-500">
-                © {new Date().getFullYear()} Joaquim Colacilli.{" "}
-                {t.footer.rights}
-              </p>
-            </div>
-          </div>
+            </motion.div>
+
+            {/* Available badge */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="mt-12 flex items-center justify-center gap-2"
+            >
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400" />
+              </span>
+              <p className="text-sm text-muted">{t.footer.available}</p>
+            </motion.div>
+
+            {/* Copyright */}
+            <p className="mt-8 text-xs text-muted/60">
+              &copy; {new Date().getFullYear()} Joaquim Colacilli. {t.footer.rights}
+            </p>
+          </motion.div>
         </div>
       </div>
     </footer>

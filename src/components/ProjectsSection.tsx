@@ -1,155 +1,219 @@
-import React, { useState, useMemo } from "react"; // Import useState and useMemo
-import { useInView } from "../hooks/useInView";
-import { Github, ExternalLink, Code2, ArrowRight } from "lucide-react";
+import React, { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { Github, ExternalLink, Code2, ArrowRight, ChevronDown, Star } from "lucide-react";
+import { translations } from "../i18n/translations";
 
 interface ProjectProps {
   currentLang: string;
 }
 
-type ProjectCategory = "All" | "Website" | "Desktop App" | "Tool";
+type ProjectCategory = "All" | "Website" | "Desktop App";
 
-const filterLabels: Record<ProjectCategory, { es: string; en: string }> = {
-  All: { es: "Todos", en: "All" },
-  Website: { es: "Sitios Web", en: "Websites" },
-  "Desktop App": { es: "Apps de Escritorio", en: "Desktop Apps" },
-  Tool: { es: "Herramientas", en: "Tools" },
-};
+const INITIAL_VISIBLE = 6;
 
 export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
-  const [sectionRef, inView] = useInView({ threshold: 0.05 });
   const [activeFilter, setActiveFilter] = useState<ProjectCategory>("All");
+  const [showAll, setShowAll] = useState(false);
+  const t = translations[currentLang as keyof typeof translations];
 
   const projects = [
+    {
+      title: "Merced Edificio",
+      description:
+        currentLang === "es"
+          ? "Landing page para edificio Merced, desarrollada con Cubiqa. Diseño inmersivo con galería de unidades y contacto integrado."
+          : "Landing page for Merced building, built with Cubiqa. Immersive design with unit gallery and integrated contact.",
+      image: "/images/projects/merced.png",
+      technologies: ["React", "Next.js", "TailwindCSS", "Framer Motion"],
+      demoLink: "https://merced-edificio.netlify.app/",
+      githubLink: "https://github.com/JoaquimColacilli/merced-landing-by-cubiqa",
+      category: "Website" as const,
+      featured: true,
+    },
+    {
+      title: "Más Fácil Imposible",
+      description:
+        currentLang === "es"
+          ? "App de finanzas personales para controlar gastos, ingresos, inversiones y ahorros con dashboards y métricas en tiempo real."
+          : "Personal finance app to track expenses, income, investments and savings with real-time dashboards and metrics.",
+      image: "/images/projects/mfi.png",
+      technologies: ["React", "TailwindCSS", "Node.js", "Supabase"],
+      demoLink: "https://mas-facil-imposible.netlify.app/dashboard",
+      githubLink: "https://github.com/JoaquimColacilli/mas-facil-imposible",
+      category: "Website" as const,
+      featured: true,
+    },
+    {
+      title: "Cubiqa Survey",
+      description:
+        currentLang === "es"
+          ? "Sistema de encuestas de satisfacción para Cubiqa. Recolección de feedback de clientes con visualización de resultados."
+          : "Satisfaction survey system for Cubiqa. Client feedback collection with results visualization.",
+      image: "/images/projects/cubiqa-survey.png",
+      technologies: ["React", "TailwindCSS", "Supabase"],
+      demoLink: "https://cubiqa-survey-satisfaction.netlify.app/",
+      githubLink: "https://github.com/JoaquimColacilli/cubiqa-survey-satisfaction",
+      category: "Website" as const,
+      featured: true,
+    },
     {
       title: "Cubiqa Landing",
       description:
         currentLang === "es"
-          ? "Landing page template diseñada para Cubiqa, empresa de experiencias arquitectónicas inmersivas. Desarrollada como solución white-label para ofrecer a sus clientes, con diseño moderno, elegante y totalmente personalizable. Incluye secciones interactivas, galería de proyectos y formulario de contacto integrado."
-          : "Landing page template designed for Cubiqa, an immersive architectural experiences company. Built as a white-label solution to offer their clients, featuring a modern, elegant, and fully customizable design. Includes interactive sections, project gallery, and integrated contact form.",
+          ? "Landing page template para Cubiqa, empresa de experiencias arquitect\u00f3nicas inmersivas. Dise\u00f1o moderno, elegante y personalizable."
+          : "Landing page template for Cubiqa, an immersive architectural experiences company. Modern, elegant, and customizable design.",
       image: "/images/projects/cubiqa.png",
       technologies: ["React", "Next.js", "TailwindCSS", "Framer Motion"],
       demoLink: "https://cubiqa-landing-template.vercel.app/",
       githubLink: "https://github.com/JoaquimColacilli/cubiqa-landing-template",
-      category: "Website" as ProjectCategory,
+      category: "Website" as const,
     },
     {
       title: "Cubiqa Backoffice",
       description:
         currentLang === "es"
-          ? "Sistema de gestión interno (backoffice) para Cubiqa, permitiendo administrar proyectos arquitectónicos, clientes, etapas de desarrollo y finanzas. Incluye dashboard con estadísticas en tiempo real, gestión de calendario, línea de tiempo de proyectos y módulo de notificaciones. Interfaz intuitiva y optimizada para flujos de trabajo eficientes."
-          : "Internal management system (backoffice) for Cubiqa, enabling management of architectural projects, clients, development stages, and finances. Features a dashboard with real-time statistics, calendar management, project timeline, and notifications module. Intuitive interface optimized for efficient workflows.",
+          ? "Sistema de gesti\u00f3n interno para Cubiqa: proyectos, clientes, finanzas. Dashboard con estad\u00edsticas en tiempo real y gesti\u00f3n de calendario."
+          : "Internal management system for Cubiqa: projects, clients, finances. Dashboard with real-time stats and calendar management.",
       image: "/images/projects/cubiqa-bo.png",
-      technologies: ["React", "Next.js", "TailwindCSS", "Node.js", "PostgreSQL", "Prisma"],
+      technologies: [
+        "React",
+        "Next.js",
+        "TailwindCSS",
+        "Node.js",
+        "PostgreSQL",
+        "Prisma",
+      ],
       demoLink: "https://cubiqa-bo.vercel.app/",
       githubLink: "",
-      category: "Website" as ProjectCategory,
+      category: "Website" as const,
     },
     {
       title: "PRIMATECH",
       description:
         currentLang === "es"
-          ? "Landing page de PRIMATECH, empresa de soluciones tecnológicas. Desarrollada para comunicar con claridad nuestros servicios de software a medida, con un enfoque visual moderno, profesional y dinámico. Incluye animaciones, secciones interactivas y una estructura escalable."
-          : "Landing page for PRIMATECH, technology solutions company. Built to clearly communicate our custom software services, featuring a modern, professional, and dynamic visual approach. Includes animations, interactive sections, and a scalable structure.",
+          ? "Landing page de PRIMATECH, empresa de soluciones tecnol\u00f3gicas. Dise\u00f1o visual moderno, profesional y din\u00e1mico con animaciones."
+          : "Landing page for PRIMATECH, technology solutions company. Modern, professional, and dynamic visual design with animations.",
       image: "/images/projects/primatech.png",
-      technologies: ["Next.js", "TailwindCSS", "Framer Motion", "i18n", "mongoDB", "Node.js"],
+      technologies: [
+        "Next.js",
+        "TailwindCSS",
+        "Framer Motion",
+        "i18n",
+        "MongoDB",
+        "Node.js",
+      ],
       demoLink: "https://primatech.com.ar/",
-      category: "Website" as ProjectCategory,
+      githubLink: "",
+      category: "Website" as const,
     },
     {
       title: "BRAMELEC",
       description:
         currentLang === "es"
-          ? "Landing page para una empresa especializada en planos de instalaciones eléctricas para edificios. Diseñada para resaltar su experiencia y precisión en proyectos eléctricos, con una interfaz moderna y optimizada para una navegación intuitiva."
-          : "Landing page for a company specializing in electrical installation plans for buildings. Designed to highlight their expertise and precision in electrical projects, with a modern interface optimized for intuitive navigation.",
+          ? "Landing page para empresa de planos de instalaciones el\u00e9ctricas. Interfaz moderna y optimizada."
+          : "Landing page for electrical installation plans company. Modern, optimized interface.",
       image: "/images/projects/bramelec.png",
       technologies: ["Next.js", "Vite", "TailwindCSS", "Firebase"],
       demoLink: "https://bramelec.com/",
       githubLink: "https://github.com/JoaquimColacilli/bramelec",
-      category: "Website" as ProjectCategory,
+      category: "Website" as const,
     },
     {
       title: "Qiufy",
       description:
         currentLang === "es"
-          ? "Plataforma de matchmaking para gamers que conecta jugadores de forma rápida y sin complicaciones."
-          : "Matchmaking platform for gamers that connects players quickly and effortlessly.",
+          ? "Plataforma de matchmaking para gamers. Conexi\u00f3n r\u00e1pida entre jugadores."
+          : "Matchmaking platform for gamers. Quick player connections.",
       image: "/images/projects/qiufy.jpg",
-      technologies: ["Angular", "Java SpringBoot", "MySQL", "Oracle", "WebSocket", "ActiveMQ", "Microservicios"],
+      technologies: [
+        "Angular",
+        "Spring Boot",
+        "MySQL",
+        "WebSocket",
+        "ActiveMQ",
+        "Microservices",
+      ],
       demoLink: "",
       githubLink: "",
-      category: "Website" as ProjectCategory,
+      category: "Website" as const,
     },
     {
       title: "Willpower Fit",
       description:
         currentLang === "es"
-          ? "Landing page para un gimnasio, diseñada para motivar y atraer nuevos clientes. Incluye un diseño moderno, imágenes dinámicas y una interfaz optimizada para rendimiento y accesibilidad."
-          : "Gym landing page designed to motivate and attract new clients. Features a modern design, dynamic visuals, and an optimized interface for performance and accessibility.",
+          ? "Landing page para gimnasio. Dise\u00f1o moderno e interfaz optimizada para rendimiento."
+          : "Gym landing page. Modern design and optimized interface for performance.",
       image: "/images/projects/wpf.png",
       technologies: ["Next.js", "Vite", "TailwindCSS"],
       demoLink: "https://joaquimcolacilli.github.io/wpf/",
       githubLink: "https://github.com/JoaquimColacilli/wpf",
-      category: "Website" as ProjectCategory,
+      category: "Website" as const,
     },
     {
       title: "Outreal Website",
       description:
         currentLang === "es"
-          ? "Sitio web oficial para Outreal ARQ, mostrando proyectos arquitectónicos innovadores."
-          : "Official website for Outreal ARQ, showcasing innovative architectural projects.",
+          ? "Sitio web oficial para Outreal ARQ, proyectos arquitect\u00f3nicos innovadores."
+          : "Official website for Outreal ARQ, innovative architectural projects.",
       image: "/images/projects/outreal.png",
       technologies: ["HTML", "CSS", "JavaScript"],
       demoLink: "https://outrealstudio.com/",
       githubLink: "https://github.com/JoaquimColacilli/outreal",
-      category: "Website" as ProjectCategory,
+      category: "Website" as const,
     },
     {
       title: "Player Timer",
       description:
         currentLang === "es"
-          ? "Temporizador interactivo para múltiples jugadores, con personalización de nombres, colores y seguimiento preciso de tiempos. Incluye una interfaz moderna, animaciones dinámicas y soporte responsivo para mejorar la experiencia de usuario."
-          : "Interactive timer for multiple players, featuring customizable names, colors, and precise time tracking. Includes a modern interface, dynamic animations, and responsive support to enhance the user experience.",
+          ? "Temporizador interactivo para m\u00faltiples jugadores con personalizaci\u00f3n y animaciones."
+          : "Interactive timer for multiple players with customization and animations.",
       image: "/images/projects/player-timer.png",
-      technologies: ["React", "TailwindCSS", "Next"],
+      technologies: ["React", "TailwindCSS", "Next.js"],
       demoLink: "https://joaquimcolacilli.github.io/playertimer/",
       githubLink: "https://github.com/JoaquimColacilli/playertimer",
-      category: "Website" as ProjectCategory,
+      category: "Website" as const,
     },
     {
       title: "Script Validator",
       description:
         currentLang === "es"
-          ? "Herramienta para validar scripts SQL con soporte para PostgreSQL, MySQL y MongoDB, garantizando consultas sin errores y optimizadas."
-          : "Tool to validate SQL scripts with support for PostgreSQL, MySQL, and MongoDB, ensuring error-free and optimized queries.",
+          ? "Herramienta para validar scripts SQL con soporte PostgreSQL, MySQL y MongoDB."
+          : "Tool to validate SQL scripts with PostgreSQL, MySQL, and MongoDB support.",
       image: "/images/projects/script-validator.png",
       technologies: ["React", "TailwindCSS", "Electron"],
       demoLink: "https://github.com/JoaquimColacilli/script-validator/",
       githubLink: "https://github.com/JoaquimColacilli/script-validator",
-      category: "Desktop App" as ProjectCategory,
+      category: "Desktop App" as const,
     },
     {
       title: "Hotfood",
       description:
         currentLang === "es"
-          ? "Plataforma de delivery de comida que conecta restaurantes locales con clientes. Sistema completo con seguimiento en tiempo real y pagos integrados."
-          : "Food delivery platform connecting local restaurants with customers. Complete system with real-time tracking and integrated payments.",
+          ? "Plataforma de delivery con seguimiento en tiempo real y pagos integrados."
+          : "Delivery platform with real-time tracking and integrated payments.",
       image: "/images/projects/hotfood.png",
-      technologies: ["Next.js", "Express", "PostgreSQL", "Stripe", "Socket.io"],
+      technologies: [
+        "Next.js",
+        "Express",
+        "PostgreSQL",
+        "Stripe",
+        "Socket.io",
+      ],
       demoLink: "https://joaquimcolacilli.github.io/hotfood/",
       githubLink: "https://github.com/JoaquimColacilli/hotfood",
-      category: "Website" as ProjectCategory,
+      category: "Website" as const,
     },
     {
       title: "JSON Parser EXEC",
       description:
         currentLang === "es"
-          ? "Aplicación ejecutable para formatear y validar archivos JSON de manera eficiente."
-          : "Executable application for formatting and validating JSON files efficiently.",
+          ? "Aplicaci\u00f3n ejecutable para formatear y validar archivos JSON."
+          : "Executable application for formatting and validating JSON files.",
       image: "/images/projects/json-parser.png",
       technologies: ["React", "JSON", "Electron"],
       demoLink: "https://github.com/JoaquimColacilli/json-parser-exec",
       githubLink: "https://github.com/JoaquimColacilli/json-parser-exec",
-      category: "Desktop App" as ProjectCategory,
+      category: "Desktop App" as const,
     },
     {
       title:
@@ -158,245 +222,274 @@ export const ProjectsSection: React.FC<ProjectProps> = ({ currentLang }) => {
           : "Development Estimator",
       description:
         currentLang === "es"
-          ? "Aplicación web para estimar tiempos y costos de desarrollo de software. Utiliza IA para proporcionar estimaciones precisas basadas en proyectos anteriores."
-          : "Web application for estimating software development time and costs. Uses AI to provide accurate estimates based on previous projects.",
+          ? "Aplicaci\u00f3n web para estimar tiempos y costos de desarrollo con IA."
+          : "Web app for estimating development time and costs with AI.",
       image: "/images/projects/estimador.png",
       technologies: ["React", "Node.js", "TailwindCSS"],
       demoLink: "https://joaquimcolacilli.github.io/estimador-desarrollo/",
-      githubLink: "https://github.com/JoaquimColacilli/estimador-desarrollo",
-      category: "Website" as ProjectCategory,
+      githubLink:
+        "https://github.com/JoaquimColacilli/estimador-desarrollo",
+      category: "Website" as const,
     },
     {
       title: "Checklist APP",
       description:
         currentLang === "es"
-          ? "Aplicación de checklist dinámica para controlar despliegues y tareas pendientes."
-          : "Dynamic checklist application for controlling deployments and pending tasks.",
+          ? "Aplicaci\u00f3n de checklist din\u00e1mica para controlar despliegues y tareas."
+          : "Dynamic checklist app for controlling deployments and tasks.",
       image: "/images/projects/checklist.png",
       technologies: ["Vue.js", "Firebase", "Vuetify"],
       demoLink: "https://joaquimcolacilli.github.io/checklistwf3/",
       githubLink: "https://github.com/JoaquimColacilli/checklistwf3",
-      category: "Website" as ProjectCategory,
+      category: "Website" as const,
     },
   ];
 
-  const filterCategories: ProjectCategory[] = [
-    "All",
-    "Website",
-    "Desktop App",
+  const filterCategories: { key: ProjectCategory; label: string }[] = [
+    { key: "All", label: t.projects.filters.all },
+    { key: "Website", label: t.projects.filters.website },
+    { key: "Desktop App", label: t.projects.filters.desktopApp },
   ];
 
   const filteredProjects = useMemo(() => {
-    if (activeFilter === "All") {
-      return projects;
-    }
-    return projects.filter((project) => project.category === activeFilter);
-  }, [activeFilter, projects, currentLang]);
+    const base = activeFilter === "All" ? projects : projects.filter((p) => p.category === activeFilter);
+    return base;
+  }, [activeFilter, currentLang]);
+
+  const visibleProjects = showAll ? filteredProjects : filteredProjects.slice(0, INITIAL_VISIBLE);
+  const hasMore = filteredProjects.length > INITIAL_VISIBLE;
 
   return (
-    <section
-      className="relative py-20 overflow-hidden bg-gray-900"
-      id="projects"
-    >
-      <div className="container mx-auto px-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Section Header */}
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 md:mb-12">
-            <h2
-              className={`text-4xl font-bold text-white mb-4 md:mb-0 transition-all duration-1000 transform ${inView
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-10"
-                }`}
-            >
-              {currentLang === "es" ? "Proyectos" : "Projects"}
-            </h2>
-            <div
-              className={`hidden md:flex items-center gap-2 text-gray-400 hover:text-white transition-all duration-500 cursor-pointer group transform ${inView
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 translate-x-10"
-                }`}
-            >
-              <a
-                href="https://github.com/JoaquimColacilli/"
-                className="text-sm font-medium"
-                target="_blank"
-                rel="noopener noreferrer"
+    <section className="section-padding relative z-10 overflow-hidden" id="projects">
+      <div className="section-container">
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-10 md:mb-14">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 md:mb-0">
+            {t.projects.title.split(" ").map((word: string, i: number) => (
+              <motion.span
+                key={i}
+                className="inline-block mr-[0.25em] last:mr-0 gradient-text"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ delay: i * 0.1, duration: 0.5, ease: "easeOut" }}
               >
-                {currentLang === "es"
-                  ? "Ver todos en GitHub"
-                  : "View all on GitHub"}
-              </a>
-              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
-            </div>
-          </div>
-
-          {/* Filter Buttons */}
-          <div
-            className={`flex flex-wrap justify-center gap-3 mb-12 md:mb-16 transition-all duration-1000 transform ${inView ? "opacity-100 scale-100" : "opacity-0 scale-90"
-              }`}
-            style={{ transitionDelay: "150ms" }} // Add slight delay
-          >
-            {filterCategories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveFilter(category)}
-                className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 ${activeFilter === category
-                  ? "bg-gradient-to-r from-blue-500 to-emerald-500 text-white shadow-md ring-2 ring-emerald-400"
-                  : "bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white"
-                  }`}
-              >
-                {
-                  filterLabels[category][
-                  currentLang as keyof (typeof filterLabels)[typeof category]
-                  ]
-                }
-              </button>
+                {word}
+              </motion.span>
             ))}
-          </div>
+          </h2>
 
-          {/* Projects Grid */}
-          <div
-            ref={sectionRef as React.RefObject<HTMLDivElement>}
-            className="grid gap-16 md:gap-24" // Increased gap slightly
+          <motion.a
+            href="https://github.com/JoaquimColacilli/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden md:flex items-center gap-2 text-muted hover:text-indigo-300 transition-colors duration-300 group text-sm font-medium"
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
-            {filteredProjects.map((project, index) => (
-              <div
-                key={`${activeFilter}-${project.title}`} // Use filter in key to help React differentiate when list changes
-                className={`group relative transition-all duration-700 ease-out transform ${inView
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-20"
-                  }`}
-                // Adjust delay based on index within the *filtered* list
-                style={{ transitionDelay: `${index * 150}ms` }}
+            {t.projects.viewAll}
+            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+          </motion.a>
+        </div>
+
+        {/* Filter Buttons */}
+        <motion.div
+          className="flex flex-wrap gap-3 mb-10 md:mb-14"
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+        >
+          {filterCategories.map((filter) => (
+            <button
+              key={filter.key}
+              onClick={() => { setActiveFilter(filter.key); setShowAll(false); }}
+              className={`px-5 py-2 rounded-full text-sm font-medium border transition-all duration-300 focus:outline-none ${
+                activeFilter === filter.key
+                  ? "bg-indigo-500/20 text-indigo-300 border-indigo-500/30"
+                  : "bg-surface text-muted border-subtle hover:text-white hover:border-indigo-500/20 hover:bg-indigo-500/5"
+              }`}
+            >
+              {filter.label}
+            </button>
+          ))}
+        </motion.div>
+
+        {/* Projects Grid */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeFilter}
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.35 }}
+          >
+            {visibleProjects.map((project, index) => (
+              <motion.div
+                key={project.title}
+                className="group relative bg-surface/60 backdrop-blur-sm border border-subtle/50 rounded-2xl overflow-hidden transition-colors duration-500 hover:border-indigo-500/30"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.08,
+                  ease: "easeOut",
+                }}
+                whileHover={{ y: -4 }}
               >
-                {/* Project Card - Structure remains similar */}
-                <div className="relative grid lg:grid-cols-2 gap-8 items-stretch">
-                  {/* Image Container (Left Side) */}
-                  <div className="relative overflow-hidden rounded-lg border border-gray-800 group-hover:border-gray-700 transition-colors duration-500 aspect-video lg:aspect-auto h-full shadow-lg group-hover:shadow-emerald-500/20">
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-transparent to-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
-                    <div className="relative h-full">
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out transform group-hover:scale-105"
-                        loading="lazy" // Add lazy loading
-                      />
-                      {/* Overlay on hover */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-center pb-8 z-20">
-                        <div className="flex items-center justify-center gap-4">
-                          <a
-                            href={project.demoLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label={`${project.title} Demo`} // Accessibility
-                            className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-all duration-300 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-emerald-400"
-                            style={{ transitionDelay: "100ms" }}
-                          >
-                            <ExternalLink className="w-5 h-5" />
-                          </a>
-                          <a
-                            href={project.githubLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label={`${project.title} Github Repository`} // Accessibility
-                            className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center text-white hover:bg-gray-600 transition-all duration-300 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                            style={{ transitionDelay: "200ms" }}
-                          >
-                            <Github className="w-5 h-5" />
-                          </a>
-                        </div>
-                      </div>
-                    </div>
+                {/* Featured badge */}
+                {"featured" in project && project.featured && (
+                  <div className="absolute top-3 right-3 z-20 flex items-center gap-1 px-2.5 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/30 backdrop-blur-sm">
+                    <Star className="w-3 h-3 text-indigo-400 fill-indigo-400" />
+                    <span className="text-[10px] font-medium text-indigo-300 uppercase tracking-wider">Featured</span>
                   </div>
+                )}
 
-                  {/* Content Container (Right Side) */}
-                  <div className="relative h-full flex">
-                    {/* Optional Subtle Glow on Hover */}
-                    <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600/30 to-emerald-600/30 rounded-lg blur-lg opacity-0 group-hover:opacity-60 transition-opacity duration-700 pointer-events-none" />
+                {/* Image Area */}
+                <div className="relative aspect-video overflow-hidden">
+                  <motion.img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                  />
 
-                    <div className="relative bg-gray-800/70 backdrop-blur-sm rounded-lg border border-gray-700 p-6 md:p-8 flex flex-col justify-between w-full shadow-md">
-                      <div>
-                        <div className="flex items-center gap-4 mb-4">
-                          <div className="p-2 bg-gray-700/60 rounded-lg ring-1 ring-gray-600">
-                            <Code2 className="w-6 h-6 text-emerald-400" />
-                          </div>
-                          <h3 className="text-xl md:text-2xl font-bold text-white">
-                            {project.title}
-                          </h3>
-                        </div>
-
-                        <p className="text-gray-300 mb-6 text-sm md:text-base leading-relaxed">
-                          {project.description}
-                        </p>
-
-                        <div className="flex flex-wrap gap-2 mb-6">
-                          {project.technologies.map((tech) => (
-                            <span
-                              key={tech}
-                              className="px-3 py-1 bg-gray-700/50 text-emerald-300 rounded-full text-xs md:text-sm font-mono ring-1 ring-gray-600/50"
-                            >
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="flex flex-wrap gap-3 mt-auto pt-4 border-t border-gray-700/50">
+                  {/* Hover Overlay with Buttons */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-center pb-6 z-10">
+                    <div className="flex items-center gap-4">
+                      {project.demoLink && (
                         <a
                           href={project.demoLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="px-5 py-2 text-sm bg-gradient-to-r from-blue-500 to-emerald-500 text-white rounded-md font-medium hover:opacity-90 transition-opacity duration-300 flex items-center gap-2 shadow-sm hover:shadow-lg transform hover:-translate-y-0.5"
+                          aria-label={`${project.title} Demo`}
+                          className="w-11 h-11 bg-indigo-500 rounded-full flex items-center justify-center text-white hover:bg-indigo-400 transition-all duration-300 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 hover:scale-110"
+                          style={{ transitionDelay: "100ms" }}
                         >
-                          <span>Demo</span>
                           <ExternalLink className="w-4 h-4" />
                         </a>
+                      )}
+                      {project.githubLink && (
                         <a
                           href={project.githubLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="px-5 py-2 text-sm border border-gray-600 bg-gray-700/50 text-gray-300 rounded-md font-medium hover:bg-gray-700 hover:text-white hover:border-gray-500 transition-all duration-300 flex items-center gap-2 shadow-sm hover:shadow-lg transform hover:-translate-y-0.5"
+                          aria-label={`${project.title} GitHub`}
+                          className="w-11 h-11 bg-elevated rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 hover:scale-110"
+                          style={{ transitionDelay: "200ms" }}
                         >
-                          <span>GitHub</span>
                           <Github className="w-4 h-4" />
                         </a>
-                      </div>
+                      )}
                     </div>
                   </div>
                 </div>
-              </div>
+
+                {/* Content Area */}
+                <div className="p-5">
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    {project.title}
+                  </h3>
+                  <p className="text-sm text-muted leading-relaxed mb-4 line-clamp-3">
+                    {project.description}
+                  </p>
+
+                  {/* Tech Tags */}
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {project.technologies.map((tech) => (
+                      <span
+                        key={tech}
+                        className="px-2.5 py-1 bg-indigo-500/10 text-indigo-300 rounded-full text-xs font-mono border border-indigo-500/20"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Bottom Links */}
+                  <div className="flex items-center gap-4 pt-3 border-t border-subtle/50">
+                    {project.demoLink && (
+                      <a
+                        href={project.demoLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 text-xs text-muted hover:text-cyan-400 transition-colors duration-300"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                        Demo
+                      </a>
+                    )}
+                    {project.githubLink && (
+                      <a
+                        href={project.githubLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 text-xs text-muted hover:text-cyan-400 transition-colors duration-300"
+                      >
+                        <Github className="w-3.5 h-3.5" />
+                        GitHub
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
             ))}
 
-            {/* Message if no projects match filter */}
-            {filteredProjects.length === 0 && activeFilter !== "All" && (
-              <div
-                className={`text-center text-gray-400 py-10 transition-opacity duration-500 ${inView ? "opacity-100" : "opacity-0"
-                  }`}
-              >
-                <p className="text-lg">
-                  {currentLang === "es"
-                    ? `No se encontraron proyectos en la categoría "${filterLabels[activeFilter].es}".`
-                    : `No projects found in the "${filterLabels[activeFilter].en}" category.`}
-                </p>
+            {/* No results */}
+            {filteredProjects.length === 0 && (
+              <div className="col-span-full text-center py-16">
+                <Code2 className="w-10 h-10 text-muted mx-auto mb-4 opacity-50" />
+                <p className="text-muted text-lg">{t.projects.noResults}</p>
               </div>
             )}
-          </div>
+          </motion.div>
+        </AnimatePresence>
 
-          {/* Mobile "View All on GitHub" Link */}
-          <div className="mt-16 text-center md:hidden">
-            <a
-              href="https://github.com/JoaquimColacilli/"
-              className="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors duration-300 font-medium group"
-              target="_blank"
-              rel="noopener noreferrer"
+        {/* Show more / Show less button */}
+        {hasMore && (
+          <motion.div
+            className="mt-10 text-center"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4 }}
+          >
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium border border-subtle text-muted hover:text-white hover:border-indigo-500/30 hover:bg-indigo-500/5 transition-all duration-300"
             >
-              {currentLang === "es"
-                ? "Ver todos en GitHub"
-                : "View all on GitHub"}
-              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
-            </a>
-          </div>
-        </div>
+              {showAll
+                ? (currentLang === "es" ? "Mostrar menos" : "Show less")
+                : (currentLang === "es" ? `Mostrar todos (${filteredProjects.length})` : `Show all (${filteredProjects.length})`)}
+              <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${showAll ? "rotate-180" : ""}`} />
+            </button>
+          </motion.div>
+        )}
+
+        {/* Mobile "View all on GitHub" */}
+        <motion.div
+          className="mt-12 text-center md:hidden"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <a
+            href="https://github.com/JoaquimColacilli/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 transition-colors duration-300 font-medium group text-sm"
+          >
+            {t.projects.viewAll}
+            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+          </a>
+        </motion.div>
       </div>
     </section>
   );
