@@ -1,0 +1,16 @@
+flowchart LR
+    subgraph Project["portfolio"]
+        Core["App React"]
+    end
+
+    GitHub["GitHub (repo personal)"]
+    LinkedIn["LinkedIn"]
+    Mail[/"Gmail (mailto:)"/]
+    NPM["registry.npmjs.org"]
+    Netlify["Hosting estático (Netlify / Vercel)"]
+
+    Core -- "enlace externo" --> GitHub
+    Core -- "enlace externo" --> LinkedIn
+    Core -- "mailto" --> Mail
+    Core -- "deploy destino" --> Netlify
+    Core -. "descarga de dependencias en build" .-> NPM

@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>portfolio — Documentación General</title>
+<style>
+/* ============================================================
+   pdf-theme.css — Professional print theme
+   Used by build_document.py via weasyprint / Chrome headless
+   ============================================================ */
+
+@page {
+  size: A4;
+  margin: 22mm 20mm 22mm 20mm;
+  @top-right {
+    content: string(doctitle);
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 9pt;
+    color: #64748b;
+  }
+  @bottom-center {
+    content: "Página " counter(page) " de " counter(pages);
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 9pt;
+    color: #64748b;
+  }
+}
+
+@page :first {
+  @top-right { content: ""; }
+  @bottom-center { content: ""; }
+}
+
+:root {
+  --ink: #0f172a;
+  --ink-soft: #334155;
+  --muted: #64748b;
+  --accent: #1e40af;
+  --accent-light: #3b82f6;
+  --accent-soft: #dbeafe;
+  --rule: #e2e8f0;
+  --rule-soft: #f1f5f9;
+  --code-bg: #f8fafc;
+  --code-border: #e2e8f0;
+  --warn-bg: #fef3c7;
+  --warn-border: #f59e0b;
+}
+
+html, body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.55;
+  color: var(--ink);
+  background: white;
+  margin: 0;
+  padding: 0;
+}
+
+main { display: block; }
+
+/* ----- Headings ----- */
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.25;
+  page-break-after: avoid;
+}
+
+h1 {
+  font-size: 28pt;
+  margin: 0 0 8pt 0;
+  string-set: doctitle content();
+  border-bottom: 3pt solid var(--accent);
+  padding-bottom: 8pt;
+  color: var(--ink);
+}
+
+h2 {
+  font-size: 18pt;
+  margin: 22pt 0 10pt 0;
+  color: var(--accent);
+  border-bottom: 1pt solid var(--rule);
+  padding-bottom: 4pt;
+  page-break-before: auto;
+}
+
+h3 {
+  font-size: 13pt;
+  margin: 14pt 0 6pt 0;
+  color: var(--ink);
+}
+
+h4 {
+  font-size: 11pt;
+  margin: 10pt 0 4pt 0;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.5pt;
+}
+
+h5, h6 {
+  font-size: 10.5pt;
+  margin: 8pt 0 4pt 0;
+  color: var(--ink-soft);
+}
+
+/* ----- Body text ----- */
+
+p {
+  margin: 0 0 8pt 0;
+  orphans: 3;
+  widows: 3;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 0.5pt solid var(--accent-soft);
+}
+
+strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+em {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+/* ----- Lists ----- */
+
+ul, ol {
+  margin: 0 0 10pt 0;
+  padding-left: 20pt;
+}
+
+li {
+  margin: 3pt 0;
+}
+
+li > p {
+  margin: 0 0 4pt 0;
+}
+
+/* ----- Inline code and fenced blocks ----- */
+
+code {
+  font-family: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 9pt;
+  background: var(--code-bg);
+  color: var(--ink);
+  padding: 1pt 5pt;
+  border-radius: 2pt;
+  border: 0.5pt solid var(--code-border);
+}
+
+pre {
+  background: var(--code-bg);
+  border: 0.5pt solid var(--code-border);
+  border-left: 3pt solid var(--accent);
+  border-radius: 3pt;
+  padding: 10pt 12pt;
+  font-size: 8.5pt;
+  line-height: 1.5;
+  page-break-inside: avoid;
+  margin: 10pt 0 12pt 0;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: 8.5pt;
+  color: var(--ink);
+}
+
+/* ----- Tables ----- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10pt 0 16pt 0;
+  page-break-inside: avoid;
+  font-size: 9.5pt;
+  border: 0.5pt solid var(--rule);
+}
+
+thead {
+  background: var(--accent);
+  color: white;
+}
+
+thead th {
+  padding: 7pt 9pt;
+  text-align: left;
+  font-weight: 600;
+  font-size: 8.5pt;
+  text-transform: uppercase;
+  letter-spacing: 0.4pt;
+  border: none;
+}
+
+tbody td {
+  padding: 6pt 9pt;
+  border-bottom: 0.5pt solid var(--rule);
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) td {
+  background: var(--rule-soft);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ----- Images (rendered diagrams) ----- */
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 12pt auto;
+  page-break-inside: avoid;
+}
+
+/* ----- Blockquotes ----- */
+
+blockquote {
+  margin: 12pt 0;
+  padding: 8pt 14pt;
+  border-left: 3pt solid var(--accent-light);
+  background: var(--accent-soft);
+  color: var(--ink-soft);
+  font-style: normal;
+  page-break-inside: avoid;
+}
+
+blockquote p {
+  margin: 0 0 4pt 0;
+}
+
+blockquote p:last-child { margin-bottom: 0; }
+
+/* ----- Horizontal rule ----- */
+
+hr {
+  border: none;
+  border-top: 1pt solid var(--rule);
+  margin: 18pt 0;
+}
+
+/* ----- Table of contents (python-markdown toc extension) ----- */
+
+.toc {
+  background: var(--code-bg);
+  border: 0.5pt solid var(--rule);
+  border-radius: 3pt;
+  padding: 12pt 18pt;
+  margin: 14pt 0 24pt 0;
+  page-break-inside: avoid;
+  page-break-after: always;
+}
+
+.toc > .toctitle {
+  font-weight: 700;
+  font-size: 13pt;
+  color: var(--accent);
+  margin-bottom: 6pt;
+}
+
+.toc ul {
+  padding-left: 16pt;
+  margin: 0;
+}
+
+.toc > ul {
+  padding-left: 0;
+  list-style: none;
+}
+
+.toc > ul > li {
+  margin: 4pt 0;
+  font-weight: 600;
+  list-style: none;
+}
+
+.toc li {
+  margin: 2pt 0;
+  font-size: 9.5pt;
+  list-style: none;
+}
+
+.toc a {
+  color: var(--ink);
+  border-bottom: none;
+}
+
+.toc a:hover { color: var(--accent); }
+
+/* ----- Syntax highlighting (pygments / codehilite) ----- */
+
+.highlight {
+  background: var(--code-bg);
+  border-radius: 3pt;
+}
+
+.highlight .k, .highlight .kd, .highlight .kn, .highlight .kr { color: #7c3aed; font-weight: 600; }
+.highlight .s, .highlight .s1, .highlight .s2, .highlight .sd { color: #059669; }
+.highlight .c, .highlight .c1, .highlight .cm, .highlight .cp { color: var(--muted); font-style: italic; }
+.highlight .n, .highlight .nx, .highlight .na { color: var(--ink); }
+.highlight .mi, .highlight .mf, .highlight .mh { color: #d97706; }
+.highlight .nf, .highlight .nc { color: var(--accent); font-weight: 600; }
+.highlight .o, .highlight .p { color: var(--ink-soft); }
+.highlight .nb, .highlight .bp { color: #7c3aed; }
+
+/* ----- Cover page special treatment ----- */
+
+h1 + blockquote {
+  background: transparent;
+  border-left: 3pt solid var(--accent);
+  padding: 10pt 16pt;
+  color: var(--ink-soft);
+  font-size: 11pt;
+  margin-top: 4pt;
+  margin-bottom: 20pt;
+}
+
+h1 + blockquote + hr {
+  page-break-after: always;
+}
+
+/* ----- Responsive wrapping for overly wide code ----- */
+
+pre, table {
+  max-width: 100%;
+}
+
+</style>
+</head>
+<body>
+<main>
+<h1 id="portfolio">portfolio</h1>
+<blockquote>
+<p><strong>Documentación General</strong>
+Versión: 8b80599
+Fecha: 2026-04-09
+Generado por: project-docs-generator skill</p>
+</blockquote>
+<hr>
+<h2 id="1-resumen-ejecutivo">1. Resumen ejecutivo</h2>
+<p><code>portfolio</code> es el sitio web personal de Joaquim Colacilli (Software Developer). Es una Single Page Application construida con React 18, TypeScript y Vite, que presenta el perfil profesional, experiencia laboral, stack técnico y proyectos destacados del autor. El sitio funciona como carta de presentación digital y canal principal de contacto para oportunidades laborales.</p>
+<p>El producto resuelve la necesidad de tener una vitrina profesional unificada, bilingüe (español e inglés), con una experiencia visual rica basada en animaciones fluidas, transiciones con <code>motion</code> (antes Framer Motion) y un diseño tipo "bento grid" moderno. Incluye descarga directa del curriculum vitae en ambos idiomas, enlaces a repositorios de GitHub, perfil de LinkedIn y contacto vía email.</p>
+<p>El usuario objetivo son reclutadores técnicos, líderes de ingeniería y clientes potenciales de trabajo freelance. La propuesta de valor es transmitir de forma concreta las capacidades técnicas del autor a través de una implementación que funciona como prueba viva de su skillset: React, TypeScript, Tailwind CSS, animaciones performantes y atención al detalle en UX.</p>
+<h2 id="2-stack-tecnologico">2. Stack tecnológico</h2>
+<table>
+<thead>
+<tr>
+<th>Capa</th>
+<th>Tecnología</th>
+<th>Versión</th>
+<th>Rol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frontend</td>
+<td>React</td>
+<td>^18.3.1</td>
+<td>Librería principal de UI</td>
+</tr>
+<tr>
+<td>Frontend</td>
+<td>React DOM</td>
+<td>^18.3.1</td>
+<td>Renderizado al DOM</td>
+</tr>
+<tr>
+<td>Lenguaje</td>
+<td>TypeScript</td>
+<td>^5.5.3</td>
+<td>Tipado estático</td>
+</tr>
+<tr>
+<td>Build tool</td>
+<td>Vite</td>
+<td>^5.4.2</td>
+<td>Dev server y bundler de producción</td>
+</tr>
+<tr>
+<td>Plugin</td>
+<td>@vitejs/plugin-react</td>
+<td>^4.3.1</td>
+<td>Integración React + Vite (Fast Refresh)</td>
+</tr>
+<tr>
+<td>Estilos</td>
+<td>Tailwind CSS</td>
+<td>^3.4.1</td>
+<td>Sistema de utilidades CSS</td>
+</tr>
+<tr>
+<td>Estilos</td>
+<td>PostCSS</td>
+<td>^8.4.35</td>
+<td>Procesamiento de CSS</td>
+</tr>
+<tr>
+<td>Estilos</td>
+<td>Autoprefixer</td>
+<td>^10.4.18</td>
+<td>Prefijos vendor automáticos</td>
+</tr>
+<tr>
+<td>Animación</td>
+<td>motion</td>
+<td>^12.38.0</td>
+<td>Animaciones declarativas y gestos</td>
+</tr>
+<tr>
+<td>Iconos</td>
+<td>lucide-react</td>
+<td>^0.344.0</td>
+<td>Set de iconos SVG</td>
+</tr>
+<tr>
+<td>Fuentes</td>
+<td>@fontsource/inter</td>
+<td>^5.2.8</td>
+<td>Tipografía Inter self-hosted</td>
+</tr>
+<tr>
+<td>Fuentes</td>
+<td>@fontsource-variable/jetbrains-mono</td>
+<td>^5.2.8</td>
+<td>Tipografía monoespaciada</td>
+</tr>
+<tr>
+<td>Linter</td>
+<td>ESLint</td>
+<td>^9.9.1</td>
+<td>Análisis estático</td>
+</tr>
+<tr>
+<td>Linter</td>
+<td>typescript-eslint</td>
+<td>^8.3.0</td>
+<td>Reglas TS para ESLint</td>
+</tr>
+<tr>
+<td>Linter</td>
+<td>eslint-plugin-react-hooks</td>
+<td>^5.1.0-rc.0</td>
+<td>Reglas de hooks</td>
+</tr>
+<tr>
+<td>Linter</td>
+<td>eslint-plugin-react-refresh</td>
+<td>^0.4.11</td>
+<td>Reglas de Fast Refresh</td>
+</tr>
+<tr>
+<td>Package manager</td>
+<td>npm</td>
+<td>—</td>
+<td>Gestor de dependencias</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-arquitectura-de-alto-nivel">3. Arquitectura de alto nivel</h2>
+<p><img alt="Diagrama 1" src="F:/PROYECTOS/portfolio/docs/generated/.build/diagrams/diagram-01-74783c3562.svg"></p>
+<ul>
+<li>El punto de entrada para cualquier request del visitante es <code>index.html</code>, servido por el host estático (por ejemplo Netlify, Vercel o GitHub Pages). Ese HTML monta el bundle generado por Vite.</li>
+<li>La raíz React se inicializa en <code>src/main.tsx</code> con <code>createRoot(...).render(&lt;StrictMode&gt;&lt;App /&gt;&lt;/StrictMode&gt;)</code> y carga las fuentes Inter y JetBrains Mono.</li>
+<li>El componente <code>App</code> en <code>src/App.tsx</code> maneja el estado de idioma (<code>currentLang</code>) y compone la <code>Navbar</code> con las secciones <code>Hero</code>, <code>AboutSection</code>, <code>ExperienceSection</code>, <code>ProjectsSection</code> y <code>Footer</code>.</li>
+<li>Los contenidos textuales en dos idiomas viven en <code>src/i18n/translations.ts</code>. Los hooks personalizados <code>useInView</code> y <code>useCounter</code> encapsulan la observación de visibilidad y la animación numérica respectivamente.</li>
+<li>Los recursos estáticos descargables (CVs en PDF, imágenes de proyectos y logos de empresas) se sirven desde la carpeta <code>public/</code>, que Vite copia tal cual al directorio final de build.</li>
+</ul>
+<h2 id="4-diagrama-de-componentes">4. Diagrama de componentes</h2>
+<p><img alt="Diagrama 2" src="F:/PROYECTOS/portfolio/docs/generated/.build/diagrams/diagram-02-f793aa2c48.svg"></p>
+<h2 id="5-flujo-principal-de-datos">5. Flujo principal de datos</h2>
+<p>El flujo más importante para el usuario es cambiar de idioma y descargar el CV, porque acumula la mayoría de interacciones útiles del portfolio.</p>
+<p><img alt="Diagrama 3" src="F:/PROYECTOS/portfolio/docs/generated/.build/diagrams/diagram-03-77bb9522c4.svg"></p>
+<h2 id="6-integraciones-externas">6. Integraciones externas</h2>
+<p>No hay un backend propio ni APIs internas. Las integraciones se limitan a recursos externos enlazados desde la UI y registros de npm usados durante el build.</p>
+<p><img alt="Diagrama 4" src="F:/PROYECTOS/portfolio/docs/generated/.build/diagrams/diagram-04-c3559dd0bd.svg"></p>
+<table>
+<thead>
+<tr>
+<th>Sistema</th>
+<th>Tipo</th>
+<th>Protocolo</th>
+<th>Dónde se usa (archivo)</th>
+<th>Propósito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GitHub (perfil)</td>
+<td>Enlace externo</td>
+<td>HTTPS</td>
+<td><code>src/components/Footer.tsx</code>, <code>src/components/ProjectsSection.tsx</code></td>
+<td>Enlazar perfil y repositorios de proyectos</td>
+</tr>
+<tr>
+<td>LinkedIn</td>
+<td>Enlace externo</td>
+<td>HTTPS</td>
+<td><code>src/components/Footer.tsx</code></td>
+<td>Enlazar perfil profesional</td>
+</tr>
+<tr>
+<td>Gmail</td>
+<td>Mailto</td>
+<td><code>mailto:</code></td>
+<td><code>src/components/Footer.tsx</code></td>
+<td>Contacto directo por correo</td>
+</tr>
+<tr>
+<td>registry.npmjs.org</td>
+<td>Registro de paquetes</td>
+<td>HTTPS</td>
+<td><code>package-lock.json</code></td>
+<td>Resolución de dependencias en build</td>
+</tr>
+<tr>
+<td>Merced Edificio demo</td>
+<td>Enlace externo</td>
+<td>HTTPS</td>
+<td><code>src/components/ProjectsSection.tsx</code></td>
+<td>Demo de proyecto del portfolio</td>
+</tr>
+<tr>
+<td>Más Fácil Imposible demo</td>
+<td>Enlace externo</td>
+<td>HTTPS</td>
+<td><code>src/components/ProjectsSection.tsx</code></td>
+<td>Demo de proyecto del portfolio</td>
+</tr>
+<tr>
+<td>Primatech demo</td>
+<td>Enlace externo</td>
+<td>HTTPS</td>
+<td><code>src/components/ProjectsSection.tsx</code></td>
+<td>Demo de proyecto del portfolio</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-api-endpoints-publicos">7. API / Endpoints públicos</h2>
+<p>Este proyecto no expone una API HTTP pública. Es una SPA estática sin backend, por lo que no hay rutas servidas desde el proyecto. La navegación interna se resuelve con anclas HTML (<code>#home</code>, <code>#about</code>, <code>#experience</code>, <code>#projects</code>, <code>#contact</code>) y se monitorea con <code>IntersectionObserver</code> en <code>src/components/Navbar.tsx</code>.</p>
+<h2 id="8-modelo-de-datos">8. Modelo de datos</h2>
+<p>El proyecto no usa base de datos. Los datos estáticos que alimentan las secciones están modelados como objetos TypeScript inmutables dentro del código. A continuación se documentan las estructuras principales halladas en los componentes.</p>
+<p><img alt="Diagrama 5" src="F:/PROYECTOS/portfolio/docs/generated/.build/diagrams/diagram-05-557332f1fc.svg"></p>
+<ul>
+<li><code>Translations</code> es un diccionario <code>{ en: {...}, es: {...} }</code> definido en <code>src/i18n/translations.ts</code>.</li>
+<li><code>SkillCategory</code> y el arreglo <code>skillCategories</code> viven en <code>src/components/AboutSection.tsx</code>.</li>
+<li><code>ExperienceItem</code> y la lista de experiencias están en <code>src/components/ExperienceSection.tsx</code>.</li>
+<li><code>Project</code> y el catálogo de proyectos están en <code>src/components/ProjectsSection.tsx</code>.</li>
+</ul>
+<h2 id="9-variables-de-entorno">9. Variables de entorno</h2>
+<p>No se detectaron archivos <code>.env</code>, <code>.env.example</code>, <code>environment.ts</code> ni propiedades de configuración externa en el repositorio. El proyecto no consume variables de entorno en tiempo de ejecución: todos los textos, imágenes y enlaces están definidos en el código fuente. Ver también la sección <code>Secciones omitidas</code> al final del documento.</p>
+<h2 id="10-manual-de-instalacion-y-puesta-en-marcha">10. Manual de instalación y puesta en marcha</h2>
+<h3 id="prerequisitos-del-sistema">Prerequisitos del sistema</h3>
+<ul>
+<li>Node.js 18 o superior (recomendado 20 LTS, compatible con Vite 5).</li>
+<li>npm 9 o superior (incluido con Node.js).</li>
+<li>Git para clonar el repositorio.</li>
+<li>Opcional: un navegador basado en Chromium para probar en desarrollo.</li>
+</ul>
+<h3 id="clonar-el-repositorio">Clonar el repositorio</h3>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/JoaquimColacilli/portfolio.git
+<span class="nb">cd</span><span class="w"> </span>portfolio
+</code></pre></div>
+
+<h3 id="instalar-dependencias">Instalar dependencias</h3>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install
+</code></pre></div>
+
+<h3 id="configurar-variables-de-entorno">Configurar variables de entorno</h3>
+<p>No se requieren variables de entorno. El proyecto funciona con la configuración del repositorio tal cual se clona.</p>
+<h3 id="levantar-servicios-auxiliares">Levantar servicios auxiliares</h3>
+<p>No aplica: el portfolio no depende de bases de datos, colas ni APIs backend.</p>
+<h3 id="correr-en-modo-desarrollo">Correr en modo desarrollo</h3>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>run<span class="w"> </span>dev
+</code></pre></div>
+
+<p>Vite levanta el servidor de desarrollo con Hot Module Replacement en el puerto por defecto (<code>http://localhost:5173</code>).</p>
+<h3 id="correr-tests">Correr tests</h3>
+<p>El proyecto no incluye suite de tests automatizados. Se puede correr el linter como control de calidad estática:</p>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>run<span class="w"> </span>lint
+</code></pre></div>
+
+<h3 id="build-de-produccion">Build de producción</h3>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>run<span class="w"> </span>build
+</code></pre></div>
+
+<p>El artefacto generado queda en la carpeta <code>dist/</code>, lista para servir en cualquier host estático.</p>
+<h3 id="previsualizacion-del-build">Previsualización del build</h3>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>run<span class="w"> </span>preview
+</code></pre></div>
+
+<h3 id="deploy">Deploy</h3>
+<p>El repositorio no contiene <code>Dockerfile</code> ni scripts de deploy. El flujo sugerido es subir la carpeta <code>dist/</code> a un proveedor de hosting estático compatible: Netlify, Vercel, Cloudflare Pages o GitHub Pages. La única convención necesaria es preservar la ruta raíz <code>/</code> para los assets absolutos referenciados en <code>index.html</code> y <code>App.tsx</code> (por ejemplo <code>/CV_JOAQUIM_COLACILLI_ESPAÑOL.pdf</code>).</p>
+<h2 id="11-estructura-de-carpetas">11. Estructura de carpetas</h2>
+<div class="highlight"><pre><span></span><code>portfolio/
+├── public/                → Assets estáticos servidos tal cual
+│   ├── images/            → Imágenes de proyectos, logos de empresas y foto de perfil
+│   ├── CV_JOAQUIM_COLACILLI_ENGLISH.pdf
+│   ├── CV_JOAQUIM_COLACILLI_ESPAÑOL.pdf
+│   ├── jc.ico
+│   └── vite.svg
+├── src/                   → Código fuente de la aplicación React
+│   ├── assets/            → Recursos importados desde el bundle
+│   ├── components/        → Componentes React por responsabilidad
+│   ├── hooks/             → Hooks personalizados reutilizables
+│   ├── i18n/              → Traducciones ES/EN
+│   ├── App.tsx            → Componente raíz y layout principal
+│   ├── index.css          → Estilos globales y capa Tailwind
+│   ├── main.tsx           → Bootstrap de React
+│   └── vite-env.d.ts      → Tipos de ambiente de Vite
+├── eslint.config.js       → Configuración de ESLint 9 flat config
+├── index.html             → HTML raíz para Vite
+├── package.json           → Metadatos y scripts del proyecto
+├── postcss.config.js      → Configuración de PostCSS
+├── README.md              → Descripción breve del proyecto
+├── tailwind.config.js     → Configuración de Tailwind CSS
+├── tsconfig.json          → Configuración TypeScript raíz
+├── tsconfig.app.json      → Config TS específica del bundle de la app
+├── tsconfig.node.json     → Config TS para archivos ejecutados en Node (vite.config)
+└── vite.config.ts         → Configuración de Vite
+</code></pre></div>
+
+<h2 id="13-scripts-y-tareas-automatizadas">13. Scripts y tareas automatizadas</h2>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Qué hace</th>
+<th>Cuándo usarlo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>npm run dev</code></td>
+<td>Levanta Vite en modo desarrollo con HMR</td>
+<td>Durante desarrollo local</td>
+</tr>
+<tr>
+<td><code>npm run build</code></td>
+<td>Compila TypeScript y genera bundle de producción en <code>dist/</code></td>
+<td>Antes de cada deploy</td>
+</tr>
+<tr>
+<td><code>npm run lint</code></td>
+<td>Ejecuta ESLint sobre todo el proyecto</td>
+<td>Validación previa a commit o PR</td>
+</tr>
+<tr>
+<td><code>npm run preview</code></td>
+<td>Sirve el contenido de <code>dist/</code> para probar el bundle compilado</td>
+<td>Verificar el build antes de publicar</td>
+</tr>
+</tbody>
+</table>
+<h2 id="15-glosario-de-terminos-del-dominio">15. Glosario de términos del dominio</h2>
+<ul>
+<li><strong>Hero</strong> — Sección superior del landing que contiene el saludo, nombre animado, rol y botones de acción principal.</li>
+<li><strong>Bento grid</strong> — Patrón de diseño usado en <code>AboutSection</code> que combina tarjetas de distintos tamaños para mostrar información densa (stats, ubicación, educación, stack).</li>
+<li><strong>White-label</strong> — Modelo de producto mencionado en la experiencia laboral; describe micrositios parametrizables para partners externos.</li>
+<li><strong>Cross Selling</strong> — Iniciativa de producto en Despegar donde el autor trabaja actualmente; se refiere a ventas cruzadas entre verticales de viaje.</li>
+<li><strong>SPA</strong> — Single Page Application: la arquitectura de este portfolio, donde todo el contenido se carga en una única página y la navegación se resuelve con anclas internas.</li>
+<li><strong>Fast Refresh</strong> — Característica de <code>@vitejs/plugin-react</code> que actualiza componentes en caliente sin perder estado durante desarrollo.</li>
+<li><strong>IntersectionObserver</strong> — API del navegador usada por los hooks <code>useInView</code> y por la <code>Navbar</code> para detectar qué sección está en viewport y resaltar el enlace activo.</li>
+</ul>
+<h2 id="16-ownership-y-contactos">16. Ownership y contactos</h2>
+<ul>
+<li><strong>Autor principal</strong>: Joaquim Colacilli</li>
+<li><strong>Email</strong>: joaquimcolacilli9@gmail.com (fuente: <code>src/components/Footer.tsx</code>)</li>
+<li><strong>GitHub</strong>: https://github.com/joaquimcolacilli</li>
+<li><strong>LinkedIn</strong>: https://linkedin.com/in/joaquim-colacilli</li>
+<li><strong>Ubicación</strong>: Buenos Aires, Argentina (fuente: <code>src/components/AboutSection.tsx</code>)</li>
+<li><strong>Committers registrados en git</strong>: Joaquim, Joaquim Colacilli</li>
+</ul>
+<p>El repositorio no contiene archivo <code>CODEOWNERS</code>. El campo <code>author</code> de <code>package.json</code> está ausente, por lo que el ownership se deriva del historial git y del contenido del propio sitio.</p>
+<h2 id="17-apendice-evidencia">17. Apéndice — Evidencia</h2>
+<h3 id="react">React</h3>
+<ul>
+<li><code>package.json</code> (dependencia: <code>react</code>, <code>react-dom</code>)</li>
+<li><code>src/main.tsx</code> (import de <code>react-dom/client</code>)</li>
+<li><code>src/App.tsx</code> (componentes funcionales)</li>
+</ul>
+<h3 id="typescript">TypeScript</h3>
+<ul>
+<li><code>package.json</code> (devDependency: <code>typescript</code>, <code>typescript-eslint</code>)</li>
+<li><code>tsconfig.json</code></li>
+<li><code>tsconfig.app.json</code></li>
+<li><code>tsconfig.node.json</code></li>
+</ul>
+<h3 id="vite">Vite</h3>
+<ul>
+<li><code>package.json</code> (devDependency: <code>vite</code>, <code>@vitejs/plugin-react</code>)</li>
+<li><code>vite.config.ts</code></li>
+</ul>
+<h3 id="tailwind-css">Tailwind CSS</h3>
+<ul>
+<li><code>package.json</code> (devDependency: <code>tailwindcss</code>, <code>postcss</code>, <code>autoprefixer</code>)</li>
+<li><code>tailwind.config.js</code></li>
+<li><code>postcss.config.js</code></li>
+<li><code>src/index.css</code></li>
+</ul>
+<h3 id="motion-animaciones">motion (animaciones)</h3>
+<ul>
+<li><code>package.json</code> (dependencia: <code>motion</code>)</li>
+<li><code>src/App.tsx</code> (<code>useScroll</code>, <code>useTransform</code>, <code>motion.div</code>, <code>AnimatedLetters</code>)</li>
+<li><code>src/components/Navbar.tsx</code> (<code>motion</code>, <code>AnimatePresence</code>)</li>
+<li><code>src/components/AboutSection.tsx</code></li>
+<li><code>src/components/ExperienceSection.tsx</code></li>
+<li><code>src/components/ProjectsSection.tsx</code></li>
+<li><code>src/components/Footer.tsx</code></li>
+</ul>
+<h3 id="lucide-react">lucide-react</h3>
+<ul>
+<li><code>package.json</code> (dependencia: <code>lucide-react</code>)</li>
+<li><code>src/App.tsx</code> (<code>ChevronDown</code>, <code>Download</code>)</li>
+<li><code>src/components/Navbar.tsx</code> (<code>Menu</code>, <code>X</code>)</li>
+<li><code>src/components/Footer.tsx</code> (<code>Mail</code>, <code>Github</code>, <code>Linkedin</code>, <code>Copy</code>, <code>Check</code>, <code>ExternalLink</code>)</li>
+</ul>
+<h3 id="fuentes-web-self-hosted">Fuentes web self-hosted</h3>
+<ul>
+<li><code>package.json</code> (dependencias: <code>@fontsource/inter</code>, <code>@fontsource-variable/jetbrains-mono</code>)</li>
+<li><code>src/main.tsx</code> (imports de los CSS de las fuentes)</li>
+</ul>
+<h3 id="eslint-9-flat-config">ESLint 9 (flat config)</h3>
+<ul>
+<li><code>package.json</code> (devDependency: <code>eslint</code>, <code>@eslint/js</code>, <code>eslint-plugin-react-hooks</code>, <code>eslint-plugin-react-refresh</code>)</li>
+<li><code>eslint.config.js</code></li>
+</ul>
+<h3 id="npm">npm</h3>
+<ul>
+<li><code>package.json</code></li>
+<li><code>package-lock.json</code></li>
+</ul>
+<h3 id="contenido-i18n">Contenido i18n</h3>
+<ul>
+<li><code>src/i18n/translations.ts</code> (objeto <code>translations</code> con claves <code>en</code> y <code>es</code>)</li>
+</ul>
+<h3 id="hooks-personalizados">Hooks personalizados</h3>
+<ul>
+<li><code>src/hooks/useInView.ts</code> (wrapper sobre <code>IntersectionObserver</code>)</li>
+<li><code>src/hooks/useCounter.ts</code> (contador animado con <code>requestAnimationFrame</code>)</li>
+</ul>
+<h3 id="assets-descargables">Assets descargables</h3>
+<ul>
+<li><code>public/CV_JOAQUIM_COLACILLI_ENGLISH.pdf</code></li>
+<li><code>public/CV_JOAQUIM_COLACILLI_ESPAÑOL.pdf</code></li>
+<li><code>public/images/</code> (imágenes de proyectos y logos de empresas)</li>
+</ul>
+<hr>
+<h2 id="secciones-omitidas">Secciones omitidas</h2>
+<ul>
+<li><strong>9. Variables de entorno</strong> — Se documentó como vacía porque el proyecto no consume variables de entorno: no existen archivos <code>.env</code>, <code>.env.example</code>, <code>environment.ts</code> ni configuraciones externalizadas. Se deja el encabezado por completitud.</li>
+<li><strong>12. CI/CD</strong> — No se detectaron workflows en <code>.github/workflows/</code> ni <code>Jenkinsfile</code>, <code>.gitlab-ci.yml</code> u otros marcadores de pipelines en el repositorio.</li>
+<li><strong>14. Troubleshooting</strong> — No existe archivo <code>TROUBLESHOOTING.md</code> y el <code>README.md</code> del proyecto tiene una única línea descriptiva sin incidencias conocidas documentadas.</li>
+</ul>
+</main>
+</body>
+</html>

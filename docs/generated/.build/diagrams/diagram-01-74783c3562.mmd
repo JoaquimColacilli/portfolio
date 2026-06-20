@@ -1,0 +1,34 @@
+flowchart TB
+    subgraph Client["Cliente"]
+        Browser["Navegador del visitante"]
+    end
+
+    subgraph Static["Hosting estático"]
+        IndexHtml["index.html"]
+        Bundle["Bundle Vite (JS + CSS)"]
+        Public["public/ — CVs, imágenes, favicon"]
+    end
+
+    subgraph App["Aplicación React"]
+        Main["main.tsx"]
+        AppRoot["App.tsx"]
+        Navbar["Navbar"]
+        Sections["Secciones: Hero / About / Experience / Projects / Footer"]
+    end
+
+    subgraph Support["Capa de soporte"]
+        I18n["i18n/translations.ts"]
+        Hooks["hooks/ — useInView, useCounter"]
+        Tailwind["tailwind.config.js"]
+    end
+
+    Browser --> IndexHtml
+    IndexHtml --> Bundle
+    Bundle --> Main
+    Main --> AppRoot
+    AppRoot --> Navbar
+    AppRoot --> Sections
+    Sections --> I18n
+    Sections --> Hooks
+    Sections --> Public
+    AppRoot --> Tailwind

@@ -1,0 +1,23 @@
+sequenceDiagram
+    autonumber
+    actor Visitor as Visitante
+    participant Nav as Navbar
+    participant App as App
+    participant T as translations
+    participant Sect as Secciones
+    participant Pub as public/
+
+    Visitor->>Nav: Click en botón EN / ES
+    Nav->>App: onLanguageChange("en" | "es")
+    App->>App: setCurrentLang(lang)
+    App->>T: translations[currentLang]
+    T-->>App: Objeto con textos
+    App->>Sect: prop currentLang
+    Sect->>T: translations[currentLang]
+    T-->>Sect: Textos de la sección
+    Sect-->>Visitor: Re-render con idioma elegido
+
+    Visitor->>App: Click en "Descargar CV"
+    App->>App: Calcula cvFileName según currentLang
+    App->>Pub: GET /CV_JOAQUIM_COLACILLI_<IDIOMA>.pdf
+    Pub-->>Visitor: Descarga del PDF

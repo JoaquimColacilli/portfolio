@@ -1,0 +1,45 @@
+classDiagram
+    class Translations {
+        +nav: NavLabels
+        +hero: HeroContent
+        +about: AboutContent
+        +experience: ExperienceContent
+        +projects: ProjectsContent
+        +footer: FooterContent
+    }
+
+    class SkillCategory {
+        +name: string
+        +icon: ReactNode
+        +skills: string[]
+    }
+
+    class ExperienceItem {
+        +title: string
+        +company: string
+        +period: string
+        +logo?: string
+        +responsibilities: string[]
+        +skills: string[]
+    }
+
+    class Project {
+        +title: string
+        +description: string
+        +image: string
+        +technologies: string[]
+        +demoLink: string
+        +githubLink: string
+        +category: ProjectCategory
+        +featured?: boolean
+    }
+
+    class NavbarProps {
+        +currentLang: string
+        +onLanguageChange(lang: string)
+    }
+
+    Translations <.. NavbarProps : usa
+    Translations <.. SkillCategory : referencia
+    Translations <.. ExperienceItem : referencia
+    Translations <.. Project : referencia
