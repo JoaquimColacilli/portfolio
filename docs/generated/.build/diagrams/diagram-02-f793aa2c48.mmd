@@ -1,0 +1,49 @@
+flowchart LR
+    subgraph Entry["Entry"]
+        main_tsx["main.tsx"]
+        App_tsx["App.tsx"]
+    end
+
+    subgraph Layout["Layout y navegación"]
+        Navbar["Navbar"]
+        Footer["Footer"]
+        LanguageSwitch["LanguageSwitch"]
+    end
+
+    subgraph Sections["Secciones"]
+        AboutSection["AboutSection"]
+        ExperienceSection["ExperienceSection"]
+        ProjectsSection["ProjectsSection"]
+    end
+
+    subgraph Visual["Elementos visuales"]
+        FloatingPaths["FloatingPaths"]
+        SnakePath["SnakePath"]
+        TypedText["TypedText"]
+        SkillCard["SkillCard"]
+        StatCard["StatCard"]
+    end
+
+    subgraph Support["Soporte"]
+        translations["i18n/translations.ts"]
+        useInView["hooks/useInView"]
+        useCounter["hooks/useCounter"]
+    end
+
+    main_tsx --> App_tsx
+    App_tsx --> Navbar
+    App_tsx --> AboutSection
+    App_tsx --> ExperienceSection
+    App_tsx --> ProjectsSection
+    App_tsx --> Footer
+    App_tsx --> FloatingPaths
+    App_tsx --> SnakePath
+    App_tsx --> TypedText
+
+    Navbar --> translations
+    AboutSection --> translations
+    AboutSection --> useInView
+    AboutSection --> useCounter
+    ExperienceSection --> translations
+    ProjectsSection --> translations
+    Footer --> translations
