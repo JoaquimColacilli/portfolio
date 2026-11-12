@@ -1,15 +1,84 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="/jc.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Joaquim Colacilli — Software Developer. Building scalable, high-performance systems." />
-    <meta name="theme-color" content="#0A0A0F" />
-    <title>Joaquim Colacilli — Software Developer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Joaquim Colacilli, software developer in Buenos Aires</title>
+    <meta
+      name="description"
+      content="Frontend-focused full-stack developer. Eleven years of work, from technical school to Despegar, drawn as one line in real time with three.js."
+    />
+    <meta name="author" content="Joaquim Colacilli" />
+    <meta name="theme-color" content="#04091f" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="canonical" href="https://joaquimcolacilli-portfolio.netlify.app/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Joaquim Colacilli" />
+    <meta property="og:title" content="Joaquim Colacilli, software developer" />
+    <meta
+      property="og:description"
+      content="Eleven years of work, from technical school to Despegar, drawn as one line in real time with three.js."
+    />
+    <meta property="og:url" content="https://joaquimcolacilli-portfolio.netlify.app/" />
+    <meta property="og:image" content="https://joaquimcolacilli-portfolio.netlify.app/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="es_AR" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/node_modules/@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2"
+      crossorigin
+    />
+    <style>
+      html {
+        background: #04091f;
+        color: #eef3ff;
+      }
+    </style>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Joaquim Colacilli",
+        "jobTitle": "Software Developer",
+        "url": "https://joaquimcolacilli-portfolio.netlify.app/",
+        "address": { "@type": "PostalAddress", "addressLocality": "Buenos Aires", "addressCountry": "AR" },
+        "worksFor": { "@type": "Organization", "name": "Despegar" },
+        "alumniOf": [
+          { "@type": "EducationalOrganization", "name": "Escuela Técnica N.º 36 Almirante Guillermo Brown" },
+          { "@type": "CollegeOrUniversity", "name": "Universidad de Buenos Aires, Facultad de Ingeniería" }
+        ],
+        "knowsLanguage": ["es", "en"],
+        "sameAs": ["https://github.com/JoaquimColacilli", "https://www.linkedin.com/in/joaquim-colacilli/"]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <div style="max-width: 40rem; margin: 12vh auto; padding: 0 24px; font: 18px/1.5 system-ui, sans-serif">
+        <h1>Joaquim Colacilli</h1>
+        <p>
+          Frontend-focused full-stack developer in Buenos Aires. This site draws its content with JavaScript; without it, here is
+          where to find me.
+        </p>
+        <p>
+          <a href="mailto:joaquimcolacilli9@gmail.com" style="color: inherit">joaquimcolacilli9@gmail.com</a><br />
+          <a href="https://www.linkedin.com/in/joaquim-colacilli/" style="color: inherit">LinkedIn</a><br />
+          <a href="https://github.com/JoaquimColacilli" style="color: inherit">GitHub</a><br />
+          <a href="CV_JOAQUIM_COLACILLI_ENGLISH.pdf" style="color: inherit">CV (English)</a><br />
+          <a href="CV_JOAQUIM_COLACILLI_ESPAÑOL.pdf" style="color: inherit">CV (Español)</a>
+        </p>
+      </div>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
