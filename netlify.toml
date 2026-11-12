@@ -1,0 +1,19 @@
+# Netlify builds the site with Vite and serves the dist folder.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Vite 8 needs Node 20.19 or newer; older sites on Netlify may still default to less.
+  NODE_VERSION = "22"
+
+# Files under /assets carry a content hash in their name, so they can be cached for good.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"

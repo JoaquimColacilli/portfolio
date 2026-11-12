@@ -1,0 +1,1195 @@
+/* ── Cover ─────────────────────────────────────────────────────────────────── */
+.cover {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  padding: 104px var(--gutter) 132px;
+}
+
+/* a soft shadow on the text side keeps it readable over the grid */
+.cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(4 9 31 / 0.55) 0%, rgb(4 9 31 / 0.3) 36%, transparent 64%);
+  opacity: clamp(0, calc(1 - var(--s) * 3.4), 1);
+  pointer-events: none;
+}
+
+.cover__body {
+  position: relative;
+  /* the cover hands over to the line as soon as the visitor starts scrolling */
+  opacity: clamp(0, calc(1 - var(--s) * 3.4), 1);
+}
+
+.cover__title {
+  font-size: clamp(3.1rem, min(10.6vw, 20svh), 10.75rem);
+  font-weight: 760;
+  font-stretch: 125%;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+}
+
+.cover__line {
+  position: relative;
+  display: block;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+/* Type construction lines: baseline and cap height, ruled across the whole sheet.
+   Offsets come from Archivo's metrics (descent 0.21 em, cap height 0.686 em). */
+.cover__line::before,
+.cover__line::after {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--gutter));
+  width: 100vw;
+  height: 1px;
+  background: var(--rule);
+  transform-origin: left;
+  animation: rule 1.3s var(--ease) both;
+  pointer-events: none;
+}
+
+.cover__line::before {
+  bottom: 0.126em;
+}
+
+.cover__line::after {
+  bottom: calc(0.126em + 0.686em);
+  animation-delay: 0.12s;
+}
+
+.cover__line:nth-child(2)::before {
+  animation-delay: 0.2s;
+}
+
+.cover__line:nth-child(2)::after {
+  animation-delay: 0.32s;
+}
+
+.cover__word {
+  display: inline-block;
+  animation: wipe 1s var(--ease) 0.35s both;
+}
+
+.cover__line:nth-child(2) .cover__word {
+  animation-delay: 0.52s;
+}
+
+.cover__cursor,
+.contact__cursor {
+  display: inline-block;
+  width: 0.085em;
+  height: 0.7em;
+  margin-left: 0.07em;
+  background: var(--signal);
+  box-shadow: 0 0 0.3em rgb(255 192 67 / 0.5);
+  vertical-align: baseline;
+}
+
+.cover__cursor {
+  animation:
+    appear 0.01s linear 1.35s both,
+    blink 1.15s steps(1, end) 2.6s infinite;
+}
+
+/* once the line has left it, the cursor is the start of the line and holds still */
+.line-out .cover__cursor {
+  animation: none;
+}
+
+.cover__text {
+  max-width: 35rem;
+  text-shadow: var(--halo);
+  margin-top: clamp(22px, 3.6vh, 46px);
+  animation: wipe 1s var(--ease) 0.95s both;
+}
+
+.cover__lede {
+  font-size: clamp(1.05rem, 0.98rem + 0.4vw, 1.3rem);
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
+.cover__now {
+  margin-top: 0.75em;
+  font-weight: 620;
+}
+
+.cover__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px 28px;
+  margin-top: clamp(20px, 3.2vh, 36px);
+}
+
+.cover__hint {
+  position: absolute;
+  left: var(--gutter);
+  bottom: 34px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: calc(100% - 2 * var(--gutter));
+  font-size: 0.92rem;
+  color: var(--ink-3);
+  text-shadow: var(--halo);
+  opacity: clamp(0, calc(1 - var(--s) * 8), 1);
+  animation: wipe 1s var(--ease) 1.5s both;
+}
+
+.cover__hint-line {
+  position: relative;
+  flex: none;
+  width: 46px;
+  height: 1px;
+  background: var(--rule-strong);
+  overflow: hidden;
+}
+
+.cover__hint-line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--signal);
+  animation: run 2.4s var(--ease) 2s infinite;
+}
+
+@keyframes rule {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes wipe {
+  from {
+    clip-path: inset(-0.4em calc(100% + 1em) -0.45em -1em);
+  }
+  to {
+    clip-path: inset(-0.4em -4% -0.45em -1em);
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes run {
+  0% {
+    transform: translateX(-100%);
+  }
+  60%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ── Chapters ──────────────────────────────────────────────────────────────────
+   Without the stage running, a chapter is a plain block of text. The two layouts that
+   depend on the stage (side by side, stacked) are further down, under .is-staged. */
+.chapter {
+  position: relative;
+  padding: 14svh 0;
+}
+
+.chapter__pin {
+  padding: 0 var(--gutter);
+}
+
+.chapter__text {
+  position: relative;
+  max-width: 34rem;
+}
+
+.chapter__title {
+  font-size: clamp(2.1rem, 3.6vw, 3.5rem);
+  font-weight: 740;
+  font-stretch: 125%;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.3em;
+}
+
+.chapter__title span {
+  display: block;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+.chapter__role {
+  font-size: 1.1em;
+  font-weight: 580;
+  margin-bottom: 1.1em;
+}
+
+.chapter__intro {
+  color: var(--ink-2);
+  margin-top: 1.15em;
+  max-width: 28em;
+}
+
+.chapter__points {
+  list-style: none;
+  padding: 0;
+  margin: 1.15em 0 1.2em;
+  display: grid;
+  gap: 0.48em;
+}
+
+.chapter__points li {
+  position: relative;
+  padding-left: 1.2em;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+
+.chapter__points li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 0.6em;
+  height: 1px;
+  background: var(--ink-3);
+}
+
+.chapter__stack,
+.chapter__also {
+  padding-top: 0.8em;
+  border-top: 1px solid var(--rule);
+  font-size: 0.93em;
+  color: var(--ink-2);
+}
+
+.chapter__also {
+  margin-top: 0.8em;
+}
+
+.chapter__stack span,
+.chapter__also span {
+  margin-right: 0.35em;
+  font-stretch: 86%;
+  font-weight: 560;
+  color: var(--ink-3);
+}
+
+/* Side by side: the text does not scroll with the page. It is plotted in place while
+   its drawing is in front of the visitor, and wiped, in writing direction, on the way out. */
+@media (min-width: 900px) and (min-aspect-ratio: 105.01/100) and (min-height: 560px) {
+  .is-staged .chapter {
+    height: 170svh;
+    padding: 0;
+    /* links to a chapter land in the middle of its scroll range */
+    --jump: 0.5;
+  }
+
+  .is-staged .chapter__pin {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    align-items: center;
+    padding: 84px var(--gutter) 92px;
+    pointer-events: none;
+  }
+
+  /* a soft shadow on the text side keeps it readable over the grid */
+  .is-staged .chapter__pin::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgb(4 9 31 / 0.66) 0%, rgb(4 9 31 / 0.4) 28%, transparent 56%);
+    opacity: var(--p, 0);
+  }
+
+  .is-staged .chapter__text {
+    /* the whole column is sized from the window, so it always fits beside the drawing */
+    font-size: clamp(0.875rem, min(2.15vh, 0.55rem + 0.62vw), 1.25rem);
+    width: min(33em, 42vw);
+    max-width: none;
+  }
+
+  .is-staged .chapter.is-live .chapter__text {
+    pointer-events: auto;
+  }
+
+  .is-staged .chapter__title {
+    font-size: clamp(2rem, min(3.55vw, 7.4vh), 4.75rem);
+    /* the heading widens as its sheet comes to rest */
+    font-stretch: calc(84% + 41% * var(--p, 1));
+  }
+
+  .is-staged .chapter.is-past .plot {
+    clip-path: inset(-0.4em -4% -0.45em 104%);
+  }
+}
+
+/* ── Dimension: a tenure drawn to scale on a six-year rule ─────────────────── */
+.dim__duration {
+  font-size: 0.98rem;
+  font-weight: 660;
+  font-variant-numeric: tabular-nums;
+}
+
+.dim__rule {
+  position: relative;
+  height: 17px;
+  margin-top: 5px;
+}
+
+.dim__rule::before {
+  content: '';
+  position: absolute;
+  inset: 8px 0 auto 0;
+  border-top: 1px dashed var(--rule-strong);
+}
+
+.dim__year {
+  position: absolute;
+  top: 4px;
+  width: 1px;
+  height: 9px;
+  margin-left: -0.5px;
+  background: var(--rule-strong);
+}
+
+.dim__measure {
+  position: absolute;
+  left: 0;
+  top: 7px;
+  z-index: 1;
+  height: 3px;
+  width: max(calc(var(--len) * 100%), 14px);
+  background: var(--signal);
+  box-shadow: 0 0 10px rgb(255 192 67 / 0.45);
+}
+
+/* oblique end ticks, as on a drawing; an arrowhead when the chapter is still open */
+.dim__measure::before,
+.dim__measure::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  width: 1.5px;
+  height: 13px;
+  background: var(--signal);
+  transform: rotate(35deg);
+}
+
+.dim__measure::before {
+  left: 0;
+}
+
+.dim__measure::after {
+  right: 0;
+}
+
+.dim__measure[data-open]::after {
+  top: -3.5px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  background: none;
+  border-top: 1.5px solid var(--signal);
+  border-right: 1.5px solid var(--signal);
+  transform: rotate(45deg);
+}
+
+.dim__dates {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 5px;
+  font-size: 0.86rem;
+  color: var(--ink-3);
+}
+
+.dim__scale {
+  font-stretch: 86%;
+  white-space: nowrap;
+}
+
+/* ── Sheets that take the whole frame: work and toolkit ────────────────────── */
+.work,
+.toolkit {
+  padding: clamp(112px, 19vh, 190px) var(--gutter) clamp(96px, 15vh, 170px);
+}
+
+.sheet__head {
+  margin-bottom: clamp(36px, 7vh, 80px);
+}
+
+.sheet__title {
+  width: fit-content;
+  font-size: clamp(2.3rem, 5.6vw, 5.4rem);
+  font-weight: 750;
+  font-stretch: 125%;
+  line-height: 0.96;
+  letter-spacing: -0.032em;
+  margin-bottom: 0.38em;
+}
+
+.sheet__intro {
+  max-width: 36rem;
+  text-shadow: var(--halo);
+  font-size: clamp(1.05rem, 1rem + 0.3vw, 1.22rem);
+  color: var(--ink-2);
+}
+
+/* Blueprint paper for the tables: it covers the world behind them, so they read cleanly. */
+.paper {
+  position: relative;
+  padding: clamp(24px, 3.4vw, 56px);
+  background: rgb(8 24 74 / 0.92);
+  /* the frame of a drawing sheet, inset from the edge of the paper */
+  outline: 1px solid var(--rule);
+  outline-offset: -10px;
+}
+
+/* figures: four large plates on an offset grid */
+.figures {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(36px, 6vh, 76px) clamp(20px, 3.4vw, 56px);
+  margin-bottom: clamp(72px, 12vh, 140px);
+}
+
+.figure:nth-child(4n + 1) {
+  grid-column: 1 / span 7;
+}
+
+.figure:nth-child(4n + 2) {
+  grid-column: 8 / span 5;
+  margin-top: clamp(40px, 11vh, 132px);
+}
+
+.figure:nth-child(4n + 3) {
+  grid-column: 1 / span 5;
+}
+
+.figure:nth-child(4n + 4) {
+  grid-column: 6 / span 7;
+  margin-top: clamp(24px, 6vh, 72px);
+}
+
+.figure__frame {
+  position: relative;
+  display: block;
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-deep);
+  transition: border-color 0.25s;
+}
+
+.figure__frame:hover {
+  border-color: var(--ink);
+}
+
+/* corner marks outside the frame, as on a printed plate */
+.figure__frame::before,
+.figure__frame::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+}
+
+.figure__frame::before {
+  left: -9px;
+  top: -9px;
+  border-left: 1px solid var(--rule-strong);
+  border-top: 1px solid var(--rule-strong);
+}
+
+.figure__frame::after {
+  right: -9px;
+  bottom: -9px;
+  border-right: 1px solid var(--rule-strong);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+/* the marks reach out when the plate is pointed at */
+.figure__frame::before,
+.figure__frame::after {
+  transition:
+    width 0.35s var(--ease),
+    height 0.35s var(--ease),
+    border-color 0.2s;
+}
+
+.figure__frame:hover::before,
+.figure__frame:hover::after,
+.figure__frame:focus-visible::before,
+.figure__frame:focus-visible::after {
+  width: 30px;
+  height: 30px;
+  border-color: var(--ink);
+}
+
+.figure__frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.figure figcaption {
+  text-shadow: var(--halo);
+  display: grid;
+  grid-template-columns: 3.4rem minmax(0, 1fr);
+  gap: 0 6px;
+  padding-top: 16px;
+}
+
+.figure__no {
+  grid-row: 1 / span 4;
+  padding-top: 0.3em;
+  font-size: 0.86rem;
+  font-stretch: 86%;
+  font-weight: 560;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.figure__title {
+  font-size: clamp(1.25rem, 1.1rem + 0.7vw, 1.7rem);
+  font-weight: 700;
+  font-stretch: 114%;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+
+.figure__text {
+  margin-top: 0.4rem;
+  max-width: 34rem;
+  color: var(--ink-2);
+}
+
+.figure__meta {
+  margin-top: 0.45rem;
+  font-size: 0.9rem;
+  color: var(--ink-3);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  font-weight: 560;
+}
+
+.figure .links {
+  margin-top: 0.6rem;
+}
+
+.links--none {
+  color: var(--ink-3);
+}
+
+/* index: every project in one table */
+.index {
+  position: relative;
+}
+
+.index__title,
+.notes h3 {
+  font-size: 1.12rem;
+  font-weight: 700;
+  font-stretch: 114%;
+  margin-bottom: 0.9rem;
+}
+
+.index table,
+.bom table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.index th,
+.index td,
+.bom th,
+.bom td {
+  padding: 0.78rem 1.1rem 0.8rem 0;
+  border-top: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.index thead th,
+.bom thead th {
+  padding-block: 0.5rem;
+  border-top-color: var(--rule-strong);
+  font-size: 0.82rem;
+  font-weight: 540;
+  font-stretch: 86%;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.index tbody tr:last-child > *,
+.bom tbody tr:last-child > * {
+  border-bottom: 1px solid var(--rule);
+}
+
+.index td:first-child,
+.bom td:first-child {
+  width: 3.4rem;
+  color: var(--ink-3);
+}
+
+.index tbody th {
+  font-weight: 660;
+}
+
+.index tbody th > span {
+  display: block;
+}
+
+.index tbody th small {
+  display: block;
+  max-width: 33rem;
+  margin-top: 0.15rem;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--ink-2);
+}
+
+.index__kind,
+.index__stack {
+  font-size: 0.92rem;
+  color: var(--ink-2);
+}
+
+.index__kind {
+  white-space: nowrap;
+}
+
+.index td:last-child {
+  white-space: nowrap;
+}
+
+.index tbody tr {
+  transition: background-color 0.2s;
+}
+
+.index tbody tr:hover {
+  background: rgb(238 243 255 / 0.05);
+}
+
+.index__thumb {
+  display: none;
+}
+
+.index__preview {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 30;
+  width: min(340px, 30vw);
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-deep);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(var(--x, 0px), var(--y, 0px)) scale(0.96);
+  transform-origin: left bottom;
+  transition:
+    opacity 0.2s,
+    transform 0.25s var(--ease);
+}
+
+.index__preview[data-visible] {
+  opacity: 1;
+  transform: translate(var(--x, 0px), var(--y, 0px));
+}
+
+.index__preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* bill of materials */
+.filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: clamp(26px, 4vh, 44px);
+}
+
+.filter__label {
+  margin-right: 8px;
+  font-size: 0.92rem;
+  color: var(--ink-3);
+}
+
+.filter button {
+  padding: 0.42em 0.8em 0.4em;
+  border: 1px solid var(--rule);
+  font-size: 0.92rem;
+  font-weight: 560;
+  color: var(--ink-2);
+  transition:
+    border-color 0.2s,
+    color 0.2s,
+    background-color 0.2s;
+}
+
+.filter button:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.filter button[aria-pressed='true'] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--on-signal);
+}
+
+.filter__count {
+  margin-left: 0.25em;
+  font-size: 0.82em;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.72;
+}
+
+.bom tbody tr {
+  transition: opacity 0.3s;
+}
+
+.bom tbody tr[data-off] {
+  opacity: 0.24;
+}
+
+.bom {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 44px clamp(28px, 5vw, 88px);
+  align-items: start;
+}
+
+.bom caption {
+  padding-bottom: 0.7rem;
+  text-align: left;
+  font-size: 1.12rem;
+  font-weight: 700;
+  font-stretch: 114%;
+}
+
+.bom th,
+.bom td {
+  padding-block: 0.5rem;
+}
+
+.bom tbody th {
+  width: 42%;
+  font-weight: 620;
+}
+
+.bom td:last-child {
+  color: var(--ink-2);
+}
+
+.notes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 40px clamp(28px, 4vw, 64px);
+  margin-top: clamp(56px, 10vh, 116px);
+  padding-top: 30px;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.notes__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: var(--ink-2);
+}
+
+.notes__list li {
+  position: relative;
+  padding: 0.42rem 0 0.42rem 1.2rem;
+  border-top: 1px solid var(--rule);
+}
+
+.notes__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1.2em;
+  width: 0.6rem;
+  height: 1px;
+  background: var(--ink-3);
+}
+
+.timeline {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.timeline th,
+.timeline td {
+  padding: 0.42rem 0;
+  border-top: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.timeline th {
+  padding-right: 1.1rem;
+  font-weight: 560;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.timeline td {
+  color: var(--ink-2);
+}
+
+.pairs div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.42rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.pairs dt {
+  font-weight: 620;
+}
+
+.pairs dd {
+  text-align: right;
+  color: var(--ink-2);
+}
+
+/* ── Contact: the title block, full size ───────────────────────────────────── */
+.contact {
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 40px;
+  padding: clamp(104px, 15vh, 168px) var(--gutter) 26px;
+}
+
+.contact__body {
+  align-self: center;
+}
+
+.contact__title {
+  font-size: clamp(3rem, min(9.8vw, 19svh), 9.75rem);
+  font-weight: 760;
+  font-stretch: 125%;
+  line-height: 0.94;
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+}
+
+.contact__title .plot {
+  display: inline-block;
+}
+
+.contact__cursor {
+  animation: blink 1.15s steps(1, end) infinite;
+}
+
+.contact__intro {
+  max-width: 34rem;
+  text-shadow: var(--halo);
+  margin: clamp(14px, 2.4vh, 28px) 0 clamp(28px, 5vh, 56px);
+  font-size: clamp(1.05rem, 1rem + 0.35vw, 1.25rem);
+  color: var(--ink-2);
+}
+
+.contact__block {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  width: fit-content;
+  max-width: 100%;
+  border: 1px solid var(--rule-strong);
+  background: var(--panel);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.contact__block > div {
+  padding: 13px 22px 15px 18px;
+  border-left: 1px solid var(--rule);
+}
+
+.contact__block > div:first-child,
+.contact__block > div:nth-child(2) {
+  border-left: 0;
+}
+
+.contact__block dt {
+  margin-bottom: 3px;
+  font-size: 0.72rem;
+  font-stretch: 84%;
+  font-weight: 520;
+  color: var(--ink-3);
+}
+
+.contact__block dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 18px;
+  font-weight: 580;
+}
+
+.contact__email {
+  grid-column: 1 / -1;
+  border-bottom: 1px solid var(--rule);
+}
+
+.contact__email dd > a {
+  font-size: clamp(1.2rem, 1rem + 1.3vw, 2rem);
+  font-weight: 660;
+  font-stretch: 108%;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.contact__email .link {
+  font-size: 0.9rem;
+  font-weight: 540;
+  color: var(--ink-2);
+}
+
+.contact__author img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.08);
+  border: 1px solid var(--rule-strong);
+}
+
+.colophon {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px 32px;
+  /* keep clear of the fixed title block in the corner */
+  padding-right: min(27rem, 40vw);
+  font-size: 0.84rem;
+  color: var(--ink-3);
+}
+
+/* ── Stacked layout: phones, and narrow, tall or very short windows ────────────
+   Keep this query in step with STACKED_QUERY in src/experience/Experience.ts. */
+@media (max-width: 899.98px), (max-aspect-ratio: 105/100), (max-height: 559.98px) {
+  .cover {
+    padding: 96px 18px 150px;
+  }
+
+  /* the text runs the full width here, so the shadow lies across the page instead */
+  .cover::before {
+    background: linear-gradient(180deg, transparent 22%, rgb(4 9 31 / 0.4) 46%, rgb(4 9 31 / 0.4) 82%, transparent 100%);
+  }
+
+  .cover__hint {
+    left: 18px;
+    bottom: 86px;
+    max-width: calc(100% - 36px);
+  }
+
+  /* here the chapters scroll under the header too */
+  .header::before {
+    opacity: 1;
+  }
+
+  /* the drawing keeps the upper half; the text scrolls over it on a panel of its own */
+  .is-staged .chapter {
+    padding: 56svh 0 30svh;
+  }
+
+  .chapter__pin {
+    padding: 0 12px;
+  }
+
+  /* no backdrop blur here: re-blurring the canvas under a large panel costs phones frames */
+  .chapter__text {
+    padding: 20px 18px 22px;
+    border: 1px solid var(--rule);
+    background: rgb(5 13 44 / 0.88);
+  }
+
+  .chapter__title {
+    font-size: clamp(1.8rem, 8.2vw, 2.6rem);
+  }
+
+  .is-staged .chapter__title {
+    font-stretch: calc(92% + 33% * var(--p, 1));
+  }
+
+  /* the panel waits for its drawing: it comes in with the text, once the pen is done */
+  .is-staged .chapter__text {
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+
+  .is-staged .chapter.is-live .chapter__text,
+  .is-staged .chapter.is-past .chapter__text {
+    opacity: 1;
+  }
+
+  /* in the page flow nothing is wiped behind the reader */
+  .is-staged .chapter.is-past .plot {
+    clip-path: inset(-0.4em -4% -0.45em -1em);
+  }
+
+  .work,
+  .toolkit {
+    padding-inline: 18px;
+  }
+
+  .figures {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .figures .figure {
+    grid-column: auto;
+    margin-top: 0;
+  }
+
+  /* the index becomes a list: number, then title and description beside a thumbnail, then links */
+  .index table,
+  .index tbody {
+    display: block;
+  }
+
+  .index thead,
+  .index__preview {
+    display: none;
+  }
+
+  .index tbody tr {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 3px 10px;
+    padding: 14px 0 16px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .index tbody tr:last-child {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .index tbody tr > * {
+    display: block;
+    padding: 0;
+    border: 0;
+  }
+
+  .index tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+
+  .index tbody td:first-child {
+    width: auto;
+    grid-row: 1 / span 2;
+  }
+
+  .index tbody th {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 92px;
+    align-items: start;
+    gap: 14px;
+  }
+
+  .index__thumb {
+    display: block;
+    width: 92px;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border: 1px solid var(--rule);
+  }
+
+  .index tbody .index__kind,
+  .index tbody .index__stack {
+    grid-column: 2;
+    font-size: 0.86rem;
+    color: var(--ink-3);
+    white-space: normal;
+  }
+
+  .index tbody th {
+    margin-bottom: 5px;
+  }
+
+  .index tbody td:last-child {
+    grid-column: 2;
+    margin-top: 7px;
+    white-space: normal;
+  }
+
+  .paper {
+    padding: 26px 20px;
+    outline-offset: -7px;
+  }
+
+  .bom,
+  .notes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contact {
+    gap: 22px;
+    padding: 84px 18px 20px;
+  }
+
+  .contact__intro {
+    margin-bottom: 22px;
+  }
+
+  .contact__block {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .contact__block > div {
+    padding: 11px 14px 12px;
+  }
+
+  .contact__block > div:nth-child(even) {
+    border-left: 0;
+  }
+
+  .contact__block > div:nth-child(n + 4) {
+    border-top: 1px solid var(--rule);
+  }
+
+  .contact__email dd > a {
+    font-size: clamp(1.05rem, 5.2vw, 1.5rem);
+  }
+
+  .colophon {
+    padding-right: 0;
+    padding-bottom: 74px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cover__cursor,
+  .contact__cursor {
+    animation: none;
+  }
+}

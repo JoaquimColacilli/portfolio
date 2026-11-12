@@ -1,16 +1,15 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import '@fontsource/inter/400.css';
-import '@fontsource/inter/500.css';
-import '@fontsource/inter/600.css';
-import '@fontsource/inter/700.css';
-import '@fontsource/inter/800.css';
-import '@fontsource-variable/jetbrains-mono';
-import './index.css';
-import App from './App.tsx';
+import 'lenis/dist/lenis.css';
+import './styles/base.css';
+import './styles/sheets.css';
+import { App } from './App';
+import { LanguageProvider } from './i18n';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
-  </StrictMode>
+    <LanguageProvider>
+      <App />
+    </LanguageProvider>
+  </StrictMode>,
 );
