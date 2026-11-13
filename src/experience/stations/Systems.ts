@@ -1,7 +1,7 @@
 import { Group } from 'three/webgpu';
 import { Ink } from '../ink/Ink';
 import { Sketch, TAU } from '../ink/sketch';
-import { Dots } from '../world/Dots';
+import { AMBER, CHASE, Dots, GREEN, ICE, SPARKLE, WHITE } from '../world/Dots';
 import { Walk } from './paths';
 import { Station, type Frame } from './Station';
 
@@ -10,9 +10,15 @@ import { Station, type Frame } from './Station';
  * A distributed system as a schematic: a hexagonal core with its ports, an API behind a
  * circuit breaker, two databases, a message queue and the delivery pipeline — with
  * requests travelling along the wires.
+ *
+ * Every few seconds the breaker opens: requests wait and the retry arrow starts to
+ * turn. The pipeline runs stage by stage. After dark the status lights show.
  */
 export class Systems extends Station {
   private packets: Dots;
+  private retry = new Group();
+  private spark: Dots;
+  private open = 0;
   private routes: { walk: Walk; count: number; speed: number; gated: boolean }[];
   private breakerArm = new Group();
   private scratch = { x: 0, y: 0 };
@@ -38,10 +44,7 @@ export class Systems extends Station {
     sk.text('API', -1.75, 0.0, 0.1, 'center');
     sk.thin(0.8).pace(0.5);
     for (const y of [0.22, 0.05, -0.12]) sk.arrow(-2.42, y, -2.14, y, 0.07);
-    sk.pace(1).together(() => {
-      sk.circle(-1.75, 0.58, 0.15, -0.5, 4.1);
-      sk.path([-1.66, 0.42, -1.618, 0.452, -1.668, 0.5]);
-    });
+    sk.pace(1);
 
     // API → core, through a circuit breaker (the arm itself is animated separately)
     sk.bold().together(() => {
@@ -102,6 +105,41 @@ export class Systems extends Station {
     this.breakerArm.position.set(-1.14, 0.05, 0);
     this.group.add(this.breakerArm);
 
+    // retry arrow: turns while the breaker is open
+    const retry = new Sketch();
+    retry.thin(0.8).together(() => {
+      retry.circle(0, 0, 0.15, -0.5, 4.1);
+      retry.path([0.09, -0.16, 0.132, -0.128, 0.082, -0.08]);
+    });
+    this.addInk(retry, { boil: 0.0015 }, this.retry);
+    this.retry.position.set(-1.75, 0.58, 0);
+    this.group.add(this.retry);
+
+    // the pipeline runs: a pulse from stage to stage, white by day and green after dark
+    for (const [gate, tone] of [
+      [-1, WHITE],
+      [1, GREEN],
+    ] as const) {
+      const stages = this.addLamps(5, { mode: CHASE, speed: 2.2, gate });
+      for (let i = 0; i < 4; i++) stages.set(i, -1.05 + i * 0.45, 1.38, 0.03, 0.17, i / 5, tone, 1);
+      stages.set(4, 0.9, 1.38, 0.03, 0.24, 4 / 5, tone, 1).commit(true);
+    }
+    // status lights, seen only at night
+    const status = this.addLamps(9, { mode: SPARKLE, gate: 1 });
+    let n = 0;
+    for (const cy of [0.72, -0.32]) {
+      for (let i = 0; i < 3; i++) status.set(n++, 1.74 + i * 0.12, cy - 0.06, 0.03, 0.1, 0.13 + n * 0.19, i === 2 ? AMBER : GREEN, 1);
+    }
+    status.set(n++, -1.47, 0.19, 0.03, 0.1, 0.4, GREEN, 1);
+    status.set(n++, 2.06, -1.1, 0.03, 0.1, 0.7, GREEN, 1);
+    status.set(n++, -0.62, -1.2, 0.03, 0.1, 0.9, AMBER, 1).commit(true);
+    const core = this.addLamps(1, { gate: 1, soft: 1 });
+    core.set(0, hx, hy, -0.05, 3.0, 0.3, ICE, 0.22).commit(true);
+    // a spark where the breaker opens
+    this.spark = this.addLamps(2, {}, this.group, false);
+    this.spark.set(0, -1.02, 0.1, 0.03, 0.34, 0, AMBER, 0.8).set(1, -1.02, 0.1, 0.03, 0.12, 0, AMBER, 1).commit(true);
+    this.addBeacon();
+
     // requests on the wires
     this.routes = [
       { walk: new Walk([-1.4, 0.05, port(3)[0], 0.05]), count: 3, speed: 0.34, gated: true },
@@ -124,6 +162,12 @@ export class Systems extends Station {
     const open = cycle > 5 && cycle < 6.5;
     const target = open ? 0.55 : 0;
     this.breakerArm.rotation.z += (target - this.breakerArm.rotation.z) * Math.min(1, frame.delta * 10 + (frame.motion > 0.5 ? 0 : 1));
+    // while it is open the retry arrow turns, and there is a spark at the contact as it opens
+    this.open += ((open ? 1 : 0) - this.open) * Math.min(1, frame.delta * 6);
+    this.retry.rotation.z -= frame.delta * 7 * this.open * frame.motion;
+    const flash = frame.motion > 0.5 && cycle > 5 && cycle < 5.35 ? 1 - (cycle - 5) / 0.35 : 0;
+    this.spark.state.opacity = presence > 0.97 ? flash : 0;
+    this.spark.mesh.visible = this.spark.state.opacity > 0.01;
 
     let i = 0;
     for (const route of this.routes) {

@@ -7,7 +7,12 @@ export interface Viewport {
   height: number;
   /** text and drawing stacked (phones, narrow windows) instead of side by side */
   stacked: boolean;
+  /** px taken by the fixed header: the sky keeps its moon below this */
+  top: number;
 }
+
+/** Vertical field of view in degrees: wider when the drawing has to share a tall, narrow frame. */
+export const fieldOfView = (viewport: Viewport): number => (viewport.stacked ? 50 : 40);
 
 const tmpA = new Vector3();
 const tmpB = new Vector3();
@@ -25,7 +30,7 @@ export class Rig {
   private shiftX: number[] = [];
   private shiftY: number[] = [];
   private curve = new CatmullRomCurve3([new Vector3(), new Vector3(0, 0, -1)]);
-  private viewport: Viewport = { width: 1, height: 1, stacked: false };
+  private viewport: Viewport = { width: 1, height: 1, stacked: false, top: 0 };
   private pointer = { x: 0, y: 0 };
   private roll = 0;
   private lastX = 0;
@@ -37,7 +42,7 @@ export class Rig {
     this.viewport = viewport;
     const aspect = viewport.width / viewport.height;
     const { stacked } = viewport;
-    const fov = stacked ? 50 : 40;
+    const fov = fieldOfView(viewport);
     this.fov = fov;
     this.camera.fov = fov;
     this.camera.aspect = aspect;

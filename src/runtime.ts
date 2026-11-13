@@ -4,6 +4,7 @@ import type { Experience } from './experience/Experience';
 import { setBackend } from './lib/backend';
 import { createBindings } from './lib/bindings';
 import { clamp, smooth } from './lib/math';
+import { getMode, onMode } from './lib/mode';
 import { stage } from './lib/stage';
 import { ticker } from './lib/ticker';
 
@@ -47,6 +48,7 @@ export function startRuntime({ host, origin, end }: Parts): Runtime {
   let dirty = true;
   let introStart = Number.POSITIVE_INFINITY;
   let frames = 0;
+  let clock = 0;
 
   stage.setSections(sheets);
   const bind = createBindings(sheets, followers);
@@ -87,7 +89,8 @@ export function startRuntime({ host, origin, end }: Parts): Runtime {
         world.dispose();
         return;
       }
-      world.setAnchors(origin, end);
+      world.setAnchors(origin, end, document.querySelector<HTMLElement>('.header__tools'));
+      world.setNight(getMode() === 'night', true);
       world.intro = reduced ? 1 : 0;
       if (reduced) root.classList.add('line-out');
       experience = world;
@@ -117,6 +120,7 @@ export function startRuntime({ host, origin, end }: Parts): Runtime {
   };
 
   const tick = (time: number, delta: number): void => {
+    clock = time;
     const resized = dirty;
     if (resized) {
       dirty = false;
@@ -162,6 +166,8 @@ export function startRuntime({ host, origin, end }: Parts): Runtime {
     if (index > 0) stage.jump(index, immediate);
   };
   const onHashChange = (): void => goToHash(false);
+  // the switch in the header: the scene follows, taking a couple of seconds over it
+  const stopMode = onMode(() => experience?.setNight(getMode() === 'night'));
 
   window.addEventListener('resize', invalidate);
   window.addEventListener('hashchange', onHashChange);
@@ -187,7 +193,8 @@ export function startRuntime({ host, origin, end }: Parts): Runtime {
     Object.assign(window, {
       __stage: stage,
       __capture: (width?: number, height?: number) => experience?.capture(width, height),
-      __info: () => ({ backend: experience?.backend ?? null, frames, s: stage.s, ready: host.classList.contains('is-ready') }),
+      __hold: (time: number | null) => ticker.hold(time),
+      __info: () => ({ backend: experience?.backend ?? null, frames, s: stage.s, time: clock, ready: host.classList.contains('is-ready') }),
     });
   }
 
@@ -197,6 +204,7 @@ export function startRuntime({ host, origin, end }: Parts): Runtime {
       disposed = true;
       root.classList.remove('is-staged', 'line-out');
       removeTick();
+      stopMode();
       observer.disconnect();
       window.removeEventListener('resize', invalidate);
       window.removeEventListener('hashchange', onHashChange);

@@ -1,17 +1,30 @@
 import { Group } from 'three/webgpu';
-import { smooth } from '../../lib/math';
+import { clamp, lerp, smooth } from '../../lib/math';
 import { Ink } from '../ink/Ink';
 import { Sketch } from '../ink/sketch';
+import { BLINK, ICE, WHITE } from '../world/Dots';
 import { Station, type Frame } from './Station';
+
+/** Where the dashboard stands, one plane behind the page. */
+const DASHBOARD = { x: -1.02, y: 0.86, z: -0.75 };
+/** The day and night switch in the wireframe's own navigation: track ends of its knob. */
+const SWITCH = { y: 0.55, off: 0.775, on: 0.885 };
 
 /**
  * Sheet 2 — freelance work, 2021.
  * Wireframes: a landing page at desktop width, its phone layout in front and a dashboard
  * behind, each on its own depth plane, with the breakpoint widths as dimensions.
+ *
+ * The dashboard is live: its bars move and its curve is plotted again every few
+ * seconds. The page has a day and night switch in its navigation, and it follows the
+ * real one: after dark the knob slides over and both screens light up.
  */
 export class Studio extends Station {
   private pointer = new Group();
   private ripple: Ink;
+  private curve: Ink;
+  private bars: Ink[] = [];
+  private knob: Ink;
 
   constructor() {
     super(2);
@@ -20,17 +33,13 @@ export class Studio extends Station {
 
     // ── dashboard, one plane back ──
     sk.scope(() => {
-      sk.translate(-1.02, 0.86, -0.75);
+      sk.translate(DASHBOARD.x, DASHBOARD.y, DASHBOARD.z);
       sk.bold(0.5).rect(0, 0, 2.0, 1.3, 0.06);
       sk.thin(0.4).line(-0.55, -0.65, -0.55, 0.65);
       sk.together(() => {
         for (let i = 0; i < 4; i++) sk.line(-0.9, 0.42 - i * 0.14, -0.66, 0.42 - i * 0.14);
       });
       sk.thin(0.45).path([-0.4, -0.45, -0.4, 0.4]).path([-0.4, -0.45, 0.85, -0.45]);
-      sk.bold(0.55).path([-0.36, -0.3, -0.12, -0.05, 0.1, -0.16, 0.36, 0.14, 0.58, 0.06, 0.82, 0.34]);
-      sk.thin(0.4).together(() => {
-        for (let i = 0; i < 5; i++) sk.rect(-0.26 + i * 0.24, -0.45 + (0.1 + i * 0.035) / 2, 0.09, 0.1 + i * 0.035);
-      });
     });
 
     // ── landing page, desktop ──
@@ -43,7 +52,8 @@ export class Studio extends Station {
     });
     sk.together(() => {
       sk.rect(-1.7, 0.55, 0.1, 0.1);
-      for (let i = 0; i < 3; i++) sk.line(0.22 + i * 0.26, 0.55, 0.4 + i * 0.26, 0.55);
+      for (let i = 0; i < 2; i++) sk.line(0.2 + i * 0.25, 0.55, 0.38 + i * 0.25, 0.55);
+      sk.rect((SWITCH.off + SWITCH.on) / 2, SWITCH.y, 0.2, 0.09, 0.045);
     });
     // headline, copy, calls to action
     sk.ink({ width: 0.05, alpha: 0.95, glow: 0.5, tone: 0, dash: 0 }).line(-1.7, 0.27, -0.72, 0.27).line(-1.7, 0.11, -0.98, 0.11);
@@ -105,12 +115,55 @@ export class Studio extends Station {
 
     const ring = new Sketch();
     ring.thin(0.9).circle(0, 0, 0.1);
-    this.ripple = new Ink(ring, { boil: 0 });
+    this.ripple = this.addPart(ring, { boil: 0 });
     this.ripple.mesh.position.set(-1.36, -0.5, 0.2);
-    this.group.add(this.ripple.mesh);
+
+    // the dashboard's curve and bars, each a part of its own so it can move
+    const curve = new Sketch();
+    curve.bold(0.55).path([-0.36, -0.3, -0.12, -0.05, 0.1, -0.16, 0.36, 0.14, 0.58, 0.06, 0.82, 0.34]);
+    this.curve = this.addPart(curve, { boil: 0.002 });
+    this.curve.mesh.position.set(DASHBOARD.x, DASHBOARD.y, DASHBOARD.z);
+    for (let i = 0; i < 5; i++) {
+      const bar = new Sketch();
+      bar.thin(0.4).path([-0.045, 0, -0.045, 1, 0.045, 1, 0.045, 0]);
+      const ink = this.addPart(bar, { boil: 0 });
+      ink.mesh.position.set(DASHBOARD.x - 0.26 + i * 0.24, DASHBOARD.y - 0.45, DASHBOARD.z);
+      this.bars.push(ink);
+    }
+
+    // knob of the day and night switch
+    const knob = new Sketch();
+    knob.bold(0.95).circle(0, 0, 0.026);
+    this.knob = this.addPart(knob, { boil: 0 });
+
+    // a notification light on the phone
+    const notice = this.addLamps(1, { mode: BLINK, speed: 2.6 });
+    notice.set(0, 2.12, 0.42, 0.62, 0.13, 0.1, WHITE, 0.9).commit(true);
+    // after dark the two screens are what lights the scene
+    const screens = this.addLamps(2, { gate: 1, soft: 1 });
+    screens.set(0, bx, -0.05, -0.05, 4.6, 0.15, ICE, 0.2).set(1, 1.78, -0.35, 0.55, 2.3, 0.5, ICE, 0.24).commit(true);
+    this.addBeacon();
   }
 
   protected animate(frame: Frame, presence: number): void {
+    const { time, night } = frame;
+    const ready = presence > 0.98;
+    const moving = frame.motion > 0.5;
+
+    // dashboard: the curve is plotted again every six seconds, the bars never rest
+    const cycle = moving ? time % 6 : 3;
+    this.curve.set(ready ? clamp(cycle / 1.5) : 0, moving ? smooth(clamp((cycle - 5.3) / 0.5)) : 0);
+    this.bars.forEach((bar, i) => {
+      bar.mesh.scale.y = 0.1 + i * 0.035 + (moving ? Math.sin(time * 1.3 + i * 1.1) * 0.05 + 0.03 : 0);
+      bar.state.opacity = presence;
+      bar.set(1, 0);
+    });
+
+    // the switch in the page's navigation follows the real one
+    this.knob.mesh.position.set(lerp(SWITCH.off, SWITCH.on, night), SWITCH.y, 0.01);
+    this.knob.state.opacity = presence;
+    this.knob.set(1, 0);
+
     // 3.2 s loop: glide in, press, ripple
     const t = frame.motion > 0.5 ? (frame.time % 3.2) / 3.2 : 0.3;
     const glide = smooth(Math.min(1, t / 0.35));

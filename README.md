@@ -8,6 +8,27 @@ after the name on the cover, passes one drawing per chapter, takes off from a ru
 Despegar ("to take off") and stops at a cursor on the last sheet. Every drawing is
 plotted stroke by stroke as the visitor scrolls towards it, and lifted again as they leave.
 
+## Day and night
+
+The site has two modes, and the night is more than a darker palette. The paper goes
+dark and the scene lights up, lamp by lamp:
+
+- a starry sky fixed to the world, a moon drawn like everything else (outline, hatched
+  shadow), a falling star now and then and a distant airliner crossing every minute and a half;
+- lamps on the drafting floor and a red beacon over every chapter;
+- each drawing gets its own lights: the old monitor glows, the dashboard switches itself
+  to dark mode, the servers show their status LEDs, the car turns its headlights on, and
+  the runway at Despegar gets edge, centre-line, threshold and approach lights;
+- above the clouds a constellation is ruled star to star (the Southern Cross, then Orion).
+
+By day there is movement too: a line of code being typed, a paper plane, a chart being
+re-plotted, wheels turning, a marshaller waving the airliner in, a windsock, birds and a
+balloon. At Despegar the airliner leaves its sheet, turns its nose up and climbs with the
+visitor, with the line as its trail.
+
+The mode follows the visitor's clock (night from 19:00 to 06:59). The switch in the
+header overrides it for the rest of the visit, and `?mode=night` or `?mode=day` forces one.
+
 ## Stack
 
 - [three.js](https://threejs.org/) r187 with `WebGPURenderer` and TSL node materials. It
@@ -53,13 +74,14 @@ src/
     stage.ts      scroll position → "sheet coordinate" (3.5 = halfway from sheet 3 to 4)
     ticker.ts     the one requestAnimationFrame loop
     bindings.ts   writes the stage into CSS variables and classes
+    mode.ts       day or night: clock, header switch, `?mode=`
   runtime.ts      wires it together: smooth scroll → stage → DOM → 3D, once per frame
   experience/     the 3D world (plain three.js, no React)
     Experience.ts renderer, frame loop, anchoring of the line to the page
     Rig.ts        camera path, one viewpoint per sheet
     ink/          the line renderer: strokes → ribbons, drawn and erased over time
-    stations/     one drawing per sheet
-    world/        backdrop, floor grid, dust, the line itself
+    stations/     one drawing per sheet, with its moving parts and its night lights
+    world/        backdrop (paper, stars, moon), floor grid, lamps, night sky, the line itself
 ```
 
 The page and the 3D world read the same number, `stage.s`, so they cannot drift apart.
@@ -73,8 +95,9 @@ Things the scene does on its own:
 - Phones and narrow or tall windows: drawing on top, text below, lighter scene.
 - Slow frames: the render resolution steps down.
 
-For debugging: `?gl=webgl` forces the WebGL 2 backend, `?debug` exposes `window.__stage`
-and `window.__info()`.
+For debugging: `?gl=webgl` forces the WebGL 2 backend, `?debug` exposes `window.__stage`,
+`window.__info()` and `window.__hold(seconds)`, which stops the scene clock at a moment
+of your choice (`null` lets it run again).
 
 ## Deploy
 

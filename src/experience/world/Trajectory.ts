@@ -16,11 +16,15 @@ export interface Route {
   /** two points that bring it back into the frame and up to the last cursor */
   entry: Vector3;
   approach: Vector3;
+  /** two points of the climb after take-off, in the middle of the camera's view */
+  climb: [Vector3, Vector3];
 }
 
 const SAMPLES_PER_SPAN = 26;
 /** how far ahead of the visitor the pen runs, in sheets */
-const LEAD = 0.1;
+export const LEAD = 0.1;
+/** sheet coordinates at which the pen passes the two climb points */
+export const CLIMB_AT: [number, number] = [5.52, 5.78];
 
 /**
  * The line. One continuous path from the cursor on the cover to the cursor on the
@@ -33,7 +37,8 @@ export class Trajectory {
   private head = new Dots(2);
   private points: Vector3[] = [];
   private fractions: number[] = []; // arc fraction of every sample
-  private sheetFraction: number[] = []; // arc fraction at each sheet
+  /** where the pen is at given sheet coordinates: arc fraction per keyed control, sorted by s */
+  private stops: { s: number; fraction: number }[] = [];
   private tmp = new Vector3();
 
   constructor() {
@@ -43,12 +48,13 @@ export class Trajectory {
   }
 
   /** (Re)builds the path between the two cursors. */
-  build({ start, end, margins, entry, approach }: Route): void {
+  build({ start, end, margins, entry, approach, climb }: Route): void {
     const controls: Vector3[] = [];
-    const sheetControl: number[] = new Array(SHEET_COUNT).fill(0);
-    const add = (v: Vector3, sheet = -1) => {
+    const keyed: { s: number; control: number }[] = [];
+    // `at` pins the pen to this control when the stage is at that sheet coordinate
+    const add = (v: Vector3, at = -1) => {
       controls.push(v);
-      if (sheet >= 0) sheetControl[sheet] = controls.length - 1;
+      if (at >= 0) keyed.push({ s: at, control: controls.length - 1 });
     };
     const rail = (i: number) => {
       const p = ANCHORS[i].clone().add(RAIL_OFFSET);
@@ -69,16 +75,17 @@ export class Trajectory {
       }
       add(rail(i), i);
     }
-    // rolls down the runway, rotates and climbs
+    // rolls down the runway, rotates and climbs steeply, straight up the visitor's view
     const r5 = rail(LAST_CHAPTER);
-    add(r5.clone().add(new Vector3(0, 0, -8.5)));
-    add(r5.clone().add(new Vector3(-0.2, 1.6, -15)));
-    add(new Vector3(0.2, 9, -108));
+    add(r5.clone().add(new Vector3(0, 0, -4.5)));
+    add(r5.clone().add(new Vector3(-0.15, 1.1, -9.5)));
+    add(climb[0].clone(), CLIMB_AT[0]);
+    add(climb[1].clone(), CLIMB_AT[1]);
     add(margins[0].clone(), 6);
     add(margins[1].clone(), 7);
     add(entry.clone());
     add(approach.clone());
-    add(end.clone(), 8);
+    add(end.clone(), SHEET_COUNT - 1);
 
     const curve = new CatmullRomCurve3(controls, false, 'centripetal');
     const spans = controls.length - 1;
@@ -89,9 +96,7 @@ export class Trajectory {
     for (let i = 1; i < this.points.length; i++) cumulative.push(cumulative[i - 1] + this.points[i].distanceTo(this.points[i - 1]));
     const total = cumulative[cumulative.length - 1] || 1;
     this.fractions = cumulative.map((c) => c / total);
-    this.sheetFraction = sheetControl.map((c) => this.fractions[c * SAMPLES_PER_SPAN]);
-    // sheets without a control of their own would map to 0; keep the list monotonic
-    for (let i = 1; i < SHEET_COUNT; i++) this.sheetFraction[i] = Math.max(this.sheetFraction[i], this.sheetFraction[i - 1]);
+    this.stops = keyed.map(({ s, control }) => ({ s, fraction: this.fractions[control * SAMPLES_PER_SPAN] }));
 
     const pts: number[] = [];
     for (const p of this.points) pts.push(p.x, p.y, p.z);
@@ -111,11 +116,18 @@ export class Trajectory {
 
   /** Arc fraction the pen has reached for a sheet coordinate. */
   fractionAt(s: number): number {
-    const f = this.sheetFraction;
-    if (f.length === 0) return 0;
-    const c = clamp(s, 0, f.length - 1);
-    const i = Math.min(Math.floor(c), f.length - 2);
-    return lerp(f[i], f[i + 1], c - i);
+    const stops = this.stops;
+    if (stops.length === 0) return 0;
+    if (s <= stops[0].s) return stops[0].fraction;
+    for (let i = 1; i < stops.length; i++) {
+      if (s <= stops[i].s) return lerp(stops[i - 1].fraction, stops[i].fraction, (s - stops[i - 1].s) / (stops[i].s - stops[i - 1].s));
+    }
+    return stops[stops.length - 1].fraction;
+  }
+
+  /** World position of the pen when the stage is at `s`. */
+  penAt(s: number, out: Vector3, intro = 1): Vector3 {
+    return this.pointAt(this.fractionAt(s + LEAD * intro), out);
   }
 
   /** World position at an arc fraction. */

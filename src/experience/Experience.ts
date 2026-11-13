@@ -1,11 +1,11 @@
 import { PerspectiveCamera, RenderTarget, Scene, Vector3, WebGPURenderer } from 'three/webgpu';
-import { clamp, damp, lerp } from '../lib/math';
-import { stage } from '../lib/stage';
+import { clamp, damp, lerp, smooth } from '../lib/math';
+import { HOLD, stage } from '../lib/stage';
 import { inkUniforms } from './ink/material';
 import { ANCHORS, FLOOR_Y, SHEET_COUNT } from './layout';
 import { Rig, type Viewport } from './Rig';
 import type { Frame, Station } from './stations/Station';
-import { Ambient, Finale } from './stations/Ambient';
+import { Ambient, Finale, MARK } from './stations/Ambient';
 import { Routes } from './stations/Routes';
 import { School } from './stations/School';
 import { Studio } from './stations/Studio';
@@ -14,7 +14,9 @@ import { Takeoff } from './stations/Takeoff';
 import { Backdrop } from './world/Backdrop';
 import { Dots } from './world/Dots';
 import { Floor } from './world/Floor';
-import { Trajectory } from './world/Trajectory';
+import { NightSky } from './world/NightSky';
+import { moonSpot } from './world/sky';
+import { CLIMB_AT, LEAD, Trajectory } from './world/Trajectory';
 
 export interface ExperienceOptions {
   reducedMotion: boolean;
@@ -42,15 +44,24 @@ export class Experience {
   private readonly rig = new Rig();
   private readonly backdrop = new Backdrop();
   private readonly floor = new Floor();
+  private readonly nightSky = new NightSky();
   private readonly trajectory = new Trajectory();
   private readonly stations: Station[] = [];
+  private readonly takeoff = new Takeoff();
   private readonly finale = new Finale();
   private readonly dust: Dots;
   private readonly pointer = { x: 0, y: 0 };
-  private viewport: Viewport = { width: 1, height: 1, stacked: false };
+  private viewport: Viewport = { width: 1, height: 1, stacked: false, top: 0 };
   private originEl: HTMLElement | null = null;
   private endEl: HTMLElement | null = null;
+  private headerEl: HTMLElement | null = null;
+  /** where the moon is for a few sheet coordinates; in between it travels from one to the next */
+  private readonly moonKeys: { s: number; direction: Vector3 }[] = [];
   private motion: number;
+  /** 0 by day, 1 at night; eased towards `nightGoal` so the lights come on gradually */
+  private night = 0;
+  private nightGoal = 0;
+  private readonly pen = new Vector3();
   /** 0 → 1 once: the line leaves the cursor on the cover */
   intro = 1;
   private pixelRatio: number;
@@ -102,9 +113,9 @@ export class Experience {
     this.pixelRatio = Math.min(window.devicePixelRatio || 1, small || modest ? 1.5 : 2);
 
     this.scene.backgroundNode = this.backdrop.node;
-    this.scene.add(this.floor.mesh, this.trajectory.group);
+    this.scene.add(this.floor.mesh, this.trajectory.group, this.nightSky.group);
 
-    this.stations = [new School(), new Studio(), new Systems(), new Routes(), new Takeoff(), new Ambient(6, 'dial'), new Ambient(7, 'hexagons'), this.finale];
+    this.stations = [new School(), new Studio(), new Systems(), new Routes(), this.takeoff, new Ambient(6, 'dial'), new Ambient(7, 'hexagons'), this.finale];
     for (const station of this.stations) this.scene.add(station.group);
 
     this.dust = this.createDust(small || modest ? 700 : 1500);
@@ -121,11 +132,15 @@ export class Experience {
     this.resize();
   }
 
-  /** The two cursors the line runs between: after the name on the cover, and on the contact sheet. */
-  setAnchors(origin: HTMLElement | null, end: HTMLElement | null): void {
+  /**
+   * The two cursors the line runs between (after the name on the cover, and on the contact
+   * sheet), and the part of the header the sky has to stay clear of.
+   */
+  setAnchors(origin: HTMLElement | null, end: HTMLElement | null, header: HTMLElement | null = null): void {
     this.originEl = origin;
     this.endEl = end;
-    this.rebuildTrajectory();
+    this.headerEl = header;
+    this.resize();
   }
 
   setReducedMotion(reduced: boolean): void {
@@ -133,15 +148,27 @@ export class Experience {
     inkUniforms.motion.value = this.motion;
   }
 
+  /** Day or night. The change takes a couple of seconds unless `immediate`. */
+  setNight(night: boolean, immediate = false): void {
+    this.nightGoal = night ? 1 : 0;
+    if (immediate) this.night = this.nightGoal;
+  }
+
   /** Call when the window changes. Cheap when the canvas kept its size. */
   resize(): void {
     // the canvas is sized in CSS (100lvh), so a phone's collapsing URL bar does not resize it
     const width = this.canvas.clientWidth || window.innerWidth;
     const height = this.canvas.clientHeight || window.innerHeight;
-    if (width !== this.viewport.width || height !== this.viewport.height) {
-      this.viewport = { width, height, stacked: window.matchMedia(STACKED_QUERY).matches };
-      this.renderer.setPixelRatio(this.pixelRatio);
-      this.renderer.setSize(width, height, false);
+    const stacked = window.matchMedia(STACKED_QUERY).matches;
+    // the header is fixed, so its box does not depend on the scroll position
+    const top = Math.round(this.headerEl?.getBoundingClientRect().bottom ?? 52);
+    const resized = width !== this.viewport.width || height !== this.viewport.height;
+    if (resized || stacked !== this.viewport.stacked || top !== this.viewport.top) {
+      this.viewport = { width, height, stacked, top };
+      if (resized) {
+        this.renderer.setPixelRatio(this.pixelRatio);
+        this.renderer.setSize(width, height, false);
+      }
       this.rig.layout(this.viewport);
       this.backdrop.aspect.value = width / height;
       for (const station of this.stations) station.layout(this.viewport);
@@ -151,16 +178,31 @@ export class Experience {
 
   /** Call when the page content moved (fonts, language): the line is re-anchored to the cursors. */
   refresh(): void {
-    this.rebuildTrajectory();
+    this.resize();
   }
 
   /** Advances and draws one frame, seen from sheet coordinate `s`. */
   frame(time: number, delta: number, s = stage.s): void {
     if (this.disposed) return;
-    const frame: Frame = { s, time, delta, motion: this.motion };
+
+    // dusk and dawn take a little over two seconds; with reduced motion they are a cut
+    const step = this.motion > 0 ? delta / 2.4 : 1;
+    this.night += clamp(this.nightGoal - this.night, -step, step);
+    inkUniforms.night.value = smooth(this.night);
 
     this.rig.update(s, delta, time, this.pointer.x, this.pointer.y, this.motion, stage.velocity);
     const camera = this.rig.camera;
+    const frame: Frame = {
+      s,
+      time,
+      delta,
+      motion: this.motion,
+      night: inkUniforms.night.value,
+      camera,
+      pen: this.trajectory.penAt(s, this.pen, this.intro),
+    };
+    // the dust in the air catches more light after dark
+    this.dust.state.opacity = lerp(0.9, 1.5, frame.night);
     this.floor.follow(camera.position.x, camera.position.z);
     // the grid thins out once the line has taken off
     this.floor.opacity.value = 1 - clamp((camera.position.y - 3) / 9) * 0.85;
@@ -178,6 +220,8 @@ export class Experience {
       this.backdrop.horizon.value = 0.5 - scratchA.y * 0.5;
     }
     this.backdrop.haze.value = 1 - clamp((camera.position.y - 2.5) / 7);
+    this.moonAt(s, this.backdrop.moon.value);
+    this.nightSky.update(frame, this.backdrop.moon.value, Math.tan((camera.fov * Math.PI) / 360) * camera.aspect);
 
     this.trajectory.update(s, time, this.motion, this.intro);
     for (const station of this.stations) station.update(frame);
@@ -232,6 +276,88 @@ export class Experience {
     return out.sub(probe.position).normalize().multiplyScalar(depth).add(probe.position);
   }
 
+  /** Direction of the sky behind a pixel of the screen, as seen from sheet coordinate `s`. */
+  private skyAt(px: number, py: number, s: number, out = new Vector3()): Vector3 {
+    const { width, height } = this.viewport;
+    probe.fov = this.rig.fov;
+    probe.aspect = width / height;
+    const { shiftX, shiftY } = this.rig.poseAt(s, probe.position, scratchB);
+    probe.lookAt(scratchB);
+    probe.updateProjectionMatrix();
+    probe.updateMatrixWorld();
+    // chapter sheets shift the frame to make room for the text: undo that
+    const x = (px - shiftX * width) / width;
+    const y = (py + shiftY * height) / height;
+    out.set(x * 2 - 1, -(y * 2 - 1), 0.5).unproject(probe);
+    return out.sub(probe.position).normalize();
+  }
+
+  /**
+   * Places the moon for this window. It rests under the right side of the header on the
+   * cover, on the chapters that look its way and above the clouds; on the last sheet it
+   * sits inside the registration mark, between two of its rings. From one to the next it
+   * drifts a few degrees, the way the moon does over a night.
+   */
+  private rebuildSky(mark: Vector3): void {
+    const last = SHEET_COUNT - 1;
+    const { width, height, stacked, top } = this.viewport;
+    const keys = this.moonKeys;
+    keys.length = 0;
+    const rest = (s: number, sheet: Parameters<typeof moonSpot>[1]) => {
+      const spot = moonSpot(this.viewport, sheet);
+      keys.push({ s, direction: this.skyAt(spot.x, spot.y, s) });
+    };
+    rest(0, 'cover');
+    rest(2, 'chapter');
+    rest(4, 'chapter');
+    rest(6 - HOLD, 'sky');
+    rest(7 - HOLD, 'sky');
+
+    // Last sheet: the moon must not land on the registration mark. First choice is inside
+    // its upper right quarter, halfway between the dashed ring and the ticks; where the
+    // window leaves no room for that, a corner of the sky.
+    const spot = moonSpot(this.viewport, 'sky');
+    const pad = spot.radius + Math.max(8, height * 0.012);
+    this.skyAt(0, 0, last, scratchA); // aims the probe at the last sheet
+    const onScreen = (v: Vector3): [number, number] => {
+      v.project(probe);
+      return [(v.x * 0.5 + 0.5) * width, (0.5 - v.y * 0.5) * height];
+    };
+    const [cx, cy] = onScreen(scratchA.copy(mark));
+    const unit = onScreen(scratchA.copy(mark).setX(mark.x + 1))[0] - cx;
+    const clear = ([px, py]: [number, number]): boolean => {
+      if (px < spot.radius + 16 || px > width - spot.radius - 16 || py < top + spot.radius + 6 || py > height * 0.5) return false;
+      const dx = px - cx;
+      const dy = py - cy;
+      const d = Math.hypot(dx, dy);
+      if (Math.abs(d - MARK.inner * unit) < pad || Math.abs(d - MARK.dashed * unit) < pad) return false;
+      if (d + pad > MARK.ticks * unit && d - pad < MARK.outer * unit) return false;
+      const onArm = (along: number, across: number) =>
+        Math.abs(across) < pad && Math.abs(along) > MARK.arm[0] * unit - pad && Math.abs(along) < MARK.arm[1] * unit + pad;
+      return !onArm(dx, dy) && !onArm(dy, dx);
+    };
+    const reach = ((MARK.dashed + MARK.ticks) / 2) * unit;
+    const candidates = [35, 29, 23, 17].map((degrees): [number, number] => {
+      const angle = (degrees * Math.PI) / 180;
+      return [cx + Math.cos(angle) * reach, cy - Math.sin(angle) * reach];
+    });
+    candidates.push([width - spot.radius - 24, spot.y], [spot.x, spot.y], [spot.radius + 24, spot.y]);
+    const [px, py] = candidates.find(clear) ?? candidates[stacked ? 6 : 5];
+    keys.push({ s: last, direction: this.skyAt(px, py, last) });
+  }
+
+  /** Direction of the moon at sheet coordinate `s`. */
+  private moonAt(s: number, out: Vector3): Vector3 {
+    const keys = this.moonKeys;
+    if (keys.length === 0) return out;
+    let i = 0;
+    while (i < keys.length - 2 && s > keys[i + 1].s) i++;
+    const from = keys[i];
+    const to = keys[Math.min(i + 1, keys.length - 1)];
+    const f = to.s > from.s ? smooth(clamp((s - from.s) / (to.s - from.s))) : 0;
+    return out.copy(from.direction).lerp(to.direction, f).normalize();
+  }
+
   /** Centre of a DOM element in screen fractions, for the page scrolled to `scrollY`. */
   private screenOf(el: HTMLElement, scrollY: number): { x: number; y: number } {
     const rect = el.getBoundingClientRect();
@@ -255,8 +381,18 @@ export class Experience {
     const gutter = sheet ? Number.parseFloat(getComputedStyle(sheet).paddingLeft) : Number.NaN;
     const margin = 1 - (Number.isFinite(gutter) ? gutter : width * 0.06) / 2 / width;
 
+    // After take-off the line climbs through the middle of what the camera is looking at,
+    // so the visitor follows it straight up. The airliner flies the same two points.
+    const climb = CLIMB_AT.map((at) => {
+      const s = at - LEAD;
+      this.rig.poseAt(s, scratchA, scratchB);
+      return scratchB.clone().sub(scratchA).normalize().multiplyScalar(14).add(scratchA);
+    }) as [Vector3, Vector3];
+    this.takeoff.setFlight(climb[0], climb[1]);
+
     const end = this.worldAt(to.x, to.y, last, 6.4);
     this.trajectory.build({
+      climb,
       start: this.worldAt(from.x, from.y, 0, 5.2),
       end,
       margins: [this.worldAt(margin, 0.8, 6, 10.5), this.worldAt(margin, 0.72, 7, 10.5)],
@@ -265,6 +401,7 @@ export class Experience {
       approach: this.worldAt(Math.min(to.x + 0.24, margin), to.y + 0.17, last, 6.8),
     });
     this.finale.moveTo(end.x, end.y, end.z);
+    this.rebuildSky(end);
   }
 
   /** Renders one frame off-screen and returns it as a PNG data URL (used by the test tooling). */
@@ -300,6 +437,7 @@ export class Experience {
     for (const fn of this.cleanups) fn();
     for (const station of this.stations) station.dispose();
     this.trajectory.dispose();
+    this.nightSky.dispose();
     this.dust.dispose();
     this.renderer.dispose();
   }

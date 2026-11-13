@@ -26,13 +26,61 @@
     U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
+/* Colours that change between day and night are registered, so the change itself can be
+   animated: every surface and every line of text crosses over with the 3D scene. */
+@property --paper {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #0f2c7e;
+}
+
+@property --paper-mid {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #0a1f60;
+}
+
+@property --paper-deep {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #04091f;
+}
+
+@property --sheet {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgb(8 24 74 / 0.92);
+}
+
+@property --veil {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgb(5 13 44 / 0.88);
+}
+
+@property --ink-2 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #c3d0f4;
+}
+
+@property --ink-3 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #93a9e3;
+}
+
 /* ── Tokens ───────────────────────────────────────────────────────────────────
    Cyanotype blue, drafting-ink white, one warm signal colour.
    Mirrors src/experience/palette.ts. */
 :root {
   --paper: #0f2c7e;
+  --paper-mid: #0a1f60;
   --paper-deep: #04091f;
   --paper-light: #2a5bd0;
+  /* the paper under the tables, and the panel under the chapter text on phones */
+  --sheet: rgb(8 24 74 / 0.92);
+  --veil: rgb(5 13 44 / 0.88);
   --ink: #eef3ff;
   --ink-2: #c3d0f4;
   --ink-3: #93a9e3;
@@ -53,6 +101,29 @@
   --s: 0;
 
   color-scheme: dark;
+  transition:
+    --paper 1.8s ease,
+    --paper-mid 1.8s ease,
+    --paper-deep 1.8s ease,
+    --sheet 1.8s ease,
+    --veil 1.8s ease,
+    --ink-2 1.8s ease,
+    --ink-3 1.8s ease;
+}
+
+/* ── Night ─────────────────────────────────────────────────────────────────────
+   Set by src/lib/mode.ts. The paper goes dark; what the 3D scene adds after dark
+   (stars, a moon, lamps) lives in src/experience. */
+:root.night {
+  --paper: #071136;
+  --paper-mid: #030920;
+  --paper-deep: #010206;
+  --paper-light: #1b3690;
+  --sheet: rgb(3 8 27 / 0.94);
+  --veil: rgb(2 5 18 / 0.92);
+  --ink-2: #b7c3ea;
+  --ink-3: #8497d2;
+  --panel: rgb(1 2 8 / 0.72);
 }
 
 *,
@@ -71,7 +142,7 @@ body {
   margin: 0;
   min-height: 100svh;
   overflow-x: clip;
-  background: radial-gradient(120% 85% at 50% 42%, var(--paper) 0%, #0a1f60 52%, var(--paper-deep) 100%) fixed;
+  background: radial-gradient(120% 85% at 50% 42%, var(--paper) 0%, var(--paper-mid) 52%, var(--paper-deep) 100%) fixed;
   color: var(--ink);
   font-family: var(--font);
   font-size: clamp(1rem, 0.94rem + 0.22vw, 1.125rem);
@@ -182,7 +253,7 @@ img {
   background:
     linear-gradient(rgb(238 243 255 / 0.07) 1px, transparent 1px) 0 0 / 100% 48px,
     linear-gradient(90deg, rgb(238 243 255 / 0.07) 1px, transparent 1px) 0 0 / 48px 100%,
-    radial-gradient(120% 85% at 50% 42%, var(--paper) 0%, #0a1f60 52%, var(--paper-deep) 100%) fixed;
+    radial-gradient(120% 85% at 50% 42%, var(--paper) 0%, var(--paper-mid) 52%, var(--paper-deep) 100%) fixed;
 }
 
 main {
@@ -295,6 +366,55 @@ main:focus {
   display: flex;
   align-items: center;
   gap: clamp(14px, 2vw, 26px);
+}
+
+/* day and night switch: the sun's rays fold in and a bite turns the disc into a moon */
+.mode {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin: -6px -4px -6px -6px;
+  color: var(--ink-2);
+  transition: color 0.2s;
+}
+
+.mode:hover {
+  color: var(--ink);
+}
+
+.mode__disc {
+  fill: currentColor;
+  transition: r 0.5s var(--ease);
+}
+
+.mode__bite {
+  transform: translate(13px, -13px);
+  transition: transform 0.5s var(--ease);
+}
+
+.mode__rays {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  transform-origin: 12px 12px;
+  transition:
+    transform 0.5s var(--ease),
+    opacity 0.3s;
+}
+
+.night .mode__disc {
+  r: 7.4px;
+}
+
+.night .mode__bite {
+  transform: translate(5px, -4px);
+}
+
+.night .mode__rays {
+  opacity: 0;
+  transform: rotate(60deg) scale(0.4);
 }
 
 .lang {

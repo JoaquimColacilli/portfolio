@@ -1,9 +1,10 @@
-import { Group } from 'three/webgpu';
+import { Group, type Object3D, type PerspectiveCamera, type Vector3 } from 'three/webgpu';
 import { ramp, smooth } from '../../lib/math';
 import { Ink } from '../ink/Ink';
 import { Sketch } from '../ink/sketch';
-import { ANCHORS, FLOOR_Y, RAIL_OFFSET } from '../layout';
+import { ANCHORS, DRAWING_HEIGHT, FLOOR_Y, RAIL_OFFSET } from '../layout';
 import type { Viewport } from '../Rig';
+import { BLINK, Dots, RED, type DotsState } from '../world/Dots';
 
 export interface Frame {
   /** sheet coordinate */
@@ -12,6 +13,11 @@ export interface Frame {
   delta: number;
   /** 0 with reduced motion, 1 otherwise */
   motion: number;
+  /** 0 by day, 1 at night, eased while the mode changes */
+  night: number;
+  camera: PerspectiveCamera;
+  /** where the pen of the line is right now, in world space */
+  pen: Vector3;
 }
 
 /**
@@ -21,19 +27,42 @@ export interface Frame {
 export abstract class Station {
   readonly group = new Group();
   protected readonly inks: Ink[] = [];
+  /** inks that keep their own timing (moving parts, things that only exist at night) */
+  private readonly extras: Ink[] = [];
+  private readonly lamps: { dots: Dots; follows: boolean }[] = [];
   /** numerals and pin: visible from afar, like a distance marker */
   private marker: Ink | null = null;
+  private beacon: Dots | null = null;
 
   constructor(readonly index: number) {
     this.group.position.copy(ANCHORS[index]);
   }
 
   /** Adds a sketch whose progress follows the visitor. */
-  protected addInk(sketch: Sketch, options: ConstructorParameters<typeof Ink>[1] = {}): Ink {
+  protected addInk(sketch: Sketch, options: ConstructorParameters<typeof Ink>[1] = {}, parent: Object3D = this.group): Ink {
     const ink = new Ink(sketch, options);
     this.inks.push(ink);
-    this.group.add(ink.mesh);
+    parent.add(ink.mesh);
     return ink;
+  }
+
+  /** Adds a sketch the station drives itself, in animate(). */
+  protected addPart(sketch: Sketch, options: ConstructorParameters<typeof Ink>[1] = {}, parent: Object3D = this.group): Ink {
+    const ink = new Ink(sketch, options);
+    this.extras.push(ink);
+    parent.add(ink.mesh);
+    return ink;
+  }
+
+  /**
+   * Adds a set of lamps. They appear and leave with the drawing unless `follows` is
+   * false, in which case the station sets their opacity itself.
+   */
+  protected addLamps(count: number, options: Partial<DotsState> = {}, parent: Object3D = this.group, follows = true): Dots {
+    const dots = new Dots(count, options);
+    this.lamps.push({ dots, follows });
+    parent.add(dots.mesh);
+    return dots;
   }
 
   /** The year, standing behind the drawing, and the pin that ties it to the line. */
@@ -57,6 +86,16 @@ export abstract class Station {
     this.group.add(this.marker.mesh);
   }
 
+  /**
+   * A red obstruction light above the drawing. At night it blinks from far away, before
+   * the drawing itself has been made, so the stations ahead read as places to reach. It
+   * goes out as the visitor leaves, with the drawing.
+   */
+  protected addBeacon(x = 0, y = DRAWING_HEIGHT / 2 + 0.3): void {
+    this.beacon = this.addLamps(1, { mode: BLINK, speed: 1.9, gate: 1, fog: 0.22, minPx: 5 }, this.group, false);
+    this.beacon.set(0, x, y, 0, 0.3, (this.index * 0.37) % 1, RED, 1).commit(true);
+  }
+
   /** Called when the window changes, for drawings that adapt to the page layout. */
   layout(_viewport: Viewport): void {}
 
@@ -74,8 +113,16 @@ export abstract class Station {
     const erase = this.eraseAt(frame.s);
     for (const ink of this.inks) ink.set(draw, erase);
     if (this.marker) this.marker.mesh.visible = frame.s < this.index + 0.9 && frame.s > this.index - 3.2;
-    this.group.visible = frame.s > this.index - 3.2 && frame.s < this.index + 0.9;
-    if (this.group.visible) this.animate(frame, draw * (1 - erase));
+    this.group.visible = frame.s > this.index - 3.2 && frame.s < this.index + 0.98;
+    if (!this.group.visible) return;
+    const presence = draw * (1 - erase);
+    if (this.beacon) this.beacon.state.opacity = 1 - smooth(ramp(this.index + 0.06, this.index + 0.22, frame.s));
+    for (const lamp of this.lamps) {
+      if (!lamp.follows) continue;
+      lamp.dots.state.opacity = presence;
+      lamp.dots.mesh.visible = presence > 0.01;
+    }
+    this.animate(frame, presence);
   }
 
   /** Per-frame motion inside the drawing. `presence` is 1 while it is fully drawn. */
@@ -83,6 +130,8 @@ export abstract class Station {
 
   dispose(): void {
     for (const ink of this.inks) ink.dispose();
+    for (const ink of this.extras) ink.dispose();
+    for (const lamp of this.lamps) lamp.dots.dispose();
     this.marker?.dispose();
   }
 }
