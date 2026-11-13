@@ -116,7 +116,7 @@ export abstract class Station {
     this.group.visible = frame.s > this.index - 3.2 && frame.s < this.index + 0.98;
     if (!this.group.visible) return;
     const presence = draw * (1 - erase);
-    if (this.beacon) this.beacon.state.opacity = 1 - smooth(ramp(this.index + 0.12, this.index + 0.4, frame.s));
+    if (this.beacon) this.beacon.state.opacity = 1 - smooth(ramp(this.index + 0.06, this.index + 0.22, frame.s));
     for (const lamp of this.lamps) {
       if (!lamp.follows) continue;
       lamp.dots.state.opacity = presence;
