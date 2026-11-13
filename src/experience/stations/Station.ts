@@ -32,6 +32,7 @@ export abstract class Station {
   private readonly lamps: { dots: Dots; follows: boolean }[] = [];
   /** numerals and pin: visible from afar, like a distance marker */
   private marker: Ink | null = null;
+  private beacon: Dots | null = null;
 
   constructor(readonly index: number) {
     this.group.position.copy(ANCHORS[index]);
@@ -87,11 +88,12 @@ export abstract class Station {
 
   /**
    * A red obstruction light above the drawing. At night it blinks from far away, before
-   * the drawing itself has been made, so the stations ahead read as places to reach.
+   * the drawing itself has been made, so the stations ahead read as places to reach. It
+   * goes out as the visitor leaves, with the drawing.
    */
   protected addBeacon(x = 0, y = DRAWING_HEIGHT / 2 + 0.3): void {
-    const beacon = this.addLamps(1, { mode: BLINK, speed: 1.9, gate: 1, fog: 0.22, minPx: 5 }, this.group, false);
-    beacon.set(0, x, y, 0, 0.3, (this.index * 0.37) % 1, RED, 1).commit(true);
+    this.beacon = this.addLamps(1, { mode: BLINK, speed: 1.9, gate: 1, fog: 0.22, minPx: 5 }, this.group, false);
+    this.beacon.set(0, x, y, 0, 0.3, (this.index * 0.37) % 1, RED, 1).commit(true);
   }
 
   /** Called when the window changes, for drawings that adapt to the page layout. */
@@ -114,6 +116,7 @@ export abstract class Station {
     this.group.visible = frame.s > this.index - 3.2 && frame.s < this.index + 0.98;
     if (!this.group.visible) return;
     const presence = draw * (1 - erase);
+    if (this.beacon) this.beacon.state.opacity = 1 - smooth(ramp(this.index + 0.12, this.index + 0.4, frame.s));
     for (const lamp of this.lamps) {
       if (!lamp.follows) continue;
       lamp.dots.state.opacity = presence;
