@@ -8,7 +8,7 @@ import { clamp, lerp } from './math';
  * While a sheet is pinned the coordinate still creeps from n − HOLD to n + HOLD, which
  * keeps the scene moving a little for as long as the visitor scrolls.
  */
-const HOLD = 0.06;
+export const HOLD = 0.06;
 
 type Listener = (index: number) => void;
 

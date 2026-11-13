@@ -49,17 +49,19 @@ export interface InkState {
   width: number;
   /** glow strength around the line */
   halo: number;
+  /** 1 = dissolves into the distance like everything else, 0 = seen from any distance */
+  fog: number;
 }
 
 const size = new Vector2();
 
 // Shared by every ink material: resolved once per render.
-const uPxPerUnit = uniform(1).onRenderUpdate(({ renderer, camera }) => {
+export const uPxPerUnit = uniform(1).onRenderUpdate(({ renderer, camera }) => {
   if (!renderer || !camera) return 1;
   renderer.getDrawingBufferSize(size);
   return camera.projectionMatrix.elements[5] * 0.5 * size.y;
 });
-const uDpr = uniform(1).onRenderUpdate(({ renderer }) => (renderer ? Math.min(renderer.getPixelRatio(), 2) : 1));
+export const uDpr = uniform(1).onRenderUpdate(({ renderer }) => (renderer ? Math.min(renderer.getPixelRatio(), 2) : 1));
 
 export const inkUniforms = {
   ink: uniform(new Color(palette.ink)),
@@ -69,6 +71,11 @@ export const inkUniforms = {
   fogFar: uniform(42),
   /** 0 disables the hand-drawn wobble (reduced motion) */
   motion: uniform(1),
+  /** 0 by day, 1 at night; eased by the Experience when the mode changes */
+  night: uniform(0),
+  red: uniform(new Color(palette.red)),
+  green: uniform(new Color(palette.green)),
+  ice: uniform(new Color(palette.ice)),
 };
 
 let shared: NodeMaterial | null = null;
@@ -100,6 +107,7 @@ export function inkMaterial(): NodeMaterial {
   const uBoil = state('boil', 0);
   const uWidth = state('width', 1);
   const uHalo = state('halo', 0.36);
+  const uFog = state('fog', 1);
 
   // x: signed distance to the centre line (px) · y: half core width (px) · z: px per world unit
   const vShape = varyingProperty('vec3', 'vShape');
@@ -136,7 +144,7 @@ export function inkMaterial(): NodeMaterial {
     const halfTotal = halfCore.add(haloPx.div(pxPerUnit));
 
     vShape.assign(vec3(aSide.mul(halfTotal).mul(pxPerUnit), halfCore.mul(pxPerUnit), pxPerUnit));
-    const fog = float(1).sub(smoothstep(inkUniforms.fogNear, inkUniforms.fogFar, depth));
+    const fog = mix(float(1), float(1).sub(smoothstep(inkUniforms.fogNear, inkUniforms.fogFar, depth)), uFog);
     const near = smoothstep(0.35, 1.6, depth);
     vArc.assign(vec3(aArc, fog.mul(near)));
     vTiming.assign(aTiming);
@@ -153,7 +161,8 @@ export function inkMaterial(): NodeMaterial {
     // core + glow
     const core = float(1).sub(smoothstep(half.sub(dpr.mul(0.5)), half.add(dpr.mul(0.5)), d));
     const out = max(d.sub(half), 0).div(dpr.mul(2.9));
-    const glow = exp(out.mul(out).negate()).mul(uHalo).mul(vTiming.w);
+    // after dark the lines carry more light
+    const glow = exp(out.mul(out).negate()).mul(uHalo).mul(vTiming.w).mul(mix(float(1), float(1.35), inkUniforms.night));
 
     // drawing progress of this stroke
     const span = max(vTiming.y.sub(vTiming.x), 1e-4);

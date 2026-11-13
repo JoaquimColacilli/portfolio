@@ -1,5 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import './lib/mode'; // first: day or night is decided before anything is painted
 import 'lenis/dist/lenis.css';
 import './styles/base.css';
 import './styles/sheets.css';

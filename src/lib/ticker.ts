@@ -9,6 +9,12 @@ class Ticker {
   private handle = 0;
   private last = 0;
   private running = false;
+  private held: number | null = null;
+
+  /** Stops the clock at `time` seconds, or lets it run again with null (used by the test tooling). */
+  hold(time: number | null): void {
+    this.held = time;
+  }
 
   /** Lower priority runs first. Returns the function that removes the listener. */
   add(fn: Tick, priority = 0): () => void {
@@ -31,7 +37,7 @@ class Ticker {
       this.handle = requestAnimationFrame(loop);
       const delta = Math.min(0.1, (now - this.last) / 1000);
       this.last = now;
-      for (const l of this.listeners) l.fn(now / 1000, delta);
+      for (const l of this.listeners) l.fn(this.held ?? now / 1000, delta);
     };
     this.handle = requestAnimationFrame(loop);
   }

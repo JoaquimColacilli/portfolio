@@ -304,6 +304,10 @@ export const ui = {
   title: { en: 'Title', es: 'Título' },
   period: { en: 'Period', es: 'Período' },
   present: { en: 'Present', es: 'Actualidad' },
+  mode: {
+    toNight: { en: 'Switch to night', es: 'Pasar a la noche' },
+    toDay: { en: 'Switch to day', es: 'Pasar al día' },
+  },
   /** what the dotted line under a chapter's duration stands for */
   rule: { en: 'rule: 6 years', es: 'regla: 6 años' },
   builtWith: { en: 'Built with', es: 'Construido con' },

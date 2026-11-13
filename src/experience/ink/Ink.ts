@@ -10,7 +10,7 @@ export class Ink {
 
   constructor(source: Sketch | Stroke[], options: Partial<InkState> = {}) {
     const strokes = source instanceof Sketch ? source.finalize() : source;
-    this.state = { draw: 1, erase: 0, opacity: 1, boil: 0.0035, width: 1, halo: 0.36, ...options };
+    this.state = { draw: 1, erase: 0, opacity: 1, boil: 0.0035, width: 1, halo: 0.36, fog: 1, ...options };
     this.mesh = new Mesh(buildInkGeometry(strokes), inkMaterial());
     this.mesh.userData = this.state;
     this.mesh.frustumCulled = false;

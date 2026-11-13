@@ -451,7 +451,7 @@
 .paper {
   position: relative;
   padding: clamp(24px, 3.4vw, 56px);
-  background: rgb(8 24 74 / 0.92);
+  background: var(--sheet);
   /* the frame of a drawing sheet, inset from the edge of the paper */
   outline: 1px solid var(--rule);
   outline-offset: -10px;
@@ -538,6 +538,7 @@
 }
 
 .figure__frame img {
+  transition: filter 1.8s ease;
   display: block;
   width: 100%;
   height: auto;
@@ -1028,7 +1029,7 @@
   .chapter__text {
     padding: 20px 18px 22px;
     border: 1px solid var(--rule);
-    background: rgb(5 13 44 / 0.88);
+    background: var(--veil);
   }
 
   .chapter__title {
@@ -1192,4 +1193,16 @@
   .contact__cursor {
     animation: none;
   }
+}
+
+/* ── Night: screenshots taken in daylight are turned down a little ─────────── */
+.night .figure__frame img,
+.night .index__thumb,
+.night .index__preview img,
+.night .contact__author img {
+  filter: brightness(0.8) saturate(0.88);
+}
+
+.night .contact__author img {
+  filter: grayscale(1) contrast(1.08) brightness(0.8);
 }

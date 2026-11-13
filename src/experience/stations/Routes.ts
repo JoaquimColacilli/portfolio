@@ -1,5 +1,6 @@
+import type { Ink } from '../ink/Ink';
 import { Sketch, TAU } from '../ink/sketch';
-import { Dots } from '../world/Dots';
+import { AMBER, Dots, RED, SPARKLE, WHITE } from '../world/Dots';
 import { spline, Walk } from './paths';
 import { Station, type Frame } from './Station';
 
@@ -7,9 +8,15 @@ import { Station, type Frame } from './Station';
  * Sheet 4 — Almundo, 2025: the Cars and Tours verticals.
  * Above, a tour drawn on a contour map with its stops; below, a car in side elevation
  * with centre lines and wheelbase, as on a vehicle data sheet.
+ *
+ * The car is on its way: the wheels turn and the road runs under it. After dark it
+ * switches its headlights on, and the towns along the tour light up.
  */
 export class Routes extends Station {
   private traveller: Dots;
+  private spokes: Ink[] = [];
+  private road: Dots;
+  private beams: Ink;
   private route: Walk;
   private scratch = { x: 0, y: 0 };
 
@@ -97,6 +104,48 @@ export class Routes extends Station {
     sk.dim(wheels[0], ground, wheels[1], ground, -0.2, '2650');
     this.addInk(sk);
 
+    // wheels: spokes that turn
+    for (const x of wheels) {
+      const spokes = new Sketch();
+      spokes.thin(0.8).together(() => {
+        for (let k = 0; k < 5; k++) {
+          const a = (k / 5) * TAU;
+          spokes.line(Math.cos(a) * 0.12, Math.sin(a) * 0.12, Math.cos(a) * 0.28, Math.sin(a) * 0.28);
+        }
+      });
+      const ink = this.addInk(spokes, { boil: 0 });
+      ink.mesh.position.set(x, wy, 0);
+      this.spokes.push(ink);
+    }
+    // the road: studs that run backwards under the car
+    this.road = this.addLamps(14);
+    for (let i = 0; i < 14; i++) this.road.set(i, 0, ground - 0.075, 0, 0.075, 0, WHITE, 0.7);
+    this.road.commit(true);
+
+    // after dark: headlights, a tail light, and the towns along the tour
+    const beams = new Sketch();
+    beams.ink({ width: 0.009, alpha: 0.55, dash: 0.07, glow: 0.4, tone: 0.35 }).together(() => {
+      beams.line(1.68, -0.78, 2.42, -0.58);
+      beams.line(1.68, -0.82, 2.42, -1.04);
+    });
+    this.beams = this.addPart(beams, { boil: 0.002 });
+    const lamps = this.addLamps(2, { gate: 1 });
+    lamps.set(0, 1.62, -0.8, 0.03, 0.3, 0.1, 0.3, 1).set(1, -1.62, -0.8, 0.03, 0.22, 0.2, RED, 1).commit(true);
+    // what the headlights reach: a pool of light on the road ahead, inside the sheet
+    const reach = this.addLamps(1, { gate: 1, soft: 1 });
+    reach.set(0, 2.08, -0.84, 0.02, 1.15, 0.15, 0.3, 0.3).commit(true);
+    const towns = this.addLamps(4 * 6, { gate: 1, mode: SPARKLE });
+    stops.slice(1, -1).forEach(([x, y], i) => {
+      towns.set(i * 6, x, y, 0.03, 0.26, 0.11 + i * 0.2, AMBER, 0.9);
+      for (let k = 1; k < 6; k++) {
+        const a = k * 2.4 + i;
+        const r = 0.14 + ((k * 37 + i * 11) % 10) * 0.016;
+        towns.set(i * 6 + k, x + Math.cos(a) * r * 1.3, y + Math.sin(a) * r * 0.8 - 0.02, 0.03, 0.075, (k * 0.17 + i * 0.31) % 1, 0.45, 0.85);
+      }
+    });
+    towns.commit(true);
+    this.addBeacon();
+
     // a vehicle following the tour
     this.traveller = new Dots(1, { opacity: 0 });
     this.traveller.set(0, 0, 0, 0.04, 0.16, 0, 0, 1).commit(true);
@@ -109,6 +158,19 @@ export class Routes extends Station {
     this.traveller.move(0, p.x, p.y, 0.04).alpha(0, Math.min(1, Math.min(t, 1 - t) * 14)).commit(true);
     this.traveller.state.opacity = presence > 0.97 ? 1 : 0;
     this.traveller.mesh.visible = this.traveller.state.opacity > 0;
+
+    // the car drives: wheels turn clockwise, the road comes towards it
+    const travelled = frame.motion > 0.5 ? frame.time * 0.9 : 0;
+    for (const spokes of this.spokes) spokes.mesh.rotation.z = -travelled / 0.28;
+    for (let i = 0; i < this.road.count; i++) {
+      const x = ((((i * 0.3 - travelled) % 4.2) + 4.2) % 4.2) - 2.1;
+      this.road.move(i, x, -1.495, 0).alpha(i, 0.7 * Math.min(1, (2.1 - Math.abs(x)) * 5));
+    }
+    this.road.commit(true);
+
+    // headlight beams are drawn when night falls
+    this.beams.state.opacity = presence;
+    this.beams.set(frame.night, 0);
   }
 
   dispose(): void {
